@@ -1,8 +1,8 @@
 /* 멸종위기종 전자야장 Service Worker */
-const VER = 'v1.1.0';
+const VER = 'v1.2.0';
 const SHELL = 'es-shell-' + VER;
 const TILES = 'es-tiles';
-const SHELL_FILES = ['./', './index.html', './manifest.webmanifest', './icons/icon-192.png', './icons/icon-512.png',
+const SHELL_FILES = ['./', './index.html', './registry.json', './manifest.webmanifest', './icons/icon-192.png', './icons/icon-512.png',
   './icons/icon-maskable-512.png', './icons/apple-touch-icon.png', './icons/favicon-32.png'];
 const CDN = ['https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css',
   'https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js'];
@@ -44,6 +44,13 @@ self.addEventListener('fetch', e => {
         return res;
       } catch (_) { return new Response('', { status: 504 }); }
     }));
+    return;
+  }
+
+  // 레지스트리: 네트워크 우선 (새 버전 즉시 반영), 오프라인이면 캐시
+  if (url.origin === location.origin && url.pathname.endsWith('/registry.json')) {
+    e.respondWith(fetch(req).then(res => { if (res.ok) { const cp = res.clone(); caches.open(SHELL).then(c => c.put('./registry.json', cp)); } return res; })
+      .catch(() => caches.match('./registry.json', { ignoreSearch: true })));
     return;
   }
 

@@ -1,0 +1,5760 @@
+{
+ "$schema": "es-registry/1.0",
+ "registry": {
+  "id": "KR-ES-FIELD-MDR",
+  "nameKo": "멸종위기 야생생물 현지조사 전자야장 메타데이터 레지스트리",
+  "nameEn": "Endangered Wildlife Field Survey Metadata Registry",
+  "version": "1.0.0",
+  "status": "pilot",
+  "issued": "2026-11-06",
+  "publisher": "(관리기관 지정 예정)",
+  "basis": [
+   "ISO/IEC 11179 메타데이터 레지스트리 구성 참고 (데이터 요소·값 영역·코드목록·버전)",
+   "Darwin Core 용어 매핑 (생물다양성 자료 국제 표준)"
+  ],
+  "sourceForms": [
+   {
+    "id": "FORM-PL",
+    "nameKo": "멸종위기 야생생물(식물) 현지조사표-1·2 및 작성요령"
+   },
+   {
+    "id": "FORM-IN",
+    "nameKo": "멸종위기 야생생물/관찰종(곤충) 현지조사표-1·2"
+   }
+  ],
+  "conventions": {
+   "coordinates": "WGS84 십진도(저장) / 도·분·초(표시)",
+   "datetime": "ISO 8601",
+   "obligation": "M=필수, C=조건부 필수, O=선택"
+  },
+  "changeLog": [
+   {
+    "version": "1.0.0",
+    "date": "2026-11-06",
+    "note": "최초 작성 — 수기 현지조사표 2종(식물·곤충) 기반 데이터 요소·코드목록 정의, 표기 차이 통합"
+   }
+  ]
+ },
+ "groups": [
+  {
+   "id": "REC",
+   "nameKo": "기록 관리"
+  },
+  {
+   "id": "TAX",
+   "nameKo": "분류군·종"
+  },
+  {
+   "id": "EVT",
+   "nameKo": "조사 행위"
+  },
+  {
+   "id": "PSN",
+   "nameKo": "조사자"
+  },
+  {
+   "id": "LOC",
+   "nameKo": "위치"
+  },
+  {
+   "id": "POP",
+   "nameKo": "개체군"
+  },
+  {
+   "id": "HAB",
+   "nameKo": "서식지"
+  },
+  {
+   "id": "THR",
+   "nameKo": "위협요인"
+  },
+  {
+   "id": "ENV",
+   "nameKo": "환경요소"
+  },
+  {
+   "id": "ASC",
+   "nameKo": "공동출현종"
+  },
+  {
+   "id": "DOC",
+   "nameKo": "기록·첨부"
+  }
+ ],
+ "dataElements": [
+  {
+   "id": "ES.TAX.VERNACULAR",
+   "group": "TAX",
+   "nameKo": "조사종명(국명)",
+   "nameEn": "Vernacular name (Korean)",
+   "definition": "국가생물종목록에서 지정하는 조사대상종의 국명",
+   "dataType": "string",
+   "key": "species",
+   "applicability": [
+    "plant",
+    "insect"
+   ],
+   "obligation": {
+    "plant": "M",
+    "insect": "M"
+   },
+   "formRef": {
+    "plant": "1. 조사지역 정보 등 > 기본 항목",
+    "insect": "1. 조사지역 정보 등 > 기본 항목"
+   },
+   "formLabel": {
+    "plant": "조사종명(국명)",
+    "insect": "조사종명(국명)"
+   },
+   "dwcTerm": "vernacularName",
+   "sensitivity": "public",
+   "status": "standard",
+   "since": "1.0.0"
+  },
+  {
+   "id": "ES.REC.SHEET_NO",
+   "group": "REC",
+   "nameKo": "조사표번호",
+   "nameEn": "Field sheet number",
+   "definition": "'일련번호_국명' 형식의 조사표 식별자. 현지조사표와 연계 제출되는 모든 파일명에 포함 (예: 001_한라송이풀)",
+   "dataType": "string",
+   "key": "serial",
+   "applicability": [
+    "plant",
+    "insect"
+   ],
+   "pattern": "^[0-9]{3,}_.+$",
+   "obligation": {
+    "plant": "O",
+    "insect": "O"
+   },
+   "formRef": {
+    "plant": "1. 조사지역 정보 등 > 기본 항목",
+    "insect": "1. 조사지역 정보 등 > 기본 항목"
+   },
+   "formLabel": {
+    "plant": "조사표번호",
+    "insect": "조사표번호"
+   },
+   "sensitivity": "public",
+   "status": "standard",
+   "since": "1.0.0"
+  },
+  {
+   "id": "ES.EVT.DATE",
+   "group": "EVT",
+   "nameKo": "조사일자",
+   "nameEn": "Survey date",
+   "definition": "현지조사를 수행한 날짜 (ISO 8601, YYYY-MM-DD)",
+   "dataType": "date",
+   "key": "date",
+   "applicability": [
+    "plant",
+    "insect"
+   ],
+   "obligation": {
+    "plant": "M",
+    "insect": "M"
+   },
+   "formRef": {
+    "plant": "1. 조사지역 정보 등 > 기본 항목",
+    "insect": "1. 조사지역 정보 등 > 기본 항목"
+   },
+   "formLabel": {
+    "plant": "조사일자",
+    "insect": "조사일자"
+   },
+   "dwcTerm": "eventDate",
+   "sensitivity": "public",
+   "status": "standard",
+   "since": "1.0.0"
+  },
+  {
+   "id": "ES.EVT.TIME_START",
+   "group": "EVT",
+   "nameKo": "조사 시작시각",
+   "nameEn": "Survey start time",
+   "definition": "조사 시작 시각 (현지시각 HH:MM, 시·분 모두 기입)",
+   "dataType": "time",
+   "key": "tStart",
+   "applicability": [
+    "plant",
+    "insect"
+   ],
+   "obligation": {
+    "plant": "O",
+    "insect": "O"
+   },
+   "formRef": {
+    "plant": "1. 조사지역 정보 등 > 기본 항목",
+    "insect": "1. 조사지역 정보 등 > 기본 항목"
+   },
+   "formLabel": {
+    "plant": "시작시각",
+    "insect": "시작시각"
+   },
+   "dwcTerm": "eventDate (구간 시작)",
+   "sensitivity": "public",
+   "status": "standard",
+   "since": "1.0.0"
+  },
+  {
+   "id": "ES.EVT.TIME_END",
+   "group": "EVT",
+   "nameKo": "조사 종료시각",
+   "nameEn": "Survey end time",
+   "definition": "조사 종료 시각 (현지시각 HH:MM)",
+   "dataType": "time",
+   "key": "tEnd",
+   "applicability": [
+    "plant",
+    "insect"
+   ],
+   "obligation": {
+    "plant": "O",
+    "insect": "O"
+   },
+   "formRef": {
+    "plant": "1. 조사지역 정보 등 > 기본 항목",
+    "insect": "1. 조사지역 정보 등 > 기본 항목"
+   },
+   "formLabel": {
+    "plant": "종료시각",
+    "insect": "종료시각"
+   },
+   "dwcTerm": "eventDate (구간 종료)",
+   "sensitivity": "public",
+   "status": "standard",
+   "since": "1.0.0"
+  },
+  {
+   "id": "ES.EVT.WEATHER",
+   "group": "EVT",
+   "nameKo": "날씨",
+   "nameEn": "Weather condition",
+   "definition": "조사 당시 날씨 상태",
+   "dataType": "code",
+   "key": "weather",
+   "applicability": [
+    "plant",
+    "insect"
+   ],
+   "codeList": "CL.WEATHER",
+   "obligation": {
+    "plant": "O",
+    "insect": "O"
+   },
+   "formRef": {
+    "plant": "1. 조사지역 정보 등 > 기본 항목",
+    "insect": "1. 조사지역 정보 등 > 기본 항목"
+   },
+   "formLabel": {
+    "plant": "날씨",
+    "insect": "날씨"
+   },
+   "sensitivity": "public",
+   "status": "standard",
+   "since": "1.0.0",
+   "note": "식물 현지조사표에는 없는 항목 — 전자야장 공통 항목으로 추가"
+  },
+  {
+   "id": "ES.EVT.AIR_TEMP",
+   "group": "EVT",
+   "nameKo": "기온",
+   "nameEn": "Air temperature",
+   "definition": "조사 당시 기온",
+   "dataType": "decimal",
+   "key": "temp",
+   "applicability": [
+    "plant",
+    "insect"
+   ],
+   "unit": "℃",
+   "min": -30,
+   "max": 45,
+   "obligation": {
+    "plant": "O",
+    "insect": "O"
+   },
+   "formRef": {
+    "plant": "1. 조사지역 정보 등 > 기본 항목",
+    "insect": "1. 조사지역 정보 등 > 기본 항목"
+   },
+   "formLabel": {
+    "plant": "기온",
+    "insect": "기온"
+   },
+   "sensitivity": "public",
+   "status": "standard",
+   "since": "1.0.0"
+  },
+  {
+   "id": "ES.EVT.WEATHER_NOTE",
+   "group": "EVT",
+   "nameKo": "기상 상세",
+   "nameEn": "Weather details",
+   "definition": "습도·풍속 등 기상 상세와 자동기입 출처(Open-Meteo 관측 시각)",
+   "dataType": "string",
+   "key": "wxNote",
+   "applicability": [
+    "plant",
+    "insect"
+   ],
+   "obligation": {
+    "plant": "O",
+    "insect": "O"
+   },
+   "formRef": {
+    "plant": "1. 조사지역 정보 등 > 기본 항목",
+    "insect": "1. 조사지역 정보 등 > 기본 항목"
+   },
+   "formLabel": {
+    "plant": "기상 상세",
+    "insect": "기상 상세"
+   },
+   "sensitivity": "public",
+   "status": "standard",
+   "since": "1.0.0",
+   "note": "전자야장 추가 항목"
+  },
+  {
+   "id": "ES.PSN.LEAD_NAME",
+   "group": "PSN",
+   "nameKo": "책임조사자 성명",
+   "nameEn": "Lead surveyor name",
+   "definition": "조사를 책임 수행한 조사자 성명",
+   "dataType": "string",
+   "key": "chiefName",
+   "applicability": [
+    "plant",
+    "insect"
+   ],
+   "obligation": {
+    "plant": "O",
+    "insect": "O"
+   },
+   "formRef": {
+    "plant": "1. 조사지역 정보 등 > 조사자",
+    "insect": "1. 조사지역 정보 등 > 조사자"
+   },
+   "formLabel": {
+    "plant": "책임 (성명)",
+    "insect": "책임 (성명)"
+   },
+   "dwcTerm": "recordedBy",
+   "sensitivity": "personal",
+   "status": "standard",
+   "since": "1.0.0"
+  },
+  {
+   "id": "ES.PSN.LEAD_ORG",
+   "group": "PSN",
+   "nameKo": "책임조사자 소속",
+   "nameEn": "Lead surveyor affiliation",
+   "definition": "책임조사자 소속 기관",
+   "dataType": "string",
+   "key": "chiefOrg",
+   "applicability": [
+    "plant",
+    "insect"
+   ],
+   "obligation": {
+    "plant": "O",
+    "insect": "O"
+   },
+   "formRef": {
+    "plant": "1. 조사지역 정보 등 > 조사자",
+    "insect": "1. 조사지역 정보 등 > 조사자"
+   },
+   "formLabel": {
+    "plant": "소속",
+    "insect": "소속"
+   },
+   "sensitivity": "personal",
+   "status": "standard",
+   "since": "1.0.0"
+  },
+  {
+   "id": "ES.PSN.ASST_NAME",
+   "group": "PSN",
+   "nameKo": "보조조사자 성명",
+   "nameEn": "Assistant surveyor name(s)",
+   "definition": "보조조사자 성명 (여러 명이면 쉼표로 구분)",
+   "dataType": "string",
+   "key": "asstName",
+   "applicability": [
+    "plant",
+    "insect"
+   ],
+   "obligation": {
+    "plant": "O",
+    "insect": "O"
+   },
+   "formRef": {
+    "plant": "1. 조사지역 정보 등 > 조사자",
+    "insect": "1. 조사지역 정보 등 > 조사자"
+   },
+   "formLabel": {
+    "plant": "보조 (성명)",
+    "insect": "보조 (성명)"
+   },
+   "dwcTerm": "recordedBy",
+   "sensitivity": "personal",
+   "status": "standard",
+   "since": "1.0.0"
+  },
+  {
+   "id": "ES.PSN.ASST_ORG",
+   "group": "PSN",
+   "nameKo": "보조조사자 소속",
+   "nameEn": "Assistant surveyor affiliation",
+   "definition": "보조조사자 소속 기관",
+   "dataType": "string",
+   "key": "asstOrg",
+   "applicability": [
+    "plant",
+    "insect"
+   ],
+   "obligation": {
+    "plant": "O",
+    "insect": "O"
+   },
+   "formRef": {
+    "plant": "1. 조사지역 정보 등 > 조사자",
+    "insect": "1. 조사지역 정보 등 > 조사자"
+   },
+   "formLabel": {
+    "plant": "소속",
+    "insect": "소속"
+   },
+   "sensitivity": "personal",
+   "status": "standard",
+   "since": "1.0.0"
+  },
+  {
+   "id": "ES.POP.NAME",
+   "group": "POP",
+   "nameKo": "개체군명",
+   "nameEn": "Population name",
+   "definition": "개체군 명칭",
+   "dataType": "string",
+   "key": "popName",
+   "applicability": [
+    "insect"
+   ],
+   "obligation": {
+    "insect": "O"
+   },
+   "formRef": {
+    "insect": "1. 조사지역 정보 등 > 개체군"
+   },
+   "formLabel": {
+    "insect": "개체군명"
+   },
+   "sensitivity": "public",
+   "status": "standard",
+   "since": "1.0.0"
+  },
+  {
+   "id": "ES.POP.CODE",
+   "group": "POP",
+   "nameKo": "개체군 코드",
+   "nameEn": "Population code",
+   "definition": "개체군 식별 코드",
+   "dataType": "string",
+   "key": "popCode",
+   "applicability": [
+    "insect"
+   ],
+   "obligation": {
+    "insect": "O"
+   },
+   "formRef": {
+    "insect": "1. 조사지역 정보 등 > 개체군"
+   },
+   "formLabel": {
+    "insect": "개체군 코드"
+   },
+   "sensitivity": "public",
+   "status": "standard",
+   "since": "1.0.0"
+  },
+  {
+   "id": "ES.LOC.SITE_NAME",
+   "group": "LOC",
+   "nameKo": "조사지역명",
+   "nameEn": "Survey site name",
+   "definition": "조사지역 명칭",
+   "dataType": "string",
+   "key": "siteName",
+   "applicability": [
+    "insect"
+   ],
+   "obligation": {
+    "insect": "O"
+   },
+   "formRef": {
+    "insect": "1. 조사지역 정보 등 > 개체군"
+   },
+   "formLabel": {
+    "insect": "조사지역명"
+   },
+   "sensitivity": "public",
+   "status": "standard",
+   "since": "1.0.0"
+  },
+  {
+   "id": "ES.LOC.SITE_CODE",
+   "group": "LOC",
+   "nameKo": "조사지역 코드",
+   "nameEn": "Survey site code",
+   "definition": "조사지역 식별 코드",
+   "dataType": "string",
+   "key": "siteCode",
+   "applicability": [
+    "insect"
+   ],
+   "obligation": {
+    "insect": "O"
+   },
+   "formRef": {
+    "insect": "1. 조사지역 정보 등 > 개체군"
+   },
+   "formLabel": {
+    "insect": "조사지역 코드"
+   },
+   "dwcTerm": "locationID",
+   "sensitivity": "public",
+   "status": "standard",
+   "since": "1.0.0"
+  },
+  {
+   "id": "ES.LOC.SITE_TYPE",
+   "group": "LOC",
+   "nameKo": "조사지 구분",
+   "nameEn": "Site category",
+   "definition": "기존 필수조사지점(필수)인지 새로운 지점(신규)인지 구분",
+   "dataType": "code",
+   "key": "siteType",
+   "applicability": [
+    "plant",
+    "insect"
+   ],
+   "codeList": "CL.SITE_TYPE",
+   "obligation": {
+    "plant": "O",
+    "insect": "O"
+   },
+   "formRef": {
+    "plant": "1. 조사지역 정보 등 > 조사지 구분",
+    "insect": "1. 조사지역 정보 등 > 개체군"
+   },
+   "formLabel": {
+    "plant": "조사지 구분",
+    "insect": "조사지 구분"
+   },
+   "sensitivity": "public",
+   "status": "standard",
+   "since": "1.0.0"
+  },
+  {
+   "id": "ES.POP.HABITABILITY",
+   "group": "POP",
+   "nameKo": "미확인 시 서식 가능 여부",
+   "nameEn": "Habitability if not found",
+   "definition": "대상종 미확인 시 서식(생육) 가능 여부 판단. 불가능하면 사유 기재",
+   "dataType": "code",
+   "key": {
+    "plant": "habitable",
+    "insect": "unconf"
+   },
+   "applicability": [
+    "plant",
+    "insect"
+   ],
+   "codeList": "CL.HABITABILITY",
+   "obligation": {
+    "plant": "O",
+    "insect": "O"
+   },
+   "formRef": {
+    "plant": "2. 개체군 정보 > 개체수",
+    "insect": "1. 조사지역 정보 등 > 개체군"
+   },
+   "formLabel": {
+    "plant": "서식 가능 여부 (※ 미확인 시 체크)",
+    "insect": "미확인 시 서식 가능 여부"
+   },
+   "sensitivity": "public",
+   "status": "standard",
+   "since": "1.0.0",
+   "note": "식물(서식가능/불가)과 곤충(가능/불가능) 표기를 단일 코드로 통합"
+  },
+  {
+   "id": "ES.LOC.ADMIN_ADDR",
+   "group": "LOC",
+   "nameKo": "행정구역",
+   "nameEn": "Administrative address",
+   "definition": "조사지 행정구역 (시·도부터 동·리, 지번까지)",
+   "dataType": "string",
+   "key": "addr",
+   "applicability": [
+    "plant",
+    "insect"
+   ],
+   "obligation": {
+    "plant": "O",
+    "insect": "O"
+   },
+   "formRef": {
+    "plant": "1. 조사지역 정보 등 > 조사지역",
+    "insect": "1. 조사지역 정보 등 > 조사지역"
+   },
+   "formLabel": {
+    "plant": "행정구역 (동/리, 지번까지)",
+    "insect": "행정구역 (동/리, 지번까지)"
+   },
+   "dwcTerm": "locality",
+   "sensitivity": "public",
+   "status": "standard",
+   "since": "1.0.0"
+  },
+  {
+   "id": "ES.LOC.DESCRIPTION",
+   "group": "LOC",
+   "nameKo": "위치설명",
+   "nameEn": "Location description",
+   "definition": "조사지역 명칭(계곡·산·하천·해안·섬 등), 이동 경로·방법, 주변 지명·구조물 등 위치 설명",
+   "dataType": "text",
+   "key": "locDesc",
+   "applicability": [
+    "plant",
+    "insect"
+   ],
+   "obligation": {
+    "plant": "O",
+    "insect": "O"
+   },
+   "formRef": {
+    "plant": "1. 조사지역 정보 등 > 조사지역",
+    "insect": "1. 조사지역 정보 등 > 조사지역"
+   },
+   "formLabel": {
+    "plant": "위치설명",
+    "insect": "위치설명"
+   },
+   "dwcTerm": "locationRemarks",
+   "sensitivity": "public",
+   "status": "standard",
+   "since": "1.0.0"
+  },
+  {
+   "id": "ES.LOC.LAT_OBS",
+   "group": "LOC",
+   "nameKo": "실측 위도",
+   "nameEn": "Observed latitude",
+   "definition": "현장에서 실측한 조사지점 위도. 저장은 WGS84 십진도, 화면 표시는 도/분/초",
+   "dataType": "decimal",
+   "key": "lat",
+   "applicability": [
+    "plant",
+    "insect"
+   ],
+   "unit": "°",
+   "min": 33,
+   "max": 39,
+   "obligation": {
+    "plant": "O",
+    "insect": "O"
+   },
+   "formRef": {
+    "plant": "1. 조사지역 정보 등 > 경·위도 좌표값 (도/분/초)",
+    "insect": "1. 조사지역 정보 등 > 경·위도 좌표값 (도/분/초)"
+   },
+   "formLabel": {
+    "plant": "실측 (현장 측정) 위도",
+    "insect": "실측 (현장 측정) 위도"
+   },
+   "dwcTerm": "decimalLatitude",
+   "sensitivity": "restricted",
+   "status": "standard",
+   "since": "1.0.0"
+  },
+  {
+   "id": "ES.LOC.LON_OBS",
+   "group": "LOC",
+   "nameKo": "실측 경도",
+   "nameEn": "Observed longitude",
+   "definition": "현장에서 실측한 조사지점 경도. 저장은 WGS84 십진도, 화면 표시는 도/분/초",
+   "dataType": "decimal",
+   "key": "lon",
+   "applicability": [
+    "plant",
+    "insect"
+   ],
+   "unit": "°",
+   "min": 124,
+   "max": 132,
+   "obligation": {
+    "plant": "O",
+    "insect": "O"
+   },
+   "formRef": {
+    "plant": "1. 조사지역 정보 등 > 경·위도 좌표값 (도/분/초)",
+    "insect": "1. 조사지역 정보 등 > 경·위도 좌표값 (도/분/초)"
+   },
+   "formLabel": {
+    "plant": "실측 (현장 측정) 경도",
+    "insect": "실측 (현장 측정) 경도"
+   },
+   "dwcTerm": "decimalLongitude",
+   "sensitivity": "restricted",
+   "status": "standard",
+   "since": "1.0.0"
+  },
+  {
+   "id": "ES.LOC.COORD_UNCERTAINTY",
+   "group": "LOC",
+   "nameKo": "GPS 수평 정확도",
+   "nameEn": "Coordinate uncertainty",
+   "definition": "GPS 측위 오차 반경",
+   "dataType": "decimal",
+   "key": "gpsAcc",
+   "applicability": [
+    "plant",
+    "insect"
+   ],
+   "unit": "m",
+   "min": 0,
+   "max": 1000,
+   "obligation": {
+    "plant": "O",
+    "insect": "O"
+   },
+   "formRef": {
+    "plant": "1. 조사지역 정보 등 > 경·위도 좌표값 (도/분/초)",
+    "insect": "1. 조사지역 정보 등 > 경·위도 좌표값 (도/분/초)"
+   },
+   "formLabel": {
+    "plant": "GPS 수평 정확도",
+    "insect": "GPS 수평 정확도"
+   },
+   "dwcTerm": "coordinateUncertaintyInMeters",
+   "sensitivity": "public",
+   "status": "standard",
+   "since": "1.0.0",
+   "note": "전자야장 추가 항목"
+  },
+  {
+   "id": "ES.LOC.LAT_REF",
+   "group": "LOC",
+   "nameKo": "기존 위도",
+   "nameEn": "Reference latitude",
+   "definition": "제공된 필수조사지점의 기존 위도 (WGS84 십진도)",
+   "dataType": "decimal",
+   "key": "lat0",
+   "applicability": [
+    "plant",
+    "insect"
+   ],
+   "unit": "°",
+   "min": 33,
+   "max": 39,
+   "obligation": {
+    "plant": "O",
+    "insect": "O"
+   },
+   "formRef": {
+    "plant": "1. 조사지역 정보 등 > 경·위도 좌표값 (도/분/초)",
+    "insect": "1. 조사지역 정보 등 > 경·위도 좌표값 (도/분/초)"
+   },
+   "formLabel": {
+    "plant": "기존 (제공된 필수조사지 좌표) 위도",
+    "insect": "기존 (제공된 필수조사지 좌표) 위도"
+   },
+   "sensitivity": "restricted",
+   "status": "standard",
+   "since": "1.0.0"
+  },
+  {
+   "id": "ES.LOC.LON_REF",
+   "group": "LOC",
+   "nameKo": "기존 경도",
+   "nameEn": "Reference longitude",
+   "definition": "제공된 필수조사지점의 기존 경도 (WGS84 십진도)",
+   "dataType": "decimal",
+   "key": "lon0",
+   "applicability": [
+    "plant",
+    "insect"
+   ],
+   "unit": "°",
+   "min": 124,
+   "max": 132,
+   "obligation": {
+    "plant": "O",
+    "insect": "O"
+   },
+   "formRef": {
+    "plant": "1. 조사지역 정보 등 > 경·위도 좌표값 (도/분/초)",
+    "insect": "1. 조사지역 정보 등 > 경·위도 좌표값 (도/분/초)"
+   },
+   "formLabel": {
+    "plant": "기존 (제공된 필수조사지 좌표) 경도",
+    "insect": "기존 (제공된 필수조사지 좌표) 경도"
+   },
+   "sensitivity": "restricted",
+   "status": "standard",
+   "since": "1.0.0"
+  },
+  {
+   "id": "ES.LOC.COORD_SOURCE",
+   "group": "LOC",
+   "nameKo": "좌표값 취득원",
+   "nameEn": "Coordinate source",
+   "definition": "조사지점 좌표값을 확인한 방법. 반드시 1개만 선택",
+   "dataType": "code",
+   "key": "src",
+   "applicability": [
+    "plant",
+    "insect"
+   ],
+   "codeList": "CL.COORD_SRC",
+   "obligation": {
+    "plant": "C",
+    "insect": "C"
+   },
+   "formRef": {
+    "plant": "1. 조사지역 정보 등 > 경·위도 좌표값 (도/분/초)",
+    "insect": "1. 조사지역 정보 등 > 경·위도 좌표값 (도/분/초)"
+   },
+   "formLabel": {
+    "plant": "좌표값 취득원 (1개만 선택)",
+    "insect": "좌표값 취득원 (1개만 선택)"
+   },
+   "condition": "실측 좌표가 있으면 필수",
+   "dwcTerm": "georeferenceProtocol",
+   "sensitivity": "public",
+   "status": "standard",
+   "since": "1.0.0",
+   "note": "식물(구글지도·카카오맵·네이버지도)과 곤충(구글맵·다음맵·네이버맵) 표기를 통합"
+  },
+  {
+   "id": "ES.LOC.ELEVATION",
+   "group": "LOC",
+   "nameKo": "고도(해발고도)",
+   "nameEn": "Elevation",
+   "definition": "조사지점 해발고도 (GPS 고도 또는 수치표고모델)",
+   "dataType": "decimal",
+   "key": "elev",
+   "applicability": [
+    "plant",
+    "insect"
+   ],
+   "unit": "m",
+   "min": -10,
+   "max": 2000,
+   "obligation": {
+    "plant": "O",
+    "insect": "O"
+   },
+   "formRef": {
+    "plant": "1. 조사지역 정보 등 > 기본 항목",
+    "insect": "1. 조사지역 정보 등 > 기본 항목"
+   },
+   "formLabel": {
+    "plant": "고도",
+    "insect": "고도"
+   },
+   "dwcTerm": "minimumElevationInMeters, maximumElevationInMeters",
+   "sensitivity": "public",
+   "status": "standard",
+   "since": "1.0.0"
+  },
+  {
+   "id": "ES.POP.COUNT",
+   "group": "POP",
+   "nameKo": "개체수",
+   "nameEn": "Individual count",
+   "definition": "확인된 개체수 (식물은 지상부 줄기 기준)",
+   "dataType": "integer",
+   "key": "count",
+   "applicability": [
+    "plant",
+    "insect"
+   ],
+   "unit": "개체",
+   "min": 0,
+   "obligation": {
+    "plant": "O",
+    "insect": "O"
+   },
+   "formRef": {
+    "plant": "2. 개체군 정보 > 개체수",
+    "insect": "2. 개체군 정보 > 개체수"
+   },
+   "formLabel": {
+    "plant": "개체수 (지상부 줄기 기준)",
+    "insect": "개체수"
+   },
+   "dwcTerm": "individualCount",
+   "sensitivity": "public",
+   "status": "standard",
+   "since": "1.0.0"
+  },
+  {
+   "id": "ES.POP.TREND",
+   "group": "POP",
+   "nameKo": "기존 대비 변동",
+   "nameEn": "Change from previous survey",
+   "definition": "기존 조사 대비 개체수 변동",
+   "dataType": "code",
+   "key": "trend",
+   "applicability": [
+    "plant"
+   ],
+   "codeList": "CL.TREND",
+   "obligation": {
+    "plant": "O"
+   },
+   "formRef": {
+    "plant": "2. 개체군 정보 > 개체수"
+   },
+   "formLabel": {
+    "plant": "기존 대비 변동"
+   },
+   "sensitivity": "public",
+   "status": "standard",
+   "since": "1.0.0"
+  },
+  {
+   "id": "ES.POP.CHANGE_REASON",
+   "group": "POP",
+   "nameKo": "변동사유",
+   "nameEn": "Reason for change",
+   "definition": "개체 변동 또는 생육 불가 사유 상세",
+   "dataType": "text",
+   "key": "changeWhy",
+   "applicability": [
+    "plant"
+   ],
+   "obligation": {
+    "plant": "O"
+   },
+   "formRef": {
+    "plant": "2. 개체군 정보 > 개체수"
+   },
+   "formLabel": {
+    "plant": "변동사유"
+   },
+   "sensitivity": "public",
+   "status": "standard",
+   "since": "1.0.0"
+  },
+  {
+   "id": "ES.POP.COUNT_CLASS",
+   "group": "POP",
+   "nameKo": "개체수 구간",
+   "nameEn": "Count class",
+   "definition": "개체수 구간 (개체수에서 자동 산출)",
+   "dataType": "code",
+   "key": "countCls",
+   "applicability": [
+    "insect"
+   ],
+   "codeList": "CL.COUNT_CLASS",
+   "obligation": {
+    "insect": "O"
+   },
+   "formRef": {
+    "insect": "2. 개체군 정보 > 개체수"
+   },
+   "formLabel": {
+    "insect": "개체수 구간 (자동 선택)"
+   },
+   "sensitivity": "public",
+   "status": "standard",
+   "since": "1.0.0"
+  },
+  {
+   "id": "ES.EVT.METHOD",
+   "group": "EVT",
+   "nameKo": "조사방법",
+   "nameEn": "Survey method",
+   "definition": "곤충 조사방법 (복수 선택)",
+   "dataType": "codeSet",
+   "key": "method",
+   "applicability": [
+    "insect"
+   ],
+   "codeList": "CL.METHOD",
+   "obligation": {
+    "insect": "O"
+   },
+   "formRef": {
+    "insect": "2. 개체군 정보 > 개체군"
+   },
+   "formLabel": {
+    "insect": "조사방법"
+   },
+   "dwcTerm": "samplingProtocol",
+   "sensitivity": "public",
+   "status": "standard",
+   "since": "1.0.0"
+  },
+  {
+   "id": "ES.POP.DIST_PATTERN",
+   "group": "POP",
+   "nameKo": "분포형태",
+   "nameEn": "Distribution pattern",
+   "definition": "개체군의 분포 형태",
+   "dataType": "code",
+   "key": "distType",
+   "applicability": [
+    "plant"
+   ],
+   "codeList": "CL.DIST_TYPE",
+   "obligation": {
+    "plant": "O"
+   },
+   "formRef": {
+    "plant": "2. 개체군 정보 > 개체군 구조"
+   },
+   "formLabel": {
+    "plant": "분포형태"
+   },
+   "sensitivity": "public",
+   "status": "standard",
+   "since": "1.0.0"
+  },
+  {
+   "id": "ES.POP.REPRO_COUNT",
+   "group": "POP",
+   "nameKo": "생식가능개체수",
+   "nameEn": "Reproductive individuals",
+   "definition": "생식 가능 개체수 (개체수가 0이면 기록 제외)",
+   "dataType": "integer",
+   "key": "reproN",
+   "applicability": [
+    "plant"
+   ],
+   "unit": "개체",
+   "min": 0,
+   "obligation": {
+    "plant": "O"
+   },
+   "formRef": {
+    "plant": "2. 개체군 정보 > 개체군 구조"
+   },
+   "formLabel": {
+    "plant": "생식가능개체수"
+   },
+   "sensitivity": "public",
+   "status": "standard",
+   "since": "1.0.0"
+  },
+  {
+   "id": "ES.POP.REPRO_RATIO",
+   "group": "POP",
+   "nameKo": "생식가능 개체수 비율",
+   "nameEn": "Reproductive ratio",
+   "definition": "전체 개체 중 생식 가능 개체의 비율",
+   "dataType": "decimal",
+   "key": "reproPct",
+   "applicability": [
+    "insect"
+   ],
+   "unit": "%",
+   "min": 0,
+   "max": 100,
+   "obligation": {
+    "insect": "O"
+   },
+   "formRef": {
+    "insect": "2. 개체군 정보 > 개체군"
+   },
+   "formLabel": {
+    "insect": "생식가능 개체수 비율"
+   },
+   "sensitivity": "public",
+   "status": "standard",
+   "since": "1.0.0"
+  },
+  {
+   "id": "ES.POP.MEAN_HEIGHT",
+   "group": "POP",
+   "nameKo": "개체평균높이",
+   "nameEn": "Mean height",
+   "definition": "개화 및 결실기 개체의 평균 높이",
+   "dataType": "decimal",
+   "key": "height",
+   "applicability": [
+    "plant"
+   ],
+   "unit": "cm",
+   "min": 0,
+   "max": 5000,
+   "obligation": {
+    "plant": "O"
+   },
+   "formRef": {
+    "plant": "2. 개체군 정보 > 개체군 구조"
+   },
+   "formLabel": {
+    "plant": "개체평균높이"
+   },
+   "sensitivity": "public",
+   "status": "standard",
+   "since": "1.0.0"
+  },
+  {
+   "id": "ES.POP.MEAN_SIZE",
+   "group": "POP",
+   "nameKo": "개체평균크기",
+   "nameEn": "Mean body size",
+   "definition": "개체 평균 크기",
+   "dataType": "decimal",
+   "key": "size",
+   "applicability": [
+    "insect"
+   ],
+   "unit": "cm",
+   "min": 0,
+   "max": 30,
+   "obligation": {
+    "insect": "O"
+   },
+   "formRef": {
+    "insect": "2. 개체군 정보 > 개체군"
+   },
+   "formLabel": {
+    "insect": "개체평균크기"
+   },
+   "sensitivity": "public",
+   "status": "standard",
+   "since": "1.0.0"
+  },
+  {
+   "id": "ES.POP.AREA",
+   "group": "POP",
+   "nameKo": "분포면적",
+   "nameEn": "Distribution area",
+   "definition": "개체군 전체 분포면적",
+   "dataType": "decimal",
+   "key": "area",
+   "applicability": [
+    "plant"
+   ],
+   "unit": "㎡",
+   "min": 0,
+   "obligation": {
+    "plant": "O"
+   },
+   "formRef": {
+    "plant": "2. 개체군 정보 > 개체군 구조"
+   },
+   "formLabel": {
+    "plant": "분포면적"
+   },
+   "sensitivity": "public",
+   "status": "standard",
+   "since": "1.0.0"
+  },
+  {
+   "id": "ES.POP.LIFE_STAGE",
+   "group": "POP",
+   "nameKo": "성장단계",
+   "nameEn": "Life stage",
+   "definition": "관찰된 성장단계 (복수 선택)",
+   "dataType": "codeSet",
+   "key": "stage",
+   "applicability": [
+    "plant",
+    "insect"
+   ],
+   "codeList": {
+    "plant": "CL.STAGE_PL",
+    "insect": "CL.STAGE_IN"
+   },
+   "obligation": {
+    "plant": "O",
+    "insect": "O"
+   },
+   "formRef": {
+    "plant": "2. 개체군 정보 > 개체군 구조",
+    "insect": "2. 개체군 정보 > 개체군"
+   },
+   "formLabel": {
+    "plant": "성장단계",
+    "insect": "성장단계"
+   },
+   "dwcTerm": "lifeStage",
+   "sensitivity": "public",
+   "status": "standard",
+   "since": "1.0.0"
+  },
+  {
+   "id": "ES.POP.STAGE_COUNT",
+   "group": "POP",
+   "nameKo": "단계별 개체수",
+   "nameEn": "Count by life stage",
+   "definition": "성장단계별 개체수",
+   "dataType": "codeMap",
+   "key": "stageN",
+   "applicability": [
+    "plant",
+    "insect"
+   ],
+   "unit": "개체",
+   "codeList": {
+    "plant": "CL.STAGE_PL",
+    "insect": "CL.STAGE_IN"
+   },
+   "obligation": {
+    "plant": "O",
+    "insect": "O"
+   },
+   "formRef": {
+    "plant": "2. 개체군 정보 > 개체군 구조",
+    "insect": "2. 개체군 정보 > 개체군"
+   },
+   "formLabel": {
+    "plant": "단계별 개체수",
+    "insect": "단계별 개체수"
+   },
+   "sensitivity": "public",
+   "status": "standard",
+   "since": "1.0.0"
+  },
+  {
+   "id": "ES.POP.SUBGROUP",
+   "group": "POP",
+   "nameKo": "소집단",
+   "nameEn": "Subpopulation records",
+   "definition": "인접 소집단별 중심 좌표, 개체수, 주요 공동/동서출현종",
+   "dataType": "list",
+   "key": "sub",
+   "applicability": [
+    "plant"
+   ],
+   "components": [
+    {
+     "name": "lat",
+     "nameKo": "위도",
+     "dataType": "decimal",
+     "unit": "°",
+     "min": 33,
+     "max": 39
+    },
+    {
+     "name": "lon",
+     "nameKo": "경도",
+     "dataType": "decimal",
+     "unit": "°",
+     "min": 124,
+     "max": 132
+    },
+    {
+     "name": "n",
+     "nameKo": "개체수",
+     "dataType": "integer",
+     "unit": "개체",
+     "min": 0
+    },
+    {
+     "name": "co",
+     "nameKo": "주요 공동/동서출현종(층)",
+     "dataType": "string"
+    }
+   ],
+   "obligation": {
+    "plant": "O"
+   },
+   "formRef": {
+    "plant": "2. 개체군 정보 > 소집단 좌표 · 개체수 · 주요 공동/동서출현종"
+   },
+   "formLabel": {
+    "plant": "소집단 좌표·개체수·공동출현종"
+   },
+   "sensitivity": "restricted",
+   "status": "standard",
+   "since": "1.0.0"
+  },
+  {
+   "id": "ES.HAB.TYPE",
+   "group": "HAB",
+   "nameKo": "서식지(처) 유형",
+   "nameEn": "Habitat type",
+   "definition": "서식지(처) 유형. 분류체계에서 1개만 선택",
+   "dataType": "code",
+   "key": "hab",
+   "applicability": [
+    "plant",
+    "insect"
+   ],
+   "codeList": {
+    "plant": "CL.HAB_PL",
+    "insect": "CL.HAB_IN"
+   },
+   "obligation": {
+    "plant": "O",
+    "insect": "O"
+   },
+   "formRef": {
+    "plant": "3. 서식지 특성(위협요인) > 서식처 유형 (1개만 선택)",
+    "insect": "3. 서식지 특성(위협요인) > 서식지 유형 (1개만 선택)"
+   },
+   "formLabel": {},
+   "dwcTerm": "habitat",
+   "sensitivity": "public",
+   "status": "standard",
+   "since": "1.0.0"
+  },
+  {
+   "id": "ES.HAB.DESCRIPTION",
+   "group": "HAB",
+   "nameKo": "서식처 특성",
+   "nameEn": "Habitat description",
+   "definition": "서식처 특성 서술",
+   "dataType": "text",
+   "key": "habDesc",
+   "applicability": [
+    "plant",
+    "insect"
+   ],
+   "obligation": {
+    "plant": "O",
+    "insect": "O"
+   },
+   "formRef": {
+    "plant": "6. 기타사항 > 서식처 특성",
+    "insect": "5. 기타사항 > 코멘트 및 기타"
+   },
+   "formLabel": {
+    "plant": "서식처 특성 기술",
+    "insect": "서식처 특성 기술"
+   },
+   "sensitivity": "public",
+   "status": "standard",
+   "since": "1.0.0"
+  },
+  {
+   "id": "ES.HAB.EPIPHYTE_HOST",
+   "group": "HAB",
+   "nameKo": "착생 부착 대상",
+   "nameEn": "Epiphyte host",
+   "definition": "착생식물의 부착 대상 (수종, 암석 등)",
+   "dataType": "string",
+   "key": "epiHost",
+   "applicability": [
+    "plant"
+   ],
+   "obligation": {
+    "plant": "O"
+   },
+   "formRef": {
+    "plant": "6. 기타사항 > 서식처 특성"
+   },
+   "formLabel": {
+    "plant": "착생식물의 경우 부착 대상"
+   },
+   "sensitivity": "public",
+   "status": "standard",
+   "since": "1.0.0"
+  },
+  {
+   "id": "ES.THR.CATEGORY",
+   "group": "THR",
+   "nameKo": "위협요인 구분",
+   "nameEn": "Threat category",
+   "definition": "주요 위협요인 구분 (중복 선택)",
+   "dataType": "codeSet",
+   "key": "thrCat",
+   "applicability": [
+    "insect"
+   ],
+   "codeList": "CL.THR_CAT",
+   "obligation": {
+    "insect": "O"
+   },
+   "formRef": {
+    "insect": "3. 서식지 특성(위협요인) > 서식지/개체군 위협요인 — 주요 요인"
+   },
+   "formLabel": {
+    "insect": "구분 (중복 체크 가능)"
+   },
+   "sensitivity": "public",
+   "status": "standard",
+   "since": "1.0.0"
+  },
+  {
+   "id": "ES.THR.ANTHROPOGENIC",
+   "group": "THR",
+   "nameKo": "인위적 위협요인",
+   "nameEn": "Anthropogenic threats",
+   "definition": "인위적 위협요인 (복수 선택)",
+   "dataType": "codeSet",
+   "key": "thrA",
+   "applicability": [
+    "plant",
+    "insect"
+   ],
+   "codeList": "CL.THR_ANTH",
+   "obligation": {
+    "plant": "O",
+    "insect": "O"
+   },
+   "formRef": {
+    "plant": "3. 서식지 특성(위협요인) > 개체군 위협요인 — 주요 요인",
+    "insect": "3. 서식지 특성(위협요인) > 서식지/개체군 위협요인 — 주요 요인"
+   },
+   "formLabel": {
+    "plant": "인위적",
+    "insect": "인위적"
+   },
+   "sensitivity": "public",
+   "status": "standard",
+   "since": "1.0.0"
+  },
+  {
+   "id": "ES.THR.NATURAL",
+   "group": "THR",
+   "nameKo": "자연적 위협요인",
+   "nameEn": "Natural threats",
+   "definition": "자연적 위협요인 (복수 선택)",
+   "dataType": "codeSet",
+   "key": "thrN",
+   "applicability": [
+    "plant",
+    "insect"
+   ],
+   "codeList": "CL.THR_NAT",
+   "obligation": {
+    "plant": "O",
+    "insect": "O"
+   },
+   "formRef": {
+    "plant": "3. 서식지 특성(위협요인) > 개체군 위협요인 — 주요 요인",
+    "insect": "3. 서식지 특성(위협요인) > 서식지/개체군 위협요인 — 주요 요인"
+   },
+   "formLabel": {
+    "plant": "자연적",
+    "insect": "자연적"
+   },
+   "sensitivity": "public",
+   "status": "standard",
+   "since": "1.0.0",
+   "note": "식물 '사태'와 곤충 '산사태'를 동일 코드로 통합"
+  },
+  {
+   "id": "ES.THR.BIOLOGICAL",
+   "group": "THR",
+   "nameKo": "생물적 위협요인",
+   "nameEn": "Biological threats",
+   "definition": "생물적 위협요인 (복수 선택)",
+   "dataType": "codeSet",
+   "key": "thrB",
+   "applicability": [
+    "plant",
+    "insect"
+   ],
+   "codeList": "CL.THR_BIO",
+   "obligation": {
+    "plant": "O",
+    "insect": "O"
+   },
+   "formRef": {
+    "plant": "3. 서식지 특성(위협요인) > 개체군 위협요인 — 주요 요인",
+    "insect": "3. 서식지 특성(위협요인) > 서식지/개체군 위협요인 — 주요 요인"
+   },
+   "formLabel": {
+    "plant": "생물적",
+    "insect": "생물적"
+   },
+   "sensitivity": "public",
+   "status": "standard",
+   "since": "1.0.0"
+  },
+  {
+   "id": "ES.THR.TIMING",
+   "group": "THR",
+   "nameKo": "위협요인 발생 시기",
+   "nameEn": "Threat timing",
+   "definition": "주요 위협요인의 발생 시기",
+   "dataType": "code",
+   "key": "thrWhen",
+   "applicability": [
+    "insect"
+   ],
+   "codeList": "CL.THR_TIMING",
+   "obligation": {
+    "insect": "O"
+   },
+   "formRef": {
+    "insect": "3. 서식지 특성(위협요인) > 서식지/개체군 위협요인 — 주요 요인"
+   },
+   "formLabel": {
+    "insect": "발생 시기"
+   },
+   "sensitivity": "public",
+   "status": "standard",
+   "since": "1.0.0"
+  },
+  {
+   "id": "ES.THR.SEVERITY",
+   "group": "THR",
+   "nameKo": "위협요인 강도",
+   "nameEn": "Threat severity",
+   "definition": "주요 위협요인의 강도",
+   "dataType": "code",
+   "key": "thrSev",
+   "applicability": [
+    "plant",
+    "insect"
+   ],
+   "codeList": {
+    "plant": "CL.THR_SEV_PL",
+    "insect": "CL.THR_SEV_IN"
+   },
+   "obligation": {
+    "plant": "O",
+    "insect": "O"
+   },
+   "formRef": {
+    "plant": "3. 서식지 특성(위협요인) > 개체군 위협요인 — 주요 요인",
+    "insect": "3. 서식지 특성(위협요인) > 서식지/개체군 위협요인 — 주요 요인"
+   },
+   "formLabel": {
+    "plant": "강도",
+    "insect": "강도"
+   },
+   "sensitivity": "public",
+   "status": "standard",
+   "since": "1.0.0"
+  },
+  {
+   "id": "ES.THR.IMPACT",
+   "group": "THR",
+   "nameKo": "위협요인 영향",
+   "nameEn": "Threat impact",
+   "definition": "위협요인이 개체군에 미치는 영향",
+   "dataType": "code",
+   "key": "thrEff",
+   "applicability": [
+    "plant",
+    "insect"
+   ],
+   "codeList": "CL.THR_IMPACT",
+   "obligation": {
+    "plant": "O",
+    "insect": "O"
+   },
+   "formRef": {
+    "plant": "3. 서식지 특성(위협요인) > 개체군 위협요인 — 주요 요인",
+    "insect": "3. 서식지 특성(위협요인) > 서식지/개체군 위협요인 — 주요 요인"
+   },
+   "formLabel": {
+    "plant": "영향",
+    "insect": "영향"
+   },
+   "sensitivity": "public",
+   "status": "standard",
+   "since": "1.0.0"
+  },
+  {
+   "id": "ES.THR.SCOPE",
+   "group": "THR",
+   "nameKo": "위협요인 범위",
+   "nameEn": "Threat scope",
+   "definition": "위협요인의 영향 범위 (개체군 대비 비율)",
+   "dataType": "code",
+   "key": "thrRange",
+   "applicability": [
+    "plant",
+    "insect"
+   ],
+   "codeList": "CL.THR_SCOPE",
+   "obligation": {
+    "plant": "O",
+    "insect": "O"
+   },
+   "formRef": {
+    "plant": "3. 서식지 특성(위협요인) > 개체군 위협요인 — 주요 요인",
+    "insect": "3. 서식지 특성(위협요인) > 서식지/개체군 위협요인 — 주요 요인"
+   },
+   "formLabel": {
+    "plant": "범위",
+    "insect": "범위"
+   },
+   "sensitivity": "public",
+   "status": "standard",
+   "since": "1.0.0"
+  },
+  {
+   "id": "ES.THR.OUTLOOK",
+   "group": "THR",
+   "nameKo": "위협요인 미래 예측",
+   "nameEn": "Threat outlook",
+   "definition": "주요 위협요인의 미래 예측",
+   "dataType": "code",
+   "key": "thrPred",
+   "applicability": [
+    "insect"
+   ],
+   "codeList": "CL.THR_OUTLOOK",
+   "obligation": {
+    "insect": "O"
+   },
+   "formRef": {
+    "insect": "3. 서식지 특성(위협요인) > 서식지/개체군 위협요인 — 주요 요인"
+   },
+   "formLabel": {
+    "insect": "미래 예측"
+   },
+   "sensitivity": "public",
+   "status": "standard",
+   "since": "1.0.0"
+  },
+  {
+   "id": "ES.THR.RANK2",
+   "group": "THR",
+   "nameKo": "2순위 위협요인",
+   "nameEn": "Secondary threat",
+   "definition": "2순위 위협요인과 발생시기·강도·영향·범위·예측",
+   "dataType": "group",
+   "key": "thr2",
+   "applicability": [
+    "insect"
+   ],
+   "components": [
+    {
+     "name": "factor",
+     "nameKo": "요인(구분, 항목)",
+     "dataType": "code",
+     "codeList": "CL.THR_ANTH|CL.THR_NAT|CL.THR_BIO"
+    },
+    {
+     "name": "when",
+     "nameKo": "발생시기",
+     "dataType": "code",
+     "codeList": "CL.THR_TIMING"
+    },
+    {
+     "name": "sev",
+     "nameKo": "강도",
+     "dataType": "code",
+     "codeList": "CL.THR_SEV_IN"
+    },
+    {
+     "name": "eff",
+     "nameKo": "영향",
+     "dataType": "code",
+     "codeList": "CL.THR_IMPACT"
+    },
+    {
+     "name": "range",
+     "nameKo": "범위",
+     "dataType": "code",
+     "codeList": "CL.THR_SCOPE"
+    },
+    {
+     "name": "pred",
+     "nameKo": "미래 예측",
+     "dataType": "code",
+     "codeList": "CL.THR_OUTLOOK"
+    }
+   ],
+   "obligation": {
+    "insect": "O"
+   },
+   "formRef": {
+    "insect": "3. 서식지 특성(위협요인) > 2·3순위 위협요인"
+   },
+   "formLabel": {
+    "insect": "2순위 위협요인"
+   },
+   "sensitivity": "public",
+   "status": "standard",
+   "since": "1.0.0"
+  },
+  {
+   "id": "ES.THR.RANK3",
+   "group": "THR",
+   "nameKo": "3순위 위협요인",
+   "nameEn": "Tertiary threat",
+   "definition": "3순위 위협요인과 발생시기·강도·영향·범위·예측",
+   "dataType": "group",
+   "key": "thr3",
+   "applicability": [
+    "insect"
+   ],
+   "components": [
+    {
+     "name": "factor",
+     "nameKo": "요인(구분, 항목)",
+     "dataType": "code",
+     "codeList": "CL.THR_ANTH|CL.THR_NAT|CL.THR_BIO"
+    },
+    {
+     "name": "when",
+     "nameKo": "발생시기",
+     "dataType": "code",
+     "codeList": "CL.THR_TIMING"
+    },
+    {
+     "name": "sev",
+     "nameKo": "강도",
+     "dataType": "code",
+     "codeList": "CL.THR_SEV_IN"
+    },
+    {
+     "name": "eff",
+     "nameKo": "영향",
+     "dataType": "code",
+     "codeList": "CL.THR_IMPACT"
+    },
+    {
+     "name": "range",
+     "nameKo": "범위",
+     "dataType": "code",
+     "codeList": "CL.THR_SCOPE"
+    },
+    {
+     "name": "pred",
+     "nameKo": "미래 예측",
+     "dataType": "code",
+     "codeList": "CL.THR_OUTLOOK"
+    }
+   ],
+   "obligation": {
+    "insect": "O"
+   },
+   "formRef": {
+    "insect": "3. 서식지 특성(위협요인) > 2·3순위 위협요인"
+   },
+   "formLabel": {
+    "insect": "3순위 위협요인"
+   },
+   "sensitivity": "public",
+   "status": "standard",
+   "since": "1.0.0"
+  },
+  {
+   "id": "ES.ENV.ROCK_EXPOSURE",
+   "group": "ENV",
+   "nameKo": "암석노출",
+   "nameEn": "Rock exposure",
+   "definition": "조사범위 내 암석 노출 비율",
+   "dataType": "code",
+   "key": "rock",
+   "applicability": [
+    "plant"
+   ],
+   "codeList": "CL.ROCK",
+   "obligation": {
+    "plant": "O"
+   },
+   "formRef": {
+    "plant": "4. 환경요소 > 환경요소 (서식지 평가항목)"
+   },
+   "formLabel": {
+    "plant": "암석노출"
+   },
+   "sensitivity": "public",
+   "status": "standard",
+   "since": "1.0.0"
+  },
+  {
+   "id": "ES.ENV.PLOT_AREA",
+   "group": "ENV",
+   "nameKo": "조사범위",
+   "nameEn": "Survey plot area",
+   "definition": "조사범위 면적",
+   "dataType": "decimal",
+   "key": "plotArea",
+   "applicability": [
+    "plant"
+   ],
+   "unit": "㎡",
+   "min": 0,
+   "obligation": {
+    "plant": "O"
+   },
+   "formRef": {
+    "plant": "4. 환경요소 > 환경요소 (서식지 평가항목)"
+   },
+   "formLabel": {
+    "plant": "조사범위"
+   },
+   "sensitivity": "public",
+   "status": "standard",
+   "since": "1.0.0"
+  },
+  {
+   "id": "ES.ENV.ASPECT",
+   "group": "ENV",
+   "nameKo": "방위",
+   "nameEn": "Aspect",
+   "definition": "사면 방위 (진북 기준 시계방향 각도)",
+   "dataType": "decimal",
+   "key": "aspect",
+   "applicability": [
+    "plant"
+   ],
+   "unit": "°",
+   "min": 0,
+   "max": 360,
+   "obligation": {
+    "plant": "O"
+   },
+   "formRef": {
+    "plant": "4. 환경요소 > 환경요소 (서식지 평가항목)"
+   },
+   "formLabel": {
+    "plant": "방위"
+   },
+   "sensitivity": "public",
+   "status": "standard",
+   "since": "1.0.0"
+  },
+  {
+   "id": "ES.ENV.LITTER_DEPTH",
+   "group": "ENV",
+   "nameKo": "낙엽층",
+   "nameEn": "Litter depth",
+   "definition": "낙엽층 두께 구간",
+   "dataType": "code",
+   "key": "litter",
+   "applicability": [
+    "plant"
+   ],
+   "unit": "cm",
+   "codeList": "CL.LITTER",
+   "obligation": {
+    "plant": "O"
+   },
+   "formRef": {
+    "plant": "4. 환경요소 > 환경요소 (서식지 평가항목)"
+   },
+   "formLabel": {
+    "plant": "낙엽층 (cm)"
+   },
+   "sensitivity": "public",
+   "status": "standard",
+   "since": "1.0.0"
+  },
+  {
+   "id": "ES.ENV.SLOPE",
+   "group": "ENV",
+   "nameKo": "경사도",
+   "nameEn": "Slope",
+   "definition": "사면 경사도",
+   "dataType": "decimal",
+   "key": "slope",
+   "applicability": [
+    "plant"
+   ],
+   "unit": "°",
+   "min": 0,
+   "max": 90,
+   "obligation": {
+    "plant": "O"
+   },
+   "formRef": {
+    "plant": "4. 환경요소 > 환경요소 (서식지 평가항목)"
+   },
+   "formLabel": {
+    "plant": "경사도"
+   },
+   "sensitivity": "public",
+   "status": "standard",
+   "since": "1.0.0"
+  },
+  {
+   "id": "ES.ENV.LIGHT",
+   "group": "ENV",
+   "nameKo": "빛조건",
+   "nameEn": "Light condition",
+   "definition": "빛 조건",
+   "dataType": "code",
+   "key": "light",
+   "applicability": [
+    "plant"
+   ],
+   "codeList": "CL.LIGHT",
+   "obligation": {
+    "plant": "O"
+   },
+   "formRef": {
+    "plant": "4. 환경요소 > 환경요소 (서식지 평가항목)"
+   },
+   "formLabel": {
+    "plant": "빛조건"
+   },
+   "sensitivity": "public",
+   "status": "standard",
+   "since": "1.0.0"
+  },
+  {
+   "id": "ES.ENV.MICROTOPO",
+   "group": "ENV",
+   "nameKo": "미세지형",
+   "nameEn": "Microtopography",
+   "definition": "미세지형",
+   "dataType": "code",
+   "key": "micro",
+   "applicability": [
+    "plant"
+   ],
+   "codeList": "CL.MICRO",
+   "obligation": {
+    "plant": "O"
+   },
+   "formRef": {
+    "plant": "4. 환경요소 > 환경요소 (서식지 평가항목)"
+   },
+   "formLabel": {
+    "plant": "미세지형"
+   },
+   "sensitivity": "public",
+   "status": "standard",
+   "since": "1.0.0"
+  },
+  {
+   "id": "ES.ENV.SOIL_MOISTURE",
+   "group": "ENV",
+   "nameKo": "토습",
+   "nameEn": "Soil moisture",
+   "definition": "토양 수분 (손으로 쥐었을 때의 상태 기준)",
+   "dataType": "code",
+   "key": "moist",
+   "applicability": [
+    "plant"
+   ],
+   "codeList": "CL.MOIST",
+   "obligation": {
+    "plant": "O"
+   },
+   "formRef": {
+    "plant": "4. 환경요소 > 환경요소 (서식지 평가항목)"
+   },
+   "formLabel": {
+    "plant": "토습"
+   },
+   "sensitivity": "public",
+   "status": "standard",
+   "since": "1.0.0"
+  },
+  {
+   "id": "ES.ASC.SPECIES",
+   "group": "ASC",
+   "nameKo": "공동/동서출현종",
+   "nameEn": "Associated species",
+   "definition": "공동/동서출현종 목록 (식물은 층위, 곤충은 개체수)",
+   "dataType": "list",
+   "key": "co",
+   "applicability": [
+    "plant",
+    "insect"
+   ],
+   "components": [
+    {
+     "name": "name",
+     "nameKo": "국명",
+     "dataType": "string"
+    },
+    {
+     "name": "layer",
+     "nameKo": "층위(식물)",
+     "dataType": "code",
+     "codeList": "CL.LAYER"
+    },
+    {
+     "name": "n",
+     "nameKo": "개체수(곤충)",
+     "dataType": "integer",
+     "min": 0
+    }
+   ],
+   "obligation": {
+    "plant": "O",
+    "insect": "O"
+   },
+   "formRef": {
+    "plant": "5. 공동/동서출현종 > 공동/동서출현종",
+    "insect": "4. 공동/동서출현종 > 공동/동서출현종"
+   },
+   "formLabel": {
+    "plant": "공동/동서출현종",
+    "insect": "공동/동서출현종"
+   },
+   "dwcTerm": "associatedTaxa",
+   "sensitivity": "public",
+   "status": "standard",
+   "since": "1.0.0"
+  },
+  {
+   "id": "ES.DOC.SITE_SKETCH",
+   "group": "DOC",
+   "nameKo": "입지위치도·조사지 약도",
+   "nameEn": "Site sketch",
+   "definition": "조사지 경로, 조사범위, 개체·집단 분포, 관측 위치, 주요 지형지물을 그린 그림",
+   "dataType": "binary",
+   "key": "sketch",
+   "applicability": [
+    "plant",
+    "insect"
+   ],
+   "obligation": {
+    "plant": "O",
+    "insect": "O"
+   },
+   "formRef": {
+    "plant": "6. 기타사항 > 입지위치도",
+    "insect": "5. 기타사항 > 조사지 약도"
+   },
+   "formLabel": {
+    "plant": "입지위치도",
+    "insect": "조사지 약도"
+   },
+   "sensitivity": "restricted",
+   "status": "standard",
+   "since": "1.0.0"
+  },
+  {
+   "id": "ES.DOC.PHOTOS",
+   "group": "DOC",
+   "nameKo": "현장 사진",
+   "nameEn": "Field photographs",
+   "definition": "현장 사진",
+   "dataType": "binary",
+   "key": "photos",
+   "applicability": [
+    "plant",
+    "insect"
+   ],
+   "obligation": {
+    "plant": "O",
+    "insect": "O"
+   },
+   "formRef": {
+    "plant": "6. 기타사항 > 입지위치도",
+    "insect": "5. 기타사항 > 조사지 약도"
+   },
+   "formLabel": {
+    "plant": "현장 사진",
+    "insect": "현장 사진"
+   },
+   "sensitivity": "public",
+   "status": "standard",
+   "since": "1.0.0",
+   "note": "전자야장 추가 항목"
+  },
+  {
+   "id": "ES.DOC.COMMENT",
+   "group": "DOC",
+   "nameKo": "코멘트 및 기타",
+   "nameEn": "Comments",
+   "definition": "주요 특이사항 및 생태 현황",
+   "dataType": "text",
+   "key": "comment",
+   "applicability": [
+    "plant",
+    "insect"
+   ],
+   "obligation": {
+    "plant": "O",
+    "insect": "O"
+   },
+   "formRef": {
+    "plant": "6. 기타사항 > 코멘트 및 기타",
+    "insect": "5. 기타사항 > 코멘트 및 기타"
+   },
+   "formLabel": {
+    "plant": "코멘트 및 기타 (주요 특이사항, 생태 현황)",
+    "insect": "코멘트 및 기타"
+   },
+   "dwcTerm": "occurrenceRemarks",
+   "sensitivity": "public",
+   "status": "standard",
+   "since": "1.0.0"
+  },
+  {
+   "id": "ES.DOC.COUNT_BASIS",
+   "group": "DOC",
+   "nameKo": "개체수 판단 사유",
+   "nameEn": "Basis of count",
+   "definition": "개체군(개체수) 판단 사유",
+   "dataType": "text",
+   "key": "popReason",
+   "applicability": [
+    "plant"
+   ],
+   "obligation": {
+    "plant": "O"
+   },
+   "formRef": {
+    "plant": "6. 기타사항 > 코멘트 및 기타"
+   },
+   "formLabel": {
+    "plant": "개체군(개체수) 판단 사유"
+   },
+   "sensitivity": "public",
+   "status": "standard",
+   "since": "1.0.0"
+  },
+  {
+   "id": "ES.POP.EST_DENSITY",
+   "group": "POP",
+   "nameKo": "단위면적당 개체수",
+   "nameEn": "Individuals per unit area",
+   "definition": "개체수 추정 시 단위면적당 개체수",
+   "dataType": "decimal",
+   "key": "estDen",
+   "applicability": [
+    "plant"
+   ],
+   "unit": "개체",
+   "min": 0,
+   "obligation": {
+    "plant": "O"
+   },
+   "formRef": {
+    "plant": "6. 기타사항 > 개체수 추정 시"
+   },
+   "formLabel": {
+    "plant": "단위면적당 개체수"
+   },
+   "sensitivity": "public",
+   "status": "standard",
+   "since": "1.0.0"
+  },
+  {
+   "id": "ES.POP.EST_UNIT_AREA",
+   "group": "POP",
+   "nameKo": "단위면적",
+   "nameEn": "Unit area",
+   "definition": "개체수 추정 시 단위면적",
+   "dataType": "decimal",
+   "key": "estUnit",
+   "applicability": [
+    "plant"
+   ],
+   "unit": "㎡",
+   "min": 0,
+   "obligation": {
+    "plant": "O"
+   },
+   "formRef": {
+    "plant": "6. 기타사항 > 개체수 추정 시"
+   },
+   "formLabel": {
+    "plant": "단위면적"
+   },
+   "sensitivity": "public",
+   "status": "standard",
+   "since": "1.0.0"
+  },
+  {
+   "id": "ES.POP.EST_AREA",
+   "group": "POP",
+   "nameKo": "추정 분포면적",
+   "nameEn": "Area for estimation",
+   "definition": "개체수 추정 시 분포면적",
+   "dataType": "decimal",
+   "key": "estArea",
+   "applicability": [
+    "plant"
+   ],
+   "unit": "㎡",
+   "min": 0,
+   "obligation": {
+    "plant": "O"
+   },
+   "formRef": {
+    "plant": "6. 기타사항 > 개체수 추정 시"
+   },
+   "formLabel": {
+    "plant": "분포면적"
+   },
+   "sensitivity": "public",
+   "status": "standard",
+   "since": "1.0.0"
+  },
+  {
+   "id": "ES.TAX.SCI_NAME",
+   "group": "TAX",
+   "nameKo": "학명",
+   "nameEn": "Scientific name",
+   "definition": "종 코드표에서 국명으로 조회한 학명",
+   "dataType": "string",
+   "applicability": [
+    "plant",
+    "insect"
+   ],
+   "obligation": {
+    "plant": "O",
+    "insect": "O"
+   },
+   "derived": "종 코드표 조회(ES.TAX.VERNACULAR)",
+   "dwcTerm": "scientificName",
+   "sensitivity": "public",
+   "status": "standard",
+   "since": "1.0.0"
+  },
+  {
+   "id": "ES.TAX.CODE",
+   "group": "TAX",
+   "nameKo": "국가생물종 코드",
+   "nameEn": "National species code",
+   "definition": "국가생물종목록의 종 식별 코드",
+   "dataType": "string",
+   "applicability": [
+    "plant",
+    "insect"
+   ],
+   "obligation": {
+    "plant": "O",
+    "insect": "O"
+   },
+   "derived": "종 코드표 조회(ES.TAX.VERNACULAR)",
+   "dwcTerm": "taxonID",
+   "sensitivity": "public",
+   "status": "standard",
+   "since": "1.0.0"
+  },
+  {
+   "id": "ES.REC.TAXON_GROUP",
+   "group": "REC",
+   "nameKo": "조사 분류군",
+   "nameEn": "Taxon group",
+   "definition": "사용한 현지조사표 종류(식물/곤충)",
+   "dataType": "code",
+   "codeList": "CL.TAXON_GROUP",
+   "applicability": [
+    "plant",
+    "insect"
+   ],
+   "obligation": {
+    "plant": "O",
+    "insect": "O"
+   },
+   "derived": "조사표 종류",
+   "dwcTerm": "kingdom, class",
+   "sensitivity": "public",
+   "status": "standard",
+   "since": "1.0.0"
+  },
+  {
+   "id": "ES.POP.EST_COUNT",
+   "group": "POP",
+   "nameKo": "추정 개체수",
+   "nameEn": "Estimated count",
+   "definition": "단위면적당 개체수 ÷ 단위면적 × 분포면적",
+   "dataType": "decimal",
+   "unit": "개체",
+   "applicability": [
+    "plant"
+   ],
+   "obligation": {
+    "plant": "O"
+   },
+   "derived": "ES.POP.EST_DENSITY ÷ ES.POP.EST_UNIT_AREA × ES.POP.EST_AREA",
+   "sensitivity": "public",
+   "status": "standard",
+   "since": "1.0.0"
+  },
+  {
+   "id": "ES.REC.ID",
+   "group": "REC",
+   "nameKo": "기록 ID",
+   "nameEn": "Record identifier",
+   "definition": "기기에서 생성한 기록 고유 식별자. 서버 동기화 키로 사용",
+   "dataType": "string",
+   "applicability": [
+    "plant",
+    "insect"
+   ],
+   "obligation": {
+    "plant": "M",
+    "insect": "M"
+   },
+   "system": true,
+   "dwcTerm": "occurrenceID",
+   "sensitivity": "public",
+   "status": "standard",
+   "since": "1.0.0"
+  },
+  {
+   "id": "ES.REC.CREATED",
+   "group": "REC",
+   "nameKo": "최초 작성 시각",
+   "nameEn": "Created at",
+   "definition": "기록 최초 저장 시각 (ISO 8601, UTC)",
+   "dataType": "datetime",
+   "applicability": [
+    "plant",
+    "insect"
+   ],
+   "obligation": {
+    "plant": "M",
+    "insect": "M"
+   },
+   "system": true,
+   "sensitivity": "public",
+   "status": "standard",
+   "since": "1.0.0"
+  },
+  {
+   "id": "ES.REC.MODIFIED",
+   "group": "REC",
+   "nameKo": "최종 수정 시각",
+   "nameEn": "Modified at",
+   "definition": "기록 최종 저장 시각 (ISO 8601, UTC)",
+   "dataType": "datetime",
+   "applicability": [
+    "plant",
+    "insect"
+   ],
+   "obligation": {
+    "plant": "M",
+    "insect": "M"
+   },
+   "system": true,
+   "dwcTerm": "modified",
+   "sensitivity": "public",
+   "status": "standard",
+   "since": "1.0.0"
+  },
+  {
+   "id": "ES.REC.REVISION",
+   "group": "REC",
+   "nameKo": "수정 차수",
+   "nameEn": "Revision",
+   "definition": "저장할 때마다 1씩 증가하는 수정 차수. 서버 동기화 시 충돌 판단에 사용",
+   "dataType": "integer",
+   "applicability": [
+    "plant",
+    "insect"
+   ],
+   "obligation": {
+    "plant": "M",
+    "insect": "M"
+   },
+   "system": true,
+   "sensitivity": "public",
+   "status": "standard",
+   "since": "1.0.0"
+  },
+  {
+   "id": "ES.REC.REGISTRY_VERSION",
+   "group": "REC",
+   "nameKo": "적용 레지스트리 버전",
+   "nameEn": "Registry version",
+   "definition": "기록을 표준화할 때 적용한 레지스트리 버전",
+   "dataType": "string",
+   "applicability": [
+    "plant",
+    "insect"
+   ],
+   "obligation": {
+    "plant": "M",
+    "insect": "M"
+   },
+   "system": true,
+   "sensitivity": "public",
+   "status": "standard",
+   "since": "1.0.0"
+  },
+  {
+   "id": "ES.REC.DEVICE_ID",
+   "group": "REC",
+   "nameKo": "기기 ID",
+   "nameEn": "Device identifier",
+   "definition": "기록을 작성한 기기의 무작위 식별자",
+   "dataType": "string",
+   "applicability": [
+    "plant",
+    "insect"
+   ],
+   "obligation": {
+    "plant": "M",
+    "insect": "M"
+   },
+   "system": true,
+   "sensitivity": "public",
+   "status": "standard",
+   "since": "1.0.0"
+  },
+  {
+   "id": "ES.REC.SURVEYOR_ID",
+   "group": "REC",
+   "nameKo": "조사자 ID",
+   "nameEn": "Surveyor identifier",
+   "definition": "서버 계정과 연결되는 조사자 식별자 (설정에서 입력)",
+   "dataType": "string",
+   "applicability": [
+    "plant",
+    "insect"
+   ],
+   "obligation": {
+    "plant": "M",
+    "insect": "M"
+   },
+   "system": true,
+   "sensitivity": "personal",
+   "status": "standard",
+   "since": "1.0.0"
+  }
+ ],
+ "codeLists": [
+  {
+   "id": "CL.TAXON_GROUP",
+   "nameKo": "조사 분류군",
+   "codes": [
+    {
+     "code": "PL",
+     "labelKo": "식물",
+     "applicability": [
+      "plant"
+     ],
+     "status": "standard",
+     "since": "1.0.0",
+     "dwc": "Plantae"
+    },
+    {
+     "code": "IN",
+     "labelKo": "곤충",
+     "applicability": [
+      "insect"
+     ],
+     "status": "standard",
+     "since": "1.0.0",
+     "dwc": "Animalia/Insecta"
+    }
+   ]
+  },
+  {
+   "id": "CL.WEATHER",
+   "nameKo": "날씨",
+   "codes": [
+    {
+     "code": "WX-01",
+     "labelKo": "맑음",
+     "applicability": [
+      "plant",
+      "insect"
+     ],
+     "status": "standard",
+     "since": "1.0.0"
+    },
+    {
+     "code": "WX-02",
+     "labelKo": "흐림",
+     "applicability": [
+      "plant",
+      "insect"
+     ],
+     "status": "standard",
+     "since": "1.0.0"
+    },
+    {
+     "code": "WX-03",
+     "labelKo": "비",
+     "applicability": [
+      "plant",
+      "insect"
+     ],
+     "status": "standard",
+     "since": "1.0.0"
+    },
+    {
+     "code": "WX-04",
+     "labelKo": "기타",
+     "applicability": [
+      "plant",
+      "insect"
+     ],
+     "status": "standard",
+     "since": "1.0.0",
+     "textPrompt": {
+      "plant": "내용 기재",
+      "insect": "내용 기재"
+     },
+     "note": "선택 시 내용 기재"
+    }
+   ],
+   "order": {
+    "plant": [
+     "WX-01",
+     "WX-02",
+     "WX-03",
+     "WX-04"
+    ],
+    "insect": [
+     "WX-01",
+     "WX-02",
+     "WX-03",
+     "WX-04"
+    ]
+   }
+  },
+  {
+   "id": "CL.SITE_TYPE",
+   "nameKo": "조사지 구분",
+   "codes": [
+    {
+     "code": "ST-01",
+     "labelKo": "필수",
+     "applicability": [
+      "plant",
+      "insect"
+     ],
+     "status": "standard",
+     "since": "1.0.0"
+    },
+    {
+     "code": "ST-02",
+     "labelKo": "신규",
+     "applicability": [
+      "plant",
+      "insect"
+     ],
+     "status": "standard",
+     "since": "1.0.0"
+    }
+   ],
+   "order": {
+    "plant": [
+     "ST-01",
+     "ST-02"
+    ],
+    "insect": [
+     "ST-01",
+     "ST-02"
+    ]
+   }
+  },
+  {
+   "id": "CL.COORD_SRC",
+   "nameKo": "좌표값 취득원",
+   "codes": [
+    {
+     "code": "SRC-01",
+     "labelKo": "GPS",
+     "applicability": [
+      "plant",
+      "insect"
+     ],
+     "status": "standard",
+     "since": "1.0.0",
+     "textPrompt": {
+      "insect": "모델명"
+     }
+    },
+    {
+     "code": "SRC-02",
+     "labelKo": "구글 지도",
+     "applicability": [
+      "plant",
+      "insect"
+     ],
+     "labels": {
+      "plant": "구글지도",
+      "insect": "구글맵"
+     },
+     "status": "standard",
+     "since": "1.0.0"
+    },
+    {
+     "code": "SRC-03",
+     "labelKo": "카카오맵(다음지도)",
+     "applicability": [
+      "plant",
+      "insect"
+     ],
+     "labels": {
+      "plant": "카카오맵",
+      "insect": "다음맵"
+     },
+     "status": "standard",
+     "since": "1.0.0"
+    },
+    {
+     "code": "SRC-04",
+     "labelKo": "네이버 지도",
+     "applicability": [
+      "plant",
+      "insect"
+     ],
+     "labels": {
+      "plant": "네이버지도",
+      "insect": "네이버맵"
+     },
+     "status": "standard",
+     "since": "1.0.0"
+    },
+    {
+     "code": "SRC-05",
+     "labelKo": "기타",
+     "applicability": [
+      "plant",
+      "insect"
+     ],
+     "status": "standard",
+     "since": "1.0.0",
+     "textPrompt": {
+      "plant": "취득 방법",
+      "insect": "취득 방법"
+     },
+     "note": "선택 시 내용 기재"
+    }
+   ],
+   "order": {
+    "plant": [
+     "SRC-01",
+     "SRC-02",
+     "SRC-03",
+     "SRC-04",
+     "SRC-05"
+    ],
+    "insect": [
+     "SRC-01",
+     "SRC-02",
+     "SRC-03",
+     "SRC-04",
+     "SRC-05"
+    ]
+   }
+  },
+  {
+   "id": "CL.HABITABILITY",
+   "nameKo": "미확인 시 서식 가능 여부",
+   "codes": [
+    {
+     "code": "HB-01",
+     "labelKo": "가능",
+     "applicability": [
+      "plant",
+      "insect"
+     ],
+     "labels": {
+      "plant": "서식가능"
+     },
+     "status": "standard",
+     "since": "1.0.0"
+    },
+    {
+     "code": "HB-02",
+     "labelKo": "불가능",
+     "applicability": [
+      "plant",
+      "insect"
+     ],
+     "labels": {
+      "plant": "불가"
+     },
+     "status": "standard",
+     "since": "1.0.0",
+     "textPrompt": {
+      "insect": "이유"
+     }
+    }
+   ],
+   "order": {
+    "plant": [
+     "HB-01",
+     "HB-02"
+    ],
+    "insect": [
+     "HB-01",
+     "HB-02"
+    ]
+   }
+  },
+  {
+   "id": "CL.TREND",
+   "nameKo": "기존 대비 개체수 변동",
+   "codes": [
+    {
+     "code": "TR-01",
+     "labelKo": "증가",
+     "applicability": [
+      "plant"
+     ],
+     "status": "standard",
+     "since": "1.0.0"
+    },
+    {
+     "code": "TR-02",
+     "labelKo": "감소",
+     "applicability": [
+      "plant"
+     ],
+     "status": "standard",
+     "since": "1.0.0"
+    },
+    {
+     "code": "TR-03",
+     "labelKo": "변동 없음",
+     "applicability": [
+      "plant"
+     ],
+     "status": "standard",
+     "since": "1.0.0"
+    }
+   ]
+  },
+  {
+   "id": "CL.DIST_TYPE",
+   "nameKo": "분포형태",
+   "codes": [
+    {
+     "code": "DT-01",
+     "labelKo": "단생",
+     "applicability": [
+      "plant"
+     ],
+     "status": "standard",
+     "since": "1.0.0"
+    },
+    {
+     "code": "DT-02",
+     "labelKo": "단생/산발",
+     "applicability": [
+      "plant"
+     ],
+     "status": "standard",
+     "since": "1.0.0"
+    },
+    {
+     "code": "DT-03",
+     "labelKo": "단집단",
+     "applicability": [
+      "plant"
+     ],
+     "status": "standard",
+     "since": "1.0.0"
+    },
+    {
+     "code": "DT-04",
+     "labelKo": "다집단",
+     "applicability": [
+      "plant"
+     ],
+     "status": "standard",
+     "since": "1.0.0"
+    },
+    {
+     "code": "DT-05",
+     "labelKo": "집단/산재",
+     "applicability": [
+      "plant"
+     ],
+     "status": "standard",
+     "since": "1.0.0"
+    },
+    {
+     "code": "DT-06",
+     "labelKo": "밀생",
+     "applicability": [
+      "plant"
+     ],
+     "status": "standard",
+     "since": "1.0.0"
+    }
+   ]
+  },
+  {
+   "id": "CL.STAGE_PL",
+   "nameKo": "성장단계(식물)",
+   "codes": [
+    {
+     "code": "SPL-01",
+     "labelKo": "유묘",
+     "applicability": [
+      "plant"
+     ],
+     "status": "standard",
+     "since": "1.0.0",
+     "dwc": "seedling"
+    },
+    {
+     "code": "SPL-02",
+     "labelKo": "영양생장기",
+     "applicability": [
+      "plant"
+     ],
+     "status": "standard",
+     "since": "1.0.0",
+     "dwc": "vegetative"
+    },
+    {
+     "code": "SPL-03",
+     "labelKo": "개화 및 결실기",
+     "applicability": [
+      "plant"
+     ],
+     "status": "standard",
+     "since": "1.0.0",
+     "dwc": "flowering/fruiting"
+    },
+    {
+     "code": "SPL-04",
+     "labelKo": "기타",
+     "applicability": [
+      "plant"
+     ],
+     "status": "standard",
+     "since": "1.0.0",
+     "textPrompt": {
+      "plant": "단계 기재"
+     },
+     "dwc": "other",
+     "note": "선택 시 내용 기재"
+    }
+   ]
+  },
+  {
+   "id": "CL.STAGE_IN",
+   "nameKo": "성장단계(곤충)",
+   "codes": [
+    {
+     "code": "SIN-01",
+     "labelKo": "알",
+     "applicability": [
+      "insect"
+     ],
+     "status": "standard",
+     "since": "1.0.0",
+     "dwc": "egg"
+    },
+    {
+     "code": "SIN-02",
+     "labelKo": "유충",
+     "applicability": [
+      "insect"
+     ],
+     "status": "standard",
+     "since": "1.0.0",
+     "dwc": "larva"
+    },
+    {
+     "code": "SIN-03",
+     "labelKo": "번데기",
+     "applicability": [
+      "insect"
+     ],
+     "status": "standard",
+     "since": "1.0.0",
+     "dwc": "pupa"
+    },
+    {
+     "code": "SIN-04",
+     "labelKo": "성충",
+     "applicability": [
+      "insect"
+     ],
+     "status": "standard",
+     "since": "1.0.0",
+     "dwc": "adult"
+    }
+   ]
+  },
+  {
+   "id": "CL.COUNT_CLASS",
+   "nameKo": "개체수 구간",
+   "codes": [
+    {
+     "code": "CC-01",
+     "labelKo": "0",
+     "applicability": [
+      "insect"
+     ],
+     "status": "standard",
+     "since": "1.0.0"
+    },
+    {
+     "code": "CC-02",
+     "labelKo": "1-10",
+     "applicability": [
+      "insect"
+     ],
+     "status": "standard",
+     "since": "1.0.0"
+    },
+    {
+     "code": "CC-03",
+     "labelKo": "11-50",
+     "applicability": [
+      "insect"
+     ],
+     "status": "standard",
+     "since": "1.0.0"
+    },
+    {
+     "code": "CC-04",
+     "labelKo": "50-100",
+     "applicability": [
+      "insect"
+     ],
+     "status": "standard",
+     "since": "1.0.0"
+    },
+    {
+     "code": "CC-05",
+     "labelKo": "101 이상",
+     "applicability": [
+      "insect"
+     ],
+     "status": "standard",
+     "since": "1.0.0"
+    }
+   ]
+  },
+  {
+   "id": "CL.METHOD",
+   "nameKo": "조사방법(곤충)",
+   "codes": [
+    {
+     "code": "MT-01",
+     "labelKo": "선조사",
+     "applicability": [
+      "insect"
+     ],
+     "status": "standard",
+     "since": "1.0.0"
+    },
+    {
+     "code": "MT-02",
+     "labelKo": "정점조사",
+     "applicability": [
+      "insect"
+     ],
+     "status": "standard",
+     "since": "1.0.0"
+    },
+    {
+     "code": "MT-03",
+     "labelKo": "뜰채",
+     "applicability": [
+      "insect"
+     ],
+     "status": "standard",
+     "since": "1.0.0"
+    },
+    {
+     "code": "MT-04",
+     "labelKo": "유아등",
+     "applicability": [
+      "insect"
+     ],
+     "status": "standard",
+     "since": "1.0.0"
+    },
+    {
+     "code": "MT-05",
+     "labelKo": "함정트랩",
+     "applicability": [
+      "insect"
+     ],
+     "status": "standard",
+     "since": "1.0.0",
+     "textPrompt": {
+      "insect": "먹이"
+     }
+    },
+    {
+     "code": "MT-06",
+     "labelKo": "말레이즈트랩",
+     "applicability": [
+      "insect"
+     ],
+     "status": "standard",
+     "since": "1.0.0"
+    },
+    {
+     "code": "MT-07",
+     "labelKo": "기타",
+     "applicability": [
+      "insect"
+     ],
+     "status": "standard",
+     "since": "1.0.0",
+     "textPrompt": {
+      "insect": "조사방법"
+     },
+     "note": "선택 시 내용 기재"
+    }
+   ]
+  },
+  {
+   "id": "CL.HAB_PL",
+   "nameKo": "서식처 유형(식물)",
+   "hierarchical": true,
+   "codes": [
+    {
+     "code": "HP-01",
+     "labelKo": "산림지역",
+     "pathKo": "산림지역",
+     "level": 1,
+     "parent": null,
+     "selectable": false,
+     "applicability": [
+      "plant"
+     ],
+     "status": "standard",
+     "since": "1.0.0"
+    },
+    {
+     "code": "HP-01-01",
+     "labelKo": "아고산",
+     "pathKo": "산림지역 > 아고산",
+     "level": 2,
+     "parent": "HP-01",
+     "selectable": false,
+     "applicability": [
+      "plant"
+     ],
+     "status": "standard",
+     "since": "1.0.0"
+    },
+    {
+     "code": "HP-01-01-01",
+     "labelKo": "하록활엽수림",
+     "pathKo": "산림지역 > 아고산 > 하록활엽수림",
+     "level": 3,
+     "parent": "HP-01-01",
+     "selectable": true,
+     "applicability": [
+      "plant"
+     ],
+     "status": "standard",
+     "since": "1.0.0"
+    },
+    {
+     "code": "HP-01-01-02",
+     "labelKo": "상록침엽수림",
+     "pathKo": "산림지역 > 아고산 > 상록침엽수림",
+     "level": 3,
+     "parent": "HP-01-01",
+     "selectable": true,
+     "applicability": [
+      "plant"
+     ],
+     "status": "standard",
+     "since": "1.0.0"
+    },
+    {
+     "code": "HP-01-01-03",
+     "labelKo": "혼효림",
+     "pathKo": "산림지역 > 아고산 > 혼효림",
+     "level": 3,
+     "parent": "HP-01-01",
+     "selectable": true,
+     "applicability": [
+      "plant"
+     ],
+     "status": "standard",
+     "since": "1.0.0"
+    },
+    {
+     "code": "HP-01-02",
+     "labelKo": "냉온대",
+     "pathKo": "산림지역 > 냉온대",
+     "level": 2,
+     "parent": "HP-01",
+     "selectable": false,
+     "applicability": [
+      "plant"
+     ],
+     "status": "standard",
+     "since": "1.0.0"
+    },
+    {
+     "code": "HP-01-02-01",
+     "labelKo": "하록활엽수림",
+     "pathKo": "산림지역 > 냉온대 > 하록활엽수림",
+     "level": 3,
+     "parent": "HP-01-02",
+     "selectable": true,
+     "applicability": [
+      "plant"
+     ],
+     "status": "standard",
+     "since": "1.0.0"
+    },
+    {
+     "code": "HP-01-02-02",
+     "labelKo": "상록침엽수림",
+     "pathKo": "산림지역 > 냉온대 > 상록침엽수림",
+     "level": 3,
+     "parent": "HP-01-02",
+     "selectable": true,
+     "applicability": [
+      "plant"
+     ],
+     "status": "standard",
+     "since": "1.0.0"
+    },
+    {
+     "code": "HP-01-02-03",
+     "labelKo": "혼효림",
+     "pathKo": "산림지역 > 냉온대 > 혼효림",
+     "level": 3,
+     "parent": "HP-01-02",
+     "selectable": true,
+     "applicability": [
+      "plant"
+     ],
+     "status": "standard",
+     "since": "1.0.0"
+    },
+    {
+     "code": "HP-01-03",
+     "labelKo": "난온대",
+     "pathKo": "산림지역 > 난온대",
+     "level": 2,
+     "parent": "HP-01",
+     "selectable": false,
+     "applicability": [
+      "plant"
+     ],
+     "status": "standard",
+     "since": "1.0.0"
+    },
+    {
+     "code": "HP-01-03-01",
+     "labelKo": "상록활엽수림",
+     "pathKo": "산림지역 > 난온대 > 상록활엽수림",
+     "level": 3,
+     "parent": "HP-01-03",
+     "selectable": true,
+     "applicability": [
+      "plant"
+     ],
+     "status": "standard",
+     "since": "1.0.0"
+    },
+    {
+     "code": "HP-01-03-02",
+     "labelKo": "하록활엽수림",
+     "pathKo": "산림지역 > 난온대 > 하록활엽수림",
+     "level": 3,
+     "parent": "HP-01-03",
+     "selectable": true,
+     "applicability": [
+      "plant"
+     ],
+     "status": "standard",
+     "since": "1.0.0"
+    },
+    {
+     "code": "HP-01-03-03",
+     "labelKo": "상록침엽수림",
+     "pathKo": "산림지역 > 난온대 > 상록침엽수림",
+     "level": 3,
+     "parent": "HP-01-03",
+     "selectable": true,
+     "applicability": [
+      "plant"
+     ],
+     "status": "standard",
+     "since": "1.0.0"
+    },
+    {
+     "code": "HP-01-03-04",
+     "labelKo": "혼효림",
+     "pathKo": "산림지역 > 난온대 > 혼효림",
+     "level": 3,
+     "parent": "HP-01-03",
+     "selectable": true,
+     "applicability": [
+      "plant"
+     ],
+     "status": "standard",
+     "since": "1.0.0"
+    },
+    {
+     "code": "HP-01-04",
+     "labelKo": "식재림",
+     "pathKo": "산림지역 > 식재림",
+     "level": 2,
+     "parent": "HP-01",
+     "selectable": false,
+     "applicability": [
+      "plant"
+     ],
+     "status": "standard",
+     "since": "1.0.0"
+    },
+    {
+     "code": "HP-01-04-01",
+     "labelKo": "하록활엽수림",
+     "pathKo": "산림지역 > 식재림 > 하록활엽수림",
+     "level": 3,
+     "parent": "HP-01-04",
+     "selectable": true,
+     "applicability": [
+      "plant"
+     ],
+     "status": "standard",
+     "since": "1.0.0"
+    },
+    {
+     "code": "HP-01-04-02",
+     "labelKo": "상록침엽수림",
+     "pathKo": "산림지역 > 식재림 > 상록침엽수림",
+     "level": 3,
+     "parent": "HP-01-04",
+     "selectable": true,
+     "applicability": [
+      "plant"
+     ],
+     "status": "standard",
+     "since": "1.0.0"
+    },
+    {
+     "code": "HP-01-04-03",
+     "labelKo": "혼효림",
+     "pathKo": "산림지역 > 식재림 > 혼효림",
+     "level": 3,
+     "parent": "HP-01-04",
+     "selectable": true,
+     "applicability": [
+      "plant"
+     ],
+     "status": "standard",
+     "since": "1.0.0"
+    },
+    {
+     "code": "HP-01-05",
+     "labelKo": "암각지",
+     "pathKo": "산림지역 > 암각지",
+     "level": 2,
+     "parent": "HP-01",
+     "selectable": false,
+     "applicability": [
+      "plant"
+     ],
+     "status": "standard",
+     "since": "1.0.0"
+    },
+    {
+     "code": "HP-01-05-01",
+     "labelKo": "암각지 초본군락",
+     "pathKo": "산림지역 > 암각지 > 암각지 초본군락",
+     "level": 3,
+     "parent": "HP-01-05",
+     "selectable": true,
+     "applicability": [
+      "plant"
+     ],
+     "status": "standard",
+     "since": "1.0.0"
+    },
+    {
+     "code": "HP-01-05-02",
+     "labelKo": "암각지 관목군락",
+     "pathKo": "산림지역 > 암각지 > 암각지 관목군락",
+     "level": 3,
+     "parent": "HP-01-05",
+     "selectable": true,
+     "applicability": [
+      "plant"
+     ],
+     "status": "standard",
+     "since": "1.0.0"
+    },
+    {
+     "code": "HP-01-06",
+     "labelKo": "숲가장자리",
+     "pathKo": "산림지역 > 숲가장자리",
+     "level": 2,
+     "parent": "HP-01",
+     "selectable": false,
+     "applicability": [
+      "plant"
+     ],
+     "status": "standard",
+     "since": "1.0.0"
+    },
+    {
+     "code": "HP-01-06-01",
+     "labelKo": "임연 초본군락",
+     "pathKo": "산림지역 > 숲가장자리 > 임연 초본군락",
+     "level": 3,
+     "parent": "HP-01-06",
+     "selectable": true,
+     "applicability": [
+      "plant"
+     ],
+     "status": "standard",
+     "since": "1.0.0"
+    },
+    {
+     "code": "HP-01-06-02",
+     "labelKo": "임연 관목군락",
+     "pathKo": "산림지역 > 숲가장자리 > 임연 관목군락",
+     "level": 3,
+     "parent": "HP-01-06",
+     "selectable": true,
+     "applicability": [
+      "plant"
+     ],
+     "status": "standard",
+     "since": "1.0.0"
+    },
+    {
+     "code": "HP-02",
+     "labelKo": "초지",
+     "pathKo": "초지",
+     "level": 1,
+     "parent": null,
+     "selectable": false,
+     "applicability": [
+      "plant"
+     ],
+     "status": "standard",
+     "since": "1.0.0"
+    },
+    {
+     "code": "HP-02-01",
+     "labelKo": "자연초지",
+     "pathKo": "초지 > 자연초지",
+     "level": 2,
+     "parent": "HP-02",
+     "selectable": false,
+     "applicability": [
+      "plant"
+     ],
+     "status": "standard",
+     "since": "1.0.0"
+    },
+    {
+     "code": "HP-02-01-01",
+     "labelKo": "해안풍충초지",
+     "pathKo": "초지 > 자연초지 > 해안풍충초지",
+     "level": 3,
+     "parent": "HP-02-01",
+     "selectable": true,
+     "applicability": [
+      "plant"
+     ],
+     "status": "standard",
+     "since": "1.0.0"
+    },
+    {
+     "code": "HP-02-01-02",
+     "labelKo": "산지자연초지",
+     "pathKo": "초지 > 자연초지 > 산지자연초지",
+     "level": 3,
+     "parent": "HP-02-01",
+     "selectable": true,
+     "applicability": [
+      "plant"
+     ],
+     "status": "standard",
+     "since": "1.0.0"
+    },
+    {
+     "code": "HP-02-01-03",
+     "labelKo": "기타 초지",
+     "pathKo": "초지 > 자연초지 > 기타 초지",
+     "level": 3,
+     "parent": "HP-02-01",
+     "selectable": true,
+     "applicability": [
+      "plant"
+     ],
+     "status": "standard",
+     "since": "1.0.0",
+     "note": "선택 시 내용 기재"
+    },
+    {
+     "code": "HP-02-02",
+     "labelKo": "인공초지",
+     "pathKo": "초지 > 인공초지",
+     "level": 2,
+     "parent": "HP-02",
+     "selectable": false,
+     "applicability": [
+      "plant"
+     ],
+     "status": "standard",
+     "since": "1.0.0"
+    },
+    {
+     "code": "HP-02-02-01",
+     "labelKo": "목초지",
+     "pathKo": "초지 > 인공초지 > 목초지",
+     "level": 3,
+     "parent": "HP-02-02",
+     "selectable": true,
+     "applicability": [
+      "plant"
+     ],
+     "status": "standard",
+     "since": "1.0.0"
+    },
+    {
+     "code": "HP-02-02-02",
+     "labelKo": "골프장",
+     "pathKo": "초지 > 인공초지 > 골프장",
+     "level": 3,
+     "parent": "HP-02-02",
+     "selectable": true,
+     "applicability": [
+      "plant"
+     ],
+     "status": "standard",
+     "since": "1.0.0"
+    },
+    {
+     "code": "HP-02-02-03",
+     "labelKo": "묘지",
+     "pathKo": "초지 > 인공초지 > 묘지",
+     "level": 3,
+     "parent": "HP-02-02",
+     "selectable": true,
+     "applicability": [
+      "plant"
+     ],
+     "status": "standard",
+     "since": "1.0.0"
+    },
+    {
+     "code": "HP-02-02-04",
+     "labelKo": "기타 초지",
+     "pathKo": "초지 > 인공초지 > 기타 초지",
+     "level": 3,
+     "parent": "HP-02-02",
+     "selectable": true,
+     "applicability": [
+      "plant"
+     ],
+     "status": "standard",
+     "since": "1.0.0",
+     "note": "선택 시 내용 기재"
+    },
+    {
+     "code": "HP-03",
+     "labelKo": "습지",
+     "pathKo": "습지",
+     "level": 1,
+     "parent": null,
+     "selectable": false,
+     "applicability": [
+      "plant"
+     ],
+     "status": "standard",
+     "since": "1.0.0"
+    },
+    {
+     "code": "HP-03-01",
+     "labelKo": "저층습원",
+     "pathKo": "습지 > 저층습원",
+     "level": 2,
+     "parent": "HP-03",
+     "selectable": false,
+     "applicability": [
+      "plant"
+     ],
+     "status": "standard",
+     "since": "1.0.0"
+    },
+    {
+     "code": "HP-03-01-01",
+     "labelKo": "부엽침수군락",
+     "pathKo": "습지 > 저층습원 > 부엽침수군락",
+     "level": 3,
+     "parent": "HP-03-01",
+     "selectable": true,
+     "applicability": [
+      "plant"
+     ],
+     "status": "standard",
+     "since": "1.0.0"
+    },
+    {
+     "code": "HP-03-01-02",
+     "labelKo": "부유식물군락",
+     "pathKo": "습지 > 저층습원 > 부유식물군락",
+     "level": 3,
+     "parent": "HP-03-01",
+     "selectable": true,
+     "applicability": [
+      "plant"
+     ],
+     "status": "standard",
+     "since": "1.0.0"
+    },
+    {
+     "code": "HP-03-01-03",
+     "labelKo": "침수",
+     "pathKo": "습지 > 저층습원 > 침수",
+     "level": 3,
+     "parent": "HP-03-01",
+     "selectable": true,
+     "applicability": [
+      "plant"
+     ],
+     "status": "standard",
+     "since": "1.0.0"
+    },
+    {
+     "code": "HP-03-01-04",
+     "labelKo": "초본식물군락",
+     "pathKo": "습지 > 저층습원 > 초본식물군락",
+     "level": 3,
+     "parent": "HP-03-01",
+     "selectable": true,
+     "applicability": [
+      "plant"
+     ],
+     "status": "standard",
+     "since": "1.0.0"
+    },
+    {
+     "code": "HP-03-01-05",
+     "labelKo": "목본식물군락",
+     "pathKo": "습지 > 저층습원 > 목본식물군락",
+     "level": 3,
+     "parent": "HP-03-01",
+     "selectable": true,
+     "applicability": [
+      "plant"
+     ],
+     "status": "standard",
+     "since": "1.0.0"
+    },
+    {
+     "code": "HP-03-02",
+     "labelKo": "중간습원",
+     "pathKo": "습지 > 중간습원",
+     "level": 2,
+     "parent": "HP-03",
+     "selectable": false,
+     "applicability": [
+      "plant"
+     ],
+     "status": "standard",
+     "since": "1.0.0"
+    },
+    {
+     "code": "HP-03-02-01",
+     "labelKo": "부엽침수군락",
+     "pathKo": "습지 > 중간습원 > 부엽침수군락",
+     "level": 3,
+     "parent": "HP-03-02",
+     "selectable": true,
+     "applicability": [
+      "plant"
+     ],
+     "status": "standard",
+     "since": "1.0.0"
+    },
+    {
+     "code": "HP-03-02-02",
+     "labelKo": "부유식물군락",
+     "pathKo": "습지 > 중간습원 > 부유식물군락",
+     "level": 3,
+     "parent": "HP-03-02",
+     "selectable": true,
+     "applicability": [
+      "plant"
+     ],
+     "status": "standard",
+     "since": "1.0.0"
+    },
+    {
+     "code": "HP-03-02-03",
+     "labelKo": "침수",
+     "pathKo": "습지 > 중간습원 > 침수",
+     "level": 3,
+     "parent": "HP-03-02",
+     "selectable": true,
+     "applicability": [
+      "plant"
+     ],
+     "status": "standard",
+     "since": "1.0.0"
+    },
+    {
+     "code": "HP-03-02-04",
+     "labelKo": "초본식물군락",
+     "pathKo": "습지 > 중간습원 > 초본식물군락",
+     "level": 3,
+     "parent": "HP-03-02",
+     "selectable": true,
+     "applicability": [
+      "plant"
+     ],
+     "status": "standard",
+     "since": "1.0.0"
+    },
+    {
+     "code": "HP-03-02-05",
+     "labelKo": "목본식물군락",
+     "pathKo": "습지 > 중간습원 > 목본식물군락",
+     "level": 3,
+     "parent": "HP-03-02",
+     "selectable": true,
+     "applicability": [
+      "plant"
+     ],
+     "status": "standard",
+     "since": "1.0.0"
+    },
+    {
+     "code": "HP-03-03",
+     "labelKo": "고층습원",
+     "pathKo": "습지 > 고층습원",
+     "level": 2,
+     "parent": "HP-03",
+     "selectable": false,
+     "applicability": [
+      "plant"
+     ],
+     "status": "standard",
+     "since": "1.0.0"
+    },
+    {
+     "code": "HP-03-03-01",
+     "labelKo": "초본식물군락",
+     "pathKo": "습지 > 고층습원 > 초본식물군락",
+     "level": 3,
+     "parent": "HP-03-03",
+     "selectable": true,
+     "applicability": [
+      "plant"
+     ],
+     "status": "standard",
+     "since": "1.0.0"
+    },
+    {
+     "code": "HP-04",
+     "labelKo": "하천",
+     "pathKo": "하천",
+     "level": 1,
+     "parent": null,
+     "selectable": false,
+     "applicability": [
+      "plant"
+     ],
+     "status": "standard",
+     "since": "1.0.0"
+    },
+    {
+     "code": "HP-04-01",
+     "labelKo": "하천 수변",
+     "pathKo": "하천 > 하천 수변",
+     "level": 2,
+     "parent": "HP-04",
+     "selectable": false,
+     "applicability": [
+      "plant"
+     ],
+     "status": "standard",
+     "since": "1.0.0"
+    },
+    {
+     "code": "HP-04-01-01",
+     "labelKo": "침수식물군락",
+     "pathKo": "하천 > 하천 수변 > 침수식물군락",
+     "level": 3,
+     "parent": "HP-04-01",
+     "selectable": true,
+     "applicability": [
+      "plant"
+     ],
+     "status": "standard",
+     "since": "1.0.0"
+    },
+    {
+     "code": "HP-04-01-02",
+     "labelKo": "유수변 초본식물군락",
+     "pathKo": "하천 > 하천 수변 > 유수변 초본식물군락",
+     "level": 3,
+     "parent": "HP-04-01",
+     "selectable": true,
+     "applicability": [
+      "plant"
+     ],
+     "status": "standard",
+     "since": "1.0.0"
+    },
+    {
+     "code": "HP-04-01-03",
+     "labelKo": "유수변 관목식물군락",
+     "pathKo": "하천 > 하천 수변 > 유수변 관목식물군락",
+     "level": 3,
+     "parent": "HP-04-01",
+     "selectable": true,
+     "applicability": [
+      "plant"
+     ],
+     "status": "standard",
+     "since": "1.0.0"
+    },
+    {
+     "code": "HP-04-02",
+     "labelKo": "고수부지 및 제방",
+     "pathKo": "하천 > 고수부지 및 제방",
+     "level": 2,
+     "parent": "HP-04",
+     "selectable": false,
+     "applicability": [
+      "plant"
+     ],
+     "status": "standard",
+     "since": "1.0.0"
+    },
+    {
+     "code": "HP-04-02-01",
+     "labelKo": "고수부지 및 제방 초본식생",
+     "pathKo": "하천 > 고수부지 및 제방 > 고수부지 및 제방 초본식생",
+     "level": 3,
+     "parent": "HP-04-02",
+     "selectable": true,
+     "applicability": [
+      "plant"
+     ],
+     "status": "standard",
+     "since": "1.0.0"
+    },
+    {
+     "code": "HP-04-02-02",
+     "labelKo": "관목 및 교목식물군락",
+     "pathKo": "하천 > 고수부지 및 제방 > 관목 및 교목식물군락",
+     "level": 3,
+     "parent": "HP-04-02",
+     "selectable": true,
+     "applicability": [
+      "plant"
+     ],
+     "status": "standard",
+     "since": "1.0.0"
+    },
+    {
+     "code": "HP-05",
+     "labelKo": "해안",
+     "pathKo": "해안",
+     "level": 1,
+     "parent": null,
+     "selectable": false,
+     "applicability": [
+      "plant"
+     ],
+     "status": "standard",
+     "since": "1.0.0"
+    },
+    {
+     "code": "HP-05-01",
+     "labelKo": "해안사구/자갈해안",
+     "pathKo": "해안 > 해안사구/자갈해안",
+     "level": 2,
+     "parent": "HP-05",
+     "selectable": false,
+     "applicability": [
+      "plant"
+     ],
+     "status": "standard",
+     "since": "1.0.0"
+    },
+    {
+     "code": "HP-05-01-01",
+     "labelKo": "해안사구 초원군락",
+     "pathKo": "해안 > 해안사구/자갈해안 > 해안사구 초원군락",
+     "level": 3,
+     "parent": "HP-05-01",
+     "selectable": true,
+     "applicability": [
+      "plant"
+     ],
+     "status": "standard",
+     "since": "1.0.0"
+    },
+    {
+     "code": "HP-05-01-02",
+     "labelKo": "자갈해안 초본식생",
+     "pathKo": "해안 > 해안사구/자갈해안 > 자갈해안 초본식생",
+     "level": 3,
+     "parent": "HP-05-01",
+     "selectable": true,
+     "applicability": [
+      "plant"
+     ],
+     "status": "standard",
+     "since": "1.0.0"
+    },
+    {
+     "code": "HP-05-01-03",
+     "labelKo": "해안사구 관목림",
+     "pathKo": "해안 > 해안사구/자갈해안 > 해안사구 관목림",
+     "level": 3,
+     "parent": "HP-05-01",
+     "selectable": true,
+     "applicability": [
+      "plant"
+     ],
+     "status": "standard",
+     "since": "1.0.0"
+    },
+    {
+     "code": "HP-05-01-04",
+     "labelKo": "해안사구 교목림",
+     "pathKo": "해안 > 해안사구/자갈해안 > 해안사구 교목림",
+     "level": 3,
+     "parent": "HP-05-01",
+     "selectable": true,
+     "applicability": [
+      "plant"
+     ],
+     "status": "standard",
+     "since": "1.0.0"
+    },
+    {
+     "code": "HP-05-02",
+     "labelKo": "염습지",
+     "pathKo": "해안 > 염습지",
+     "level": 2,
+     "parent": "HP-05",
+     "selectable": false,
+     "applicability": [
+      "plant"
+     ],
+     "status": "standard",
+     "since": "1.0.0"
+    },
+    {
+     "code": "HP-05-02-01",
+     "labelKo": "염습지 초본식생",
+     "pathKo": "해안 > 염습지 > 염습지 초본식생",
+     "level": 3,
+     "parent": "HP-05-02",
+     "selectable": true,
+     "applicability": [
+      "plant"
+     ],
+     "status": "standard",
+     "since": "1.0.0"
+    },
+    {
+     "code": "HP-05-02-02",
+     "labelKo": "침수 초본군락",
+     "pathKo": "해안 > 염습지 > 침수 초본군락",
+     "level": 3,
+     "parent": "HP-05-02",
+     "selectable": true,
+     "applicability": [
+      "plant"
+     ],
+     "status": "standard",
+     "since": "1.0.0"
+    },
+    {
+     "code": "HP-05-03",
+     "labelKo": "해안단애(절벽)",
+     "pathKo": "해안 > 해안단애(절벽)",
+     "level": 2,
+     "parent": "HP-05",
+     "selectable": false,
+     "applicability": [
+      "plant"
+     ],
+     "status": "standard",
+     "since": "1.0.0"
+    },
+    {
+     "code": "HP-05-03-01",
+     "labelKo": "해안절벽 초본군락",
+     "pathKo": "해안 > 해안단애(절벽) > 해안절벽 초본군락",
+     "level": 3,
+     "parent": "HP-05-03",
+     "selectable": true,
+     "applicability": [
+      "plant"
+     ],
+     "status": "standard",
+     "since": "1.0.0"
+    },
+    {
+     "code": "HP-05-03-02",
+     "labelKo": "해안절벽 관목림",
+     "pathKo": "해안 > 해안단애(절벽) > 해안절벽 관목림",
+     "level": 3,
+     "parent": "HP-05-03",
+     "selectable": true,
+     "applicability": [
+      "plant"
+     ],
+     "status": "standard",
+     "since": "1.0.0"
+    },
+    {
+     "code": "HP-05-03-03",
+     "labelKo": "해안절벽 교목림",
+     "pathKo": "해안 > 해안단애(절벽) > 해안절벽 교목림",
+     "level": 3,
+     "parent": "HP-05-03",
+     "selectable": true,
+     "applicability": [
+      "plant"
+     ],
+     "status": "standard",
+     "since": "1.0.0"
+    },
+    {
+     "code": "HP-06",
+     "labelKo": "농경지역",
+     "pathKo": "농경지역",
+     "level": 1,
+     "parent": null,
+     "selectable": false,
+     "applicability": [
+      "plant"
+     ],
+     "status": "standard",
+     "since": "1.0.0"
+    },
+    {
+     "code": "HP-06-01",
+     "labelKo": "논",
+     "pathKo": "농경지역 > 논",
+     "level": 2,
+     "parent": "HP-06",
+     "selectable": true,
+     "applicability": [
+      "plant"
+     ],
+     "status": "standard",
+     "since": "1.0.0"
+    },
+    {
+     "code": "HP-06-02",
+     "labelKo": "밭",
+     "pathKo": "농경지역 > 밭",
+     "level": 2,
+     "parent": "HP-06",
+     "selectable": true,
+     "applicability": [
+      "plant"
+     ],
+     "status": "standard",
+     "since": "1.0.0"
+    },
+    {
+     "code": "HP-06-03",
+     "labelKo": "과수원",
+     "pathKo": "농경지역 > 과수원",
+     "level": 2,
+     "parent": "HP-06",
+     "selectable": true,
+     "applicability": [
+      "plant"
+     ],
+     "status": "standard",
+     "since": "1.0.0"
+    },
+    {
+     "code": "HP-06-04",
+     "labelKo": "기타",
+     "pathKo": "농경지역 > 기타",
+     "level": 2,
+     "parent": "HP-06",
+     "selectable": true,
+     "textPrompt": {
+      "plant": "내용 기재"
+     },
+     "applicability": [
+      "plant"
+     ],
+     "status": "standard",
+     "since": "1.0.0",
+     "note": "선택 시 내용 기재"
+    },
+    {
+     "code": "HP-07",
+     "labelKo": "인공서식지",
+     "pathKo": "인공서식지",
+     "level": 1,
+     "parent": null,
+     "selectable": false,
+     "applicability": [
+      "plant"
+     ],
+     "status": "standard",
+     "since": "1.0.0"
+    },
+    {
+     "code": "HP-07-01",
+     "labelKo": "공터",
+     "pathKo": "인공서식지 > 공터",
+     "level": 2,
+     "parent": "HP-07",
+     "selectable": true,
+     "applicability": [
+      "plant"
+     ],
+     "status": "standard",
+     "since": "1.0.0"
+    },
+    {
+     "code": "HP-07-02",
+     "labelKo": "채광지역",
+     "pathKo": "인공서식지 > 채광지역",
+     "level": 2,
+     "parent": "HP-07",
+     "selectable": true,
+     "applicability": [
+      "plant"
+     ],
+     "status": "standard",
+     "since": "1.0.0"
+    },
+    {
+     "code": "HP-07-03",
+     "labelKo": "인공수로",
+     "pathKo": "인공서식지 > 인공수로",
+     "level": 2,
+     "parent": "HP-07",
+     "selectable": true,
+     "applicability": [
+      "plant"
+     ],
+     "status": "standard",
+     "since": "1.0.0"
+    },
+    {
+     "code": "HP-07-04",
+     "labelKo": "기타",
+     "pathKo": "인공서식지 > 기타",
+     "level": 2,
+     "parent": "HP-07",
+     "selectable": true,
+     "textPrompt": {
+      "plant": "내용 기재"
+     },
+     "applicability": [
+      "plant"
+     ],
+     "status": "standard",
+     "since": "1.0.0",
+     "note": "선택 시 내용 기재"
+    },
+    {
+     "code": "HP-08",
+     "labelKo": "기타",
+     "pathKo": "기타",
+     "level": 1,
+     "parent": null,
+     "selectable": false,
+     "applicability": [
+      "plant"
+     ],
+     "status": "standard",
+     "since": "1.0.0",
+     "note": "선택 시 내용 기재"
+    },
+    {
+     "code": "HP-08-01",
+     "labelKo": "생육지 유형에 포함되지 않는 경우",
+     "pathKo": "기타 > 생육지 유형에 포함되지 않는 경우",
+     "level": 2,
+     "parent": "HP-08",
+     "selectable": true,
+     "textPrompt": {
+      "plant": "상세 설명"
+     },
+     "applicability": [
+      "plant"
+     ],
+     "status": "standard",
+     "since": "1.0.0"
+    }
+   ]
+  },
+  {
+   "id": "CL.HAB_IN",
+   "nameKo": "서식지 유형(곤충)",
+   "hierarchical": true,
+   "codes": [
+    {
+     "code": "HI-01",
+     "labelKo": "도시화지역",
+     "pathKo": "도시화지역",
+     "level": 1,
+     "parent": null,
+     "selectable": false,
+     "applicability": [
+      "insect"
+     ],
+     "status": "standard",
+     "since": "1.0.0"
+    },
+    {
+     "code": "HI-01-01",
+     "labelKo": "주거지",
+     "pathKo": "도시화지역 > 주거지",
+     "level": 2,
+     "parent": "HI-01",
+     "selectable": true,
+     "applicability": [
+      "insect"
+     ],
+     "status": "standard",
+     "since": "1.0.0"
+    },
+    {
+     "code": "HI-01-02",
+     "labelKo": "상업지역",
+     "pathKo": "도시화지역 > 상업지역",
+     "level": 2,
+     "parent": "HI-01",
+     "selectable": true,
+     "applicability": [
+      "insect"
+     ],
+     "status": "standard",
+     "since": "1.0.0"
+    },
+    {
+     "code": "HI-01-03",
+     "labelKo": "공업지",
+     "pathKo": "도시화지역 > 공업지",
+     "level": 2,
+     "parent": "HI-01",
+     "selectable": true,
+     "applicability": [
+      "insect"
+     ],
+     "status": "standard",
+     "since": "1.0.0"
+    },
+    {
+     "code": "HI-01-04",
+     "labelKo": "기타",
+     "pathKo": "도시화지역 > 기타",
+     "level": 2,
+     "parent": "HI-01",
+     "selectable": true,
+     "textPrompt": {
+      "insect": "내용 기재"
+     },
+     "applicability": [
+      "insect"
+     ],
+     "status": "standard",
+     "since": "1.0.0",
+     "note": "선택 시 내용 기재"
+    },
+    {
+     "code": "HI-02",
+     "labelKo": "농업지역",
+     "pathKo": "농업지역",
+     "level": 1,
+     "parent": null,
+     "selectable": false,
+     "applicability": [
+      "insect"
+     ],
+     "status": "standard",
+     "since": "1.0.0"
+    },
+    {
+     "code": "HI-02-01",
+     "labelKo": "논",
+     "pathKo": "농업지역 > 논",
+     "level": 2,
+     "parent": "HI-02",
+     "selectable": true,
+     "applicability": [
+      "insect"
+     ],
+     "status": "standard",
+     "since": "1.0.0"
+    },
+    {
+     "code": "HI-02-02",
+     "labelKo": "밭",
+     "pathKo": "농업지역 > 밭",
+     "level": 2,
+     "parent": "HI-02",
+     "selectable": true,
+     "applicability": [
+      "insect"
+     ],
+     "status": "standard",
+     "since": "1.0.0"
+    },
+    {
+     "code": "HI-02-03",
+     "labelKo": "과수원",
+     "pathKo": "농업지역 > 과수원",
+     "level": 2,
+     "parent": "HI-02",
+     "selectable": true,
+     "applicability": [
+      "insect"
+     ],
+     "status": "standard",
+     "since": "1.0.0"
+    },
+    {
+     "code": "HI-02-04",
+     "labelKo": "기타",
+     "pathKo": "농업지역 > 기타",
+     "level": 2,
+     "parent": "HI-02",
+     "selectable": true,
+     "textPrompt": {
+      "insect": "내용 기재"
+     },
+     "applicability": [
+      "insect"
+     ],
+     "status": "standard",
+     "since": "1.0.0",
+     "note": "선택 시 내용 기재"
+    },
+    {
+     "code": "HI-03",
+     "labelKo": "초지",
+     "pathKo": "초지",
+     "level": 1,
+     "parent": null,
+     "selectable": false,
+     "applicability": [
+      "insect"
+     ],
+     "status": "standard",
+     "since": "1.0.0"
+    },
+    {
+     "code": "HI-03-01",
+     "labelKo": "건생초지",
+     "pathKo": "초지 > 건생초지",
+     "level": 2,
+     "parent": "HI-03",
+     "selectable": true,
+     "applicability": [
+      "insect"
+     ],
+     "status": "standard",
+     "since": "1.0.0"
+    },
+    {
+     "code": "HI-03-02",
+     "labelKo": "아고산초지",
+     "pathKo": "초지 > 아고산초지",
+     "level": 2,
+     "parent": "HI-03",
+     "selectable": true,
+     "applicability": [
+      "insect"
+     ],
+     "status": "standard",
+     "since": "1.0.0"
+    },
+    {
+     "code": "HI-03-03",
+     "labelKo": "인공초지",
+     "pathKo": "초지 > 인공초지",
+     "level": 2,
+     "parent": "HI-03",
+     "selectable": true,
+     "applicability": [
+      "insect"
+     ],
+     "status": "standard",
+     "since": "1.0.0"
+    },
+    {
+     "code": "HI-04",
+     "labelKo": "나지",
+     "pathKo": "나지",
+     "level": 1,
+     "parent": null,
+     "selectable": false,
+     "applicability": [
+      "insect"
+     ],
+     "status": "standard",
+     "since": "1.0.0"
+    },
+    {
+     "code": "HI-04-01",
+     "labelKo": "산지절벽",
+     "pathKo": "나지 > 산지절벽",
+     "level": 2,
+     "parent": "HI-04",
+     "selectable": true,
+     "applicability": [
+      "insect"
+     ],
+     "status": "standard",
+     "since": "1.0.0"
+    },
+    {
+     "code": "HI-04-02",
+     "labelKo": "나지",
+     "pathKo": "나지 > 나지",
+     "level": 2,
+     "parent": "HI-04",
+     "selectable": true,
+     "applicability": [
+      "insect"
+     ],
+     "status": "standard",
+     "since": "1.0.0"
+    },
+    {
+     "code": "HI-05",
+     "labelKo": "산림",
+     "pathKo": "산림",
+     "level": 1,
+     "parent": null,
+     "selectable": false,
+     "applicability": [
+      "insect"
+     ],
+     "status": "standard",
+     "since": "1.0.0"
+    },
+    {
+     "code": "HI-05-01",
+     "labelKo": "난온대 상록활엽수림",
+     "pathKo": "산림 > 난온대 상록활엽수림",
+     "level": 2,
+     "parent": "HI-05",
+     "selectable": true,
+     "applicability": [
+      "insect"
+     ],
+     "status": "standard",
+     "since": "1.0.0"
+    },
+    {
+     "code": "HI-05-02",
+     "labelKo": "냉온대 활엽수림",
+     "pathKo": "산림 > 냉온대 활엽수림",
+     "level": 2,
+     "parent": "HI-05",
+     "selectable": true,
+     "applicability": [
+      "insect"
+     ],
+     "status": "standard",
+     "since": "1.0.0"
+    },
+    {
+     "code": "HI-05-03",
+     "labelKo": "침엽수림",
+     "pathKo": "산림 > 침엽수림",
+     "level": 2,
+     "parent": "HI-05",
+     "selectable": true,
+     "applicability": [
+      "insect"
+     ],
+     "status": "standard",
+     "since": "1.0.0"
+    },
+    {
+     "code": "HI-05-04",
+     "labelKo": "혼효림",
+     "pathKo": "산림 > 혼효림",
+     "level": 2,
+     "parent": "HI-05",
+     "selectable": true,
+     "applicability": [
+      "insect"
+     ],
+     "status": "standard",
+     "since": "1.0.0"
+    },
+    {
+     "code": "HI-05-05",
+     "labelKo": "숲가장자리",
+     "pathKo": "산림 > 숲가장자리",
+     "level": 2,
+     "parent": "HI-05",
+     "selectable": true,
+     "applicability": [
+      "insect"
+     ],
+     "status": "standard",
+     "since": "1.0.0"
+    },
+    {
+     "code": "HI-06",
+     "labelKo": "습지",
+     "pathKo": "습지",
+     "level": 1,
+     "parent": null,
+     "selectable": false,
+     "applicability": [
+      "insect"
+     ],
+     "status": "standard",
+     "since": "1.0.0"
+    },
+    {
+     "code": "HI-06-01",
+     "labelKo": "저층습지",
+     "pathKo": "습지 > 저층습지",
+     "level": 2,
+     "parent": "HI-06",
+     "selectable": true,
+     "applicability": [
+      "insect"
+     ],
+     "status": "standard",
+     "since": "1.0.0"
+    },
+    {
+     "code": "HI-06-02",
+     "labelKo": "중층습지",
+     "pathKo": "습지 > 중층습지",
+     "level": 2,
+     "parent": "HI-06",
+     "selectable": true,
+     "applicability": [
+      "insect"
+     ],
+     "status": "standard",
+     "since": "1.0.0"
+    },
+    {
+     "code": "HI-06-03",
+     "labelKo": "고층습지",
+     "pathKo": "습지 > 고층습지",
+     "level": 2,
+     "parent": "HI-06",
+     "selectable": true,
+     "applicability": [
+      "insect"
+     ],
+     "status": "standard",
+     "since": "1.0.0"
+    },
+    {
+     "code": "HI-06-04",
+     "labelKo": "인공습지",
+     "pathKo": "습지 > 인공습지",
+     "level": 2,
+     "parent": "HI-06",
+     "selectable": true,
+     "applicability": [
+      "insect"
+     ],
+     "status": "standard",
+     "since": "1.0.0"
+    },
+    {
+     "code": "HI-07",
+     "labelKo": "하천",
+     "pathKo": "하천",
+     "level": 1,
+     "parent": null,
+     "selectable": false,
+     "applicability": [
+      "insect"
+     ],
+     "status": "standard",
+     "since": "1.0.0"
+    },
+    {
+     "code": "HI-07-01",
+     "labelKo": "하상",
+     "pathKo": "하천 > 하상",
+     "level": 2,
+     "parent": "HI-07",
+     "selectable": true,
+     "applicability": [
+      "insect"
+     ],
+     "status": "standard",
+     "since": "1.0.0"
+    },
+    {
+     "code": "HI-07-02",
+     "labelKo": "수변",
+     "pathKo": "하천 > 수변",
+     "level": 2,
+     "parent": "HI-07",
+     "selectable": true,
+     "applicability": [
+      "insect"
+     ],
+     "status": "standard",
+     "since": "1.0.0"
+    },
+    {
+     "code": "HI-07-03",
+     "labelKo": "고수부지 및 제방",
+     "pathKo": "하천 > 고수부지 및 제방",
+     "level": 2,
+     "parent": "HI-07",
+     "selectable": true,
+     "applicability": [
+      "insect"
+     ],
+     "status": "standard",
+     "since": "1.0.0"
+    },
+    {
+     "code": "HI-07-04",
+     "labelKo": "인공하천",
+     "pathKo": "하천 > 인공하천",
+     "level": 2,
+     "parent": "HI-07",
+     "selectable": true,
+     "applicability": [
+      "insect"
+     ],
+     "status": "standard",
+     "since": "1.0.0"
+    },
+    {
+     "code": "HI-07-05",
+     "labelKo": "하안단구(절벽)",
+     "pathKo": "하천 > 하안단구(절벽)",
+     "level": 2,
+     "parent": "HI-07",
+     "selectable": true,
+     "applicability": [
+      "insect"
+     ],
+     "status": "standard",
+     "since": "1.0.0"
+    },
+    {
+     "code": "HI-08",
+     "labelKo": "해안",
+     "pathKo": "해안",
+     "level": 1,
+     "parent": null,
+     "selectable": false,
+     "applicability": [
+      "insect"
+     ],
+     "status": "standard",
+     "since": "1.0.0"
+    },
+    {
+     "code": "HI-08-01",
+     "labelKo": "해안사구",
+     "pathKo": "해안 > 해안사구",
+     "level": 2,
+     "parent": "HI-08",
+     "selectable": true,
+     "applicability": [
+      "insect"
+     ],
+     "status": "standard",
+     "since": "1.0.0"
+    },
+    {
+     "code": "HI-08-02",
+     "labelKo": "염습지",
+     "pathKo": "해안 > 염습지",
+     "level": 2,
+     "parent": "HI-08",
+     "selectable": true,
+     "applicability": [
+      "insect"
+     ],
+     "status": "standard",
+     "since": "1.0.0"
+    },
+    {
+     "code": "HI-08-03",
+     "labelKo": "해안단애(절벽)",
+     "pathKo": "해안 > 해안단애(절벽)",
+     "level": 2,
+     "parent": "HI-08",
+     "selectable": true,
+     "applicability": [
+      "insect"
+     ],
+     "status": "standard",
+     "since": "1.0.0"
+    },
+    {
+     "code": "HI-08-04",
+     "labelKo": "자갈해안",
+     "pathKo": "해안 > 자갈해안",
+     "level": 2,
+     "parent": "HI-08",
+     "selectable": true,
+     "applicability": [
+      "insect"
+     ],
+     "status": "standard",
+     "since": "1.0.0"
+    },
+    {
+     "code": "HI-08-05",
+     "labelKo": "조상대",
+     "pathKo": "해안 > 조상대",
+     "level": 2,
+     "parent": "HI-08",
+     "selectable": true,
+     "applicability": [
+      "insect"
+     ],
+     "status": "standard",
+     "since": "1.0.0"
+    }
+   ]
+  },
+  {
+   "id": "CL.THR_CAT",
+   "nameKo": "위협요인 구분",
+   "codes": [
+    {
+     "code": "TC-01",
+     "labelKo": "인위적",
+     "applicability": [
+      "insect"
+     ],
+     "status": "standard",
+     "since": "1.0.0"
+    },
+    {
+     "code": "TC-02",
+     "labelKo": "자연적",
+     "applicability": [
+      "insect"
+     ],
+     "status": "standard",
+     "since": "1.0.0"
+    },
+    {
+     "code": "TC-03",
+     "labelKo": "생물적",
+     "applicability": [
+      "insect"
+     ],
+     "status": "standard",
+     "since": "1.0.0"
+    },
+    {
+     "code": "TC-04",
+     "labelKo": "해당사항 없음",
+     "applicability": [
+      "insect"
+     ],
+     "status": "standard",
+     "since": "1.0.0"
+    }
+   ]
+  },
+  {
+   "id": "CL.THR_ANTH",
+   "nameKo": "인위적 위협요인",
+   "codes": [
+    {
+     "code": "TA-01",
+     "labelKo": "매립",
+     "applicability": [
+      "plant",
+      "insect"
+     ],
+     "status": "standard",
+     "since": "1.0.0"
+    },
+    {
+     "code": "TA-02",
+     "labelKo": "간척",
+     "applicability": [
+      "plant",
+      "insect"
+     ],
+     "status": "standard",
+     "since": "1.0.0"
+    },
+    {
+     "code": "TA-03",
+     "labelKo": "개간 및 농지 확장",
+     "applicability": [
+      "plant"
+     ],
+     "status": "standard",
+     "since": "1.0.0"
+    },
+    {
+     "code": "TA-04",
+     "labelKo": "골재/석재채취",
+     "applicability": [
+      "plant",
+      "insect"
+     ],
+     "status": "standard",
+     "since": "1.0.0"
+    },
+    {
+     "code": "TA-05",
+     "labelKo": "도로(철도)신설/확장",
+     "applicability": [
+      "plant",
+      "insect"
+     ],
+     "status": "standard",
+     "since": "1.0.0"
+    },
+    {
+     "code": "TA-06",
+     "labelKo": "인공구조물 설치",
+     "applicability": [
+      "plant"
+     ],
+     "status": "standard",
+     "since": "1.0.0"
+    },
+    {
+     "code": "TA-07",
+     "labelKo": "하천/호소 구조변경",
+     "applicability": [
+      "plant",
+      "insect"
+     ],
+     "status": "standard",
+     "since": "1.0.0"
+    },
+    {
+     "code": "TA-08",
+     "labelKo": "수질오염",
+     "applicability": [
+      "plant",
+      "insect"
+     ],
+     "status": "standard",
+     "since": "1.0.0"
+    },
+    {
+     "code": "TA-09",
+     "labelKo": "벌채",
+     "applicability": [
+      "plant",
+      "insect"
+     ],
+     "status": "standard",
+     "since": "1.0.0"
+    },
+    {
+     "code": "TA-10",
+     "labelKo": "인간출입",
+     "applicability": [
+      "plant",
+      "insect"
+     ],
+     "status": "standard",
+     "since": "1.0.0"
+    },
+    {
+     "code": "TA-11",
+     "labelKo": "포획/채취",
+     "applicability": [
+      "plant",
+      "insect"
+     ],
+     "status": "standard",
+     "since": "1.0.0"
+    },
+    {
+     "code": "TA-12",
+     "labelKo": "기타",
+     "applicability": [
+      "plant",
+      "insect"
+     ],
+     "status": "standard",
+     "since": "1.0.0",
+     "textPrompt": {
+      "plant": "내용 기재",
+      "insect": "내용 기재"
+     },
+     "note": "선택 시 내용 기재"
+    }
+   ],
+   "order": {
+    "plant": [
+     "TA-01",
+     "TA-02",
+     "TA-03",
+     "TA-04",
+     "TA-05",
+     "TA-06",
+     "TA-07",
+     "TA-08",
+     "TA-09",
+     "TA-10",
+     "TA-11",
+     "TA-12"
+    ],
+    "insect": [
+     "TA-01",
+     "TA-02",
+     "TA-04",
+     "TA-05",
+     "TA-09",
+     "TA-07",
+     "TA-10",
+     "TA-11",
+     "TA-08",
+     "TA-12"
+    ]
+   }
+  },
+  {
+   "id": "CL.THR_NAT",
+   "nameKo": "자연적 위협요인",
+   "codes": [
+    {
+     "code": "TN-01",
+     "labelKo": "산불",
+     "applicability": [
+      "plant",
+      "insect"
+     ],
+     "status": "standard",
+     "since": "1.0.0"
+    },
+    {
+     "code": "TN-02",
+     "labelKo": "태풍",
+     "applicability": [
+      "plant",
+      "insect"
+     ],
+     "status": "standard",
+     "since": "1.0.0"
+    },
+    {
+     "code": "TN-03",
+     "labelKo": "가뭄",
+     "applicability": [
+      "plant",
+      "insect"
+     ],
+     "status": "standard",
+     "since": "1.0.0"
+    },
+    {
+     "code": "TN-04",
+     "labelKo": "산사태",
+     "applicability": [
+      "plant",
+      "insect"
+     ],
+     "labels": {
+      "plant": "사태"
+     },
+     "status": "standard",
+     "since": "1.0.0"
+    },
+    {
+     "code": "TN-05",
+     "labelKo": "홍수",
+     "applicability": [
+      "plant",
+      "insect"
+     ],
+     "status": "standard",
+     "since": "1.0.0"
+    },
+    {
+     "code": "TN-06",
+     "labelKo": "폭설",
+     "applicability": [
+      "plant",
+      "insect"
+     ],
+     "status": "standard",
+     "since": "1.0.0"
+    },
+    {
+     "code": "TN-07",
+     "labelKo": "이상기온",
+     "applicability": [
+      "plant",
+      "insect"
+     ],
+     "status": "standard",
+     "since": "1.0.0"
+    },
+    {
+     "code": "TN-08",
+     "labelKo": "기타",
+     "applicability": [
+      "plant",
+      "insect"
+     ],
+     "status": "standard",
+     "since": "1.0.0",
+     "textPrompt": {
+      "plant": "내용 기재",
+      "insect": "내용 기재"
+     },
+     "note": "선택 시 내용 기재"
+    },
+    {
+     "code": "TN-09",
+     "labelKo": "천이",
+     "applicability": [
+      "insect"
+     ],
+     "status": "standard",
+     "since": "1.0.0"
+    }
+   ],
+   "order": {
+    "plant": [
+     "TN-01",
+     "TN-02",
+     "TN-03",
+     "TN-04",
+     "TN-05",
+     "TN-06",
+     "TN-07",
+     "TN-08"
+    ],
+    "insect": [
+     "TN-01",
+     "TN-02",
+     "TN-03",
+     "TN-04",
+     "TN-05",
+     "TN-06",
+     "TN-07",
+     "TN-09",
+     "TN-08"
+    ]
+   }
+  },
+  {
+   "id": "CL.THR_BIO",
+   "nameKo": "생물적 위협요인",
+   "codes": [
+    {
+     "code": "TB-01",
+     "labelKo": "천적",
+     "applicability": [
+      "plant",
+      "insect"
+     ],
+     "status": "standard",
+     "since": "1.0.0"
+    },
+    {
+     "code": "TB-02",
+     "labelKo": "경쟁",
+     "applicability": [
+      "plant",
+      "insect"
+     ],
+     "status": "standard",
+     "since": "1.0.0"
+    },
+    {
+     "code": "TB-03",
+     "labelKo": "질병",
+     "applicability": [
+      "plant",
+      "insect"
+     ],
+     "status": "standard",
+     "since": "1.0.0"
+    },
+    {
+     "code": "TB-04",
+     "labelKo": "외래종",
+     "applicability": [
+      "plant",
+      "insect"
+     ],
+     "status": "standard",
+     "since": "1.0.0"
+    },
+    {
+     "code": "TB-05",
+     "labelKo": "기타",
+     "applicability": [
+      "plant",
+      "insect"
+     ],
+     "status": "standard",
+     "since": "1.0.0",
+     "textPrompt": {
+      "plant": "내용 기재",
+      "insect": "내용 기재"
+     },
+     "note": "선택 시 내용 기재"
+    }
+   ],
+   "order": {
+    "plant": [
+     "TB-01",
+     "TB-02",
+     "TB-03",
+     "TB-04",
+     "TB-05"
+    ],
+    "insect": [
+     "TB-01",
+     "TB-02",
+     "TB-03",
+     "TB-04",
+     "TB-05"
+    ]
+   }
+  },
+  {
+   "id": "CL.THR_TIMING",
+   "nameKo": "위협요인 발생 시기",
+   "codes": [
+    {
+     "code": "TW-01",
+     "labelKo": "과거(재발가능성 없음)",
+     "applicability": [
+      "insect"
+     ],
+     "status": "standard",
+     "since": "1.0.0"
+    },
+    {
+     "code": "TW-02",
+     "labelKo": "과거(재발예상)",
+     "applicability": [
+      "insect"
+     ],
+     "status": "standard",
+     "since": "1.0.0"
+    },
+    {
+     "code": "TW-03",
+     "labelKo": "현재(진행 중)",
+     "applicability": [
+      "insect"
+     ],
+     "status": "standard",
+     "since": "1.0.0"
+    },
+    {
+     "code": "TW-04",
+     "labelKo": "미래(발생예상)",
+     "applicability": [
+      "insect"
+     ],
+     "status": "standard",
+     "since": "1.0.0"
+    }
+   ]
+  },
+  {
+   "id": "CL.THR_SEV_PL",
+   "nameKo": "위협요인 강도(식물)",
+   "codes": [
+    {
+     "code": "TSP-01",
+     "labelKo": "낮은 강도",
+     "applicability": [
+      "plant"
+     ],
+     "status": "standard",
+     "since": "1.0.0"
+    },
+    {
+     "code": "TSP-02",
+     "labelKo": "중간 강도",
+     "applicability": [
+      "plant"
+     ],
+     "status": "standard",
+     "since": "1.0.0"
+    },
+    {
+     "code": "TSP-03",
+     "labelKo": "고강도",
+     "applicability": [
+      "plant"
+     ],
+     "status": "standard",
+     "since": "1.0.0"
+    },
+    {
+     "code": "TSP-04",
+     "labelKo": "해당없음",
+     "applicability": [
+      "plant"
+     ],
+     "status": "standard",
+     "since": "1.0.0"
+    }
+   ]
+  },
+  {
+   "id": "CL.THR_SEV_IN",
+   "nameKo": "위협요인 강도(곤충)",
+   "codes": [
+    {
+     "code": "TSI-01",
+     "labelKo": "일부",
+     "applicability": [
+      "insect"
+     ],
+     "status": "standard",
+     "since": "1.0.0"
+    },
+    {
+     "code": "TSI-02",
+     "labelKo": "미약",
+     "applicability": [
+      "insect"
+     ],
+     "status": "standard",
+     "since": "1.0.0"
+    },
+    {
+     "code": "TSI-03",
+     "labelKo": "보통",
+     "applicability": [
+      "insect"
+     ],
+     "status": "standard",
+     "since": "1.0.0"
+    },
+    {
+     "code": "TSI-04",
+     "labelKo": "위협",
+     "applicability": [
+      "insect"
+     ],
+     "status": "standard",
+     "since": "1.0.0"
+    },
+    {
+     "code": "TSI-05",
+     "labelKo": "심각",
+     "applicability": [
+      "insect"
+     ],
+     "status": "standard",
+     "since": "1.0.0"
+    }
+   ]
+  },
+  {
+   "id": "CL.THR_IMPACT",
+   "nameKo": "위협요인 영향",
+   "codes": [
+    {
+     "code": "TI-01",
+     "labelKo": "빠른 개체 감소 유발",
+     "applicability": [
+      "plant",
+      "insect"
+     ],
+     "status": "standard",
+     "since": "1.0.0"
+    },
+    {
+     "code": "TI-02",
+     "labelKo": "느린 감소 유발",
+     "applicability": [
+      "plant",
+      "insect"
+     ],
+     "status": "standard",
+     "since": "1.0.0"
+    },
+    {
+     "code": "TI-03",
+     "labelKo": "변동 유발",
+     "applicability": [
+      "plant",
+      "insect"
+     ],
+     "status": "standard",
+     "since": "1.0.0"
+    },
+    {
+     "code": "TI-04",
+     "labelKo": "무시할 만한 수준",
+     "applicability": [
+      "plant",
+      "insect"
+     ],
+     "status": "standard",
+     "since": "1.0.0"
+    },
+    {
+     "code": "TI-05",
+     "labelKo": "감소 없음",
+     "applicability": [
+      "plant",
+      "insect"
+     ],
+     "status": "standard",
+     "since": "1.0.0"
+    }
+   ],
+   "order": {
+    "plant": [
+     "TI-01",
+     "TI-02",
+     "TI-03",
+     "TI-04",
+     "TI-05"
+    ],
+    "insect": [
+     "TI-01",
+     "TI-02",
+     "TI-03",
+     "TI-04",
+     "TI-05"
+    ]
+   }
+  },
+  {
+   "id": "CL.THR_SCOPE",
+   "nameKo": "위협요인 범위",
+   "codes": [
+    {
+     "code": "TR2-01",
+     "labelKo": "10%미만",
+     "applicability": [
+      "plant",
+      "insect"
+     ],
+     "status": "standard",
+     "since": "1.0.0"
+    },
+    {
+     "code": "TR2-02",
+     "labelKo": "10%~40%",
+     "applicability": [
+      "plant",
+      "insect"
+     ],
+     "status": "standard",
+     "since": "1.0.0"
+    },
+    {
+     "code": "TR2-03",
+     "labelKo": "40%~70%",
+     "applicability": [
+      "plant",
+      "insect"
+     ],
+     "status": "standard",
+     "since": "1.0.0"
+    },
+    {
+     "code": "TR2-04",
+     "labelKo": "70%~90%",
+     "applicability": [
+      "plant",
+      "insect"
+     ],
+     "status": "standard",
+     "since": "1.0.0"
+    },
+    {
+     "code": "TR2-05",
+     "labelKo": "90%이상",
+     "applicability": [
+      "plant",
+      "insect"
+     ],
+     "status": "standard",
+     "since": "1.0.0"
+    }
+   ],
+   "order": {
+    "plant": [
+     "TR2-01",
+     "TR2-02",
+     "TR2-03",
+     "TR2-04",
+     "TR2-05"
+    ],
+    "insect": [
+     "TR2-01",
+     "TR2-02",
+     "TR2-03",
+     "TR2-04",
+     "TR2-05"
+    ]
+   }
+  },
+  {
+   "id": "CL.THR_OUTLOOK",
+   "nameKo": "위협요인 미래 예측",
+   "codes": [
+    {
+     "code": "TO-01",
+     "labelKo": "단기",
+     "applicability": [
+      "insect"
+     ],
+     "status": "standard",
+     "since": "1.0.0"
+    },
+    {
+     "code": "TO-02",
+     "labelKo": "중기반복(<5년)",
+     "applicability": [
+      "insect"
+     ],
+     "status": "standard",
+     "since": "1.0.0"
+    },
+    {
+     "code": "TO-03",
+     "labelKo": "중기지속(<5년)",
+     "applicability": [
+      "insect"
+     ],
+     "status": "standard",
+     "since": "1.0.0"
+    },
+    {
+     "code": "TO-04",
+     "labelKo": "장기반복(>5년)",
+     "applicability": [
+      "insect"
+     ],
+     "status": "standard",
+     "since": "1.0.0"
+    },
+    {
+     "code": "TO-05",
+     "labelKo": "장기지속(>5년)",
+     "applicability": [
+      "insect"
+     ],
+     "status": "standard",
+     "since": "1.0.0"
+    }
+   ]
+  },
+  {
+   "id": "CL.ROCK",
+   "nameKo": "암석노출",
+   "codes": [
+    {
+     "code": "RK-01",
+     "labelKo": "0%",
+     "applicability": [
+      "plant"
+     ],
+     "status": "standard",
+     "since": "1.0.0"
+    },
+    {
+     "code": "RK-02",
+     "labelKo": "<5%",
+     "applicability": [
+      "plant"
+     ],
+     "status": "standard",
+     "since": "1.0.0"
+    },
+    {
+     "code": "RK-03",
+     "labelKo": "<25%",
+     "applicability": [
+      "plant"
+     ],
+     "status": "standard",
+     "since": "1.0.0"
+    },
+    {
+     "code": "RK-04",
+     "labelKo": "<50%",
+     "applicability": [
+      "plant"
+     ],
+     "status": "standard",
+     "since": "1.0.0"
+    },
+    {
+     "code": "RK-05",
+     "labelKo": ">51%",
+     "applicability": [
+      "plant"
+     ],
+     "status": "standard",
+     "since": "1.0.0"
+    }
+   ]
+  },
+  {
+   "id": "CL.LITTER",
+   "nameKo": "낙엽층 두께(cm)",
+   "codes": [
+    {
+     "code": "LT-01",
+     "labelKo": "0-5",
+     "applicability": [
+      "plant"
+     ],
+     "status": "standard",
+     "since": "1.0.0"
+    },
+    {
+     "code": "LT-02",
+     "labelKo": "6-10",
+     "applicability": [
+      "plant"
+     ],
+     "status": "standard",
+     "since": "1.0.0"
+    },
+    {
+     "code": "LT-03",
+     "labelKo": "11-30",
+     "applicability": [
+      "plant"
+     ],
+     "status": "standard",
+     "since": "1.0.0"
+    },
+    {
+     "code": "LT-04",
+     "labelKo": "31-100",
+     "applicability": [
+      "plant"
+     ],
+     "status": "standard",
+     "since": "1.0.0"
+    },
+    {
+     "code": "LT-05",
+     "labelKo": "100이상",
+     "applicability": [
+      "plant"
+     ],
+     "status": "standard",
+     "since": "1.0.0"
+    }
+   ]
+  },
+  {
+   "id": "CL.LIGHT",
+   "nameKo": "빛조건",
+   "codes": [
+    {
+     "code": "LG-01",
+     "labelKo": "음지",
+     "applicability": [
+      "plant"
+     ],
+     "status": "standard",
+     "since": "1.0.0"
+    },
+    {
+     "code": "LG-02",
+     "labelKo": "반음지",
+     "applicability": [
+      "plant"
+     ],
+     "status": "standard",
+     "since": "1.0.0"
+    },
+    {
+     "code": "LG-03",
+     "labelKo": "양지",
+     "applicability": [
+      "plant"
+     ],
+     "status": "standard",
+     "since": "1.0.0"
+    }
+   ]
+  },
+  {
+   "id": "CL.MICRO",
+   "nameKo": "미세지형",
+   "codes": [
+    {
+     "code": "MC-01",
+     "labelKo": "평면",
+     "applicability": [
+      "plant"
+     ],
+     "status": "standard",
+     "since": "1.0.0"
+    },
+    {
+     "code": "MC-02",
+     "labelKo": "함몰",
+     "applicability": [
+      "plant"
+     ],
+     "status": "standard",
+     "since": "1.0.0"
+    },
+    {
+     "code": "MC-03",
+     "labelKo": "요철",
+     "applicability": [
+      "plant"
+     ],
+     "status": "standard",
+     "since": "1.0.0"
+    },
+    {
+     "code": "MC-04",
+     "labelKo": "돌출",
+     "applicability": [
+      "plant"
+     ],
+     "status": "standard",
+     "since": "1.0.0"
+    }
+   ]
+  },
+  {
+   "id": "CL.MOIST",
+   "nameKo": "토습",
+   "codes": [
+    {
+     "code": "SM-01",
+     "labelKo": "건",
+     "applicability": [
+      "plant"
+     ],
+     "status": "standard",
+     "since": "1.0.0",
+     "description": "손바닥에 물기가 전혀 남지 않음"
+    },
+    {
+     "code": "SM-02",
+     "labelKo": "적",
+     "applicability": [
+      "plant"
+     ],
+     "status": "standard",
+     "since": "1.0.0",
+     "description": "토양을 강하게 누르면 손바닥에 물기가 남음"
+    },
+    {
+     "code": "SM-03",
+     "labelKo": "습",
+     "applicability": [
+      "plant"
+     ],
+     "status": "standard",
+     "since": "1.0.0",
+     "description": "강하게 누르면 물기가 남지만, 물방울이 떨어지지 않음"
+    },
+    {
+     "code": "SM-04",
+     "labelKo": "다습",
+     "applicability": [
+      "plant"
+     ],
+     "status": "standard",
+     "since": "1.0.0",
+     "description": "강하게 누르면 물방울이 떨어짐"
+    },
+    {
+     "code": "SM-05",
+     "labelKo": "과습",
+     "applicability": [
+      "plant"
+     ],
+     "status": "standard",
+     "since": "1.0.0",
+     "description": "토양을 손바닥에 올려놓으면 물방울이 떨어짐"
+    },
+    {
+     "code": "SM-06",
+     "labelKo": "기타(수중)",
+     "applicability": [
+      "plant"
+     ],
+     "status": "standard",
+     "since": "1.0.0",
+     "note": "선택 시 내용 기재"
+    }
+   ]
+  },
+  {
+   "id": "CL.LAYER",
+   "nameKo": "식생 층위",
+   "codes": [
+    {
+     "code": "LYR-T",
+     "labelKo": "교목층",
+     "aliases": [
+      "T"
+     ],
+     "applicability": [
+      "plant"
+     ],
+     "status": "standard",
+     "since": "1.0.0"
+    },
+    {
+     "code": "LYR-S",
+     "labelKo": "관목층",
+     "aliases": [
+      "S"
+     ],
+     "applicability": [
+      "plant"
+     ],
+     "status": "standard",
+     "since": "1.0.0"
+    },
+    {
+     "code": "LYR-H",
+     "labelKo": "초본층",
+     "aliases": [
+      "H"
+     ],
+     "applicability": [
+      "plant"
+     ],
+     "status": "standard",
+     "since": "1.0.0"
+    }
+   ]
+  }
+ ],
+ "species": [],
+ "issues": [
+  {
+   "id": "ISS-001",
+   "title": "위협요인 강도 척도 불일치",
+   "elements": [
+    "ES.THR.SEVERITY"
+   ],
+   "status": "open",
+   "detail": "식물은 낮은/중간/고강도/해당없음(3단계+), 곤충은 일부/미약/보통/위협/심각(5단계)으로 척도가 달라 분류군 간 비교·통합 분석이 불가함.",
+   "resolution": "분류군별 코드목록을 분리 유지. 통합 척도(예: 5단계) 및 상호 변환표 마련 필요."
+  },
+  {
+   "id": "ISS-002",
+   "title": "서식지 분류체계 상이",
+   "elements": [
+    "ES.HAB.TYPE"
+   ],
+   "status": "open",
+   "detail": "식물은 대·중·소 3단계(산림지역>아고산>혼효림 등), 곤충은 대·중 2단계(산림>혼효림 등)로 체계와 용어가 다름.",
+   "resolution": "분류군별 코드목록(CL.HAB_PL, CL.HAB_IN) 분리. 공통 상위 분류(산림·초지·습지·하천·해안·농경·도시) 매핑표 필요."
+  },
+  {
+   "id": "ISS-003",
+   "title": "개체수 구간 경계 중복",
+   "elements": [
+    "ES.POP.COUNT_CLASS"
+   ],
+   "status": "open",
+   "detail": "곤충 조사표의 '11-50'과 '50-100' 구간이 50에서 겹침.",
+   "resolution": "'51-100'으로 정정 검토. 현재 전자야장은 50을 '11-50'으로 자동 분류."
+  },
+  {
+   "id": "ISS-004",
+   "title": "암석노출 구간 공백",
+   "elements": [
+    "ES.ENV.ROCK_EXPOSURE"
+   ],
+   "status": "open",
+   "detail": "식물 조사표의 '<50%'와 '>51%' 사이(50~51%)가 정의되지 않음.",
+   "resolution": "'≥50%'로 정정 검토."
+  },
+  {
+   "id": "ISS-005",
+   "title": "행정구역 기재 방식 상충",
+   "elements": [
+    "ES.LOC.ADMIN_ADDR"
+   ],
+   "status": "open",
+   "detail": "작성요령은 '도로명 주소 체계'를, 조사표는 '동/리, 지번까지 기재'를 지시함. 산지 조사지는 도로명주소가 없는 경우가 많음.",
+   "resolution": "지번 기준 기재를 기본으로 하고 도로명주소는 선택 요소로 분리 검토."
+  },
+  {
+   "id": "ISS-006",
+   "title": "좌표값 취득원 표기 차이",
+   "elements": [
+    "ES.LOC.COORD_SOURCE"
+   ],
+   "status": "resolved",
+   "detail": "식물(구글지도·카카오맵·네이버지도)과 곤충(구글맵·다음맵·네이버맵) 표기가 다름.",
+   "resolution": "동일 서비스를 단일 코드로 통합(SRC-02 구글 지도, SRC-03 카카오맵(다음지도), SRC-04 네이버 지도). 화면에는 각 조사표 표기 유지."
+  },
+  {
+   "id": "ISS-007",
+   "title": "자연적 위협요인 '사태'/'산사태' 표기 차이",
+   "elements": [
+    "ES.THR.NATURAL"
+   ],
+   "status": "resolved",
+   "detail": "식물은 '사태', 곤충은 '산사태'로 표기.",
+   "resolution": "단일 코드 '산사태'로 통합."
+  },
+  {
+   "id": "ISS-008",
+   "title": "미확인 시 서식 가능 여부 표기 차이",
+   "elements": [
+    "ES.POP.HABITABILITY"
+   ],
+   "status": "resolved",
+   "detail": "식물(서식가능/불가)과 곤충(가능/불가능) 표기가 다르고 입력 키도 다름.",
+   "resolution": "단일 데이터 요소·코드목록으로 통합."
+  },
+  {
+   "id": "ISS-009",
+   "title": "성장단계 체계 상이",
+   "elements": [
+    "ES.POP.LIFE_STAGE",
+    "ES.POP.STAGE_COUNT"
+   ],
+   "status": "accepted",
+   "detail": "식물(유묘·영양생장기·개화 및 결실기)과 곤충(알·유충·번데기·성충)은 생물학적으로 다른 체계임.",
+   "resolution": "분류군별 코드목록 유지, Darwin Core lifeStage 값으로 매핑."
+  },
+  {
+   "id": "ISS-010",
+   "title": "식물 조사표에 날씨·기온 항목 없음",
+   "elements": [
+    "ES.EVT.WEATHER",
+    "ES.EVT.AIR_TEMP"
+   ],
+   "status": "resolved",
+   "detail": "곤충 조사표에만 날씨·기온이 있음.",
+   "resolution": "전자야장에서 공통 선택 항목으로 추가(자동기입)."
+  },
+  {
+   "id": "ISS-011",
+   "title": "식물 위협요인 평가가 요인별로 분리되지 않음",
+   "elements": [
+    "ES.THR.SEVERITY",
+    "ES.THR.IMPACT",
+    "ES.THR.SCOPE"
+   ],
+   "status": "open",
+   "detail": "식물 조사표는 여러 위협요인을 체크해도 강도·영향·범위를 1세트만 기록함. 곤충은 2·3순위 요인을 별도 평가함.",
+   "resolution": "식물에도 순위별 위협요인 평가(ES.THR.RANK2/3) 적용 검토."
+  },
+  {
+   "id": "ISS-012",
+   "title": "종 코드표 미구축",
+   "elements": [
+    "ES.TAX.VERNACULAR",
+    "ES.TAX.SCI_NAME",
+    "ES.TAX.CODE"
+   ],
+   "status": "open",
+   "detail": "현재 국명 자유입력으로 오기·이명 혼용 가능성이 있음.",
+   "resolution": "국가생물종목록 기준 종 코드표(국명·학명·종코드·등급) 구축 후 레지스트리에 수록. 앱에서 CSV로 가져오기 지원."
+  }
+ ]
+}

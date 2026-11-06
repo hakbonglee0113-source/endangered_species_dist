@@ -98,7 +98,27 @@ input,select,textarea{font:inherit;font-size:16px;color:var(--ink)}
 .dr-title h2{margin:0;font-size:18px}
 .icon-btn{width:38px;height:38px;border:0;border-radius:10px;background:rgba(255,255,255,.12);color:#fff;display:grid;place-items:center}
 .dr-tabs{display:flex;gap:4px}
-.dr-tabs button{flex:1;border:0;background:none;color:rgba(255,255,255,.7);padding:10px 0;font-weight:700;border-bottom:3px solid transparent}
+.dr-tabs button{flex:1;border:0;background:none;color:rgba(255,255,255,.7);padding:10px 0;font-weight:700;font-size:13.5px;border-bottom:3px solid transparent;white-space:nowrap}
+.reg-head .rh-t{font-weight:800;font-size:15px;color:var(--navy);line-height:1.35}
+.rh-m{display:flex;gap:6px;align-items:center;margin:6px 0 10px;flex-wrap:wrap}.rh-m code{font-size:11.5px;color:var(--muted)}
+.vb{background:var(--navy);color:#fff;border-radius:6px;padding:1px 8px;font-size:12px;font-weight:800}
+.sb{background:#fff4d6;color:#8a5a00;border-radius:6px;padding:1px 8px;font-size:12px;font-weight:700}
+.rh-g{display:grid;grid-template-columns:repeat(4,1fr);gap:6px;margin-bottom:8px;text-align:center}
+.rh-g div{background:var(--bg);border-radius:10px;padding:7px 2px}.rh-g b{display:block;font-size:17px;color:var(--navy)}.rh-g span{font-size:11px;color:var(--muted)}
+.chips.rv{margin-bottom:12px}
+.rg-g{font-size:12.5px;font-weight:800;color:var(--navy);margin:14px 2px 6px;display:flex;justify-content:space-between}.rg-g span{color:var(--muted);font-weight:600}
+.rec.el{padding:10px 12px}.rec.el .t2{font-weight:800}.rec.el code{font-size:11.5px;color:var(--navy2)}
+code{font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:.92em}
+.tag.ty{background:#eef1f7;color:#3d4458}.tag.ob{background:#fff;border:1px solid var(--line);color:#3d4458}.tag.sys{background:#efe9fb;color:#5b3fa8}
+table.st.cl td,table.st.cl th{text-align:left;white-space:normal;vertical-align:top}
+table.st.cl tr.grp td{color:var(--muted);background:#f7f8fb;font-weight:700}table.st.cl tr.dep td{text-decoration:line-through;opacity:.6}
+table.st.cl i{font-style:normal;font-size:10.5px;color:#b36a0e}
+.prop{background:#fff7e0;border-radius:10px;padding:8px 10px;margin-bottom:6px;font-size:13px}.prop span{display:block;font-size:11px;color:var(--muted);margin-top:2px}
+.card.iss p{font-size:13px;margin:8px 0 0}.card.iss .res{color:#2d4a3a}
+.tag.st-open{background:#fdecea;color:var(--danger)}.tag.st-resolved{background:var(--plant-soft);color:var(--plant)}.tag.st-accepted{background:#eef1f7;color:#3d4458}
+.qc-list{list-style:none;padding:0;margin:10px 0 0;display:grid;gap:6px}
+.qc-list li{border-radius:10px;padding:8px 10px;font-size:13px;background:#fff7e0}.qc-list li.error{background:#fdecea}
+.qc-list li b{margin-right:4px}.qc-list li.error b{color:var(--danger)}.qc-list li.warn b{color:#8a5a00}.qc-list li span{display:block;font-size:10.5px;color:var(--muted);font-family:ui-monospace,monospace}
 .dr-tabs button.on{color:#fff;border-color:#fff}
 .dr-body{flex:1;overflow:auto;padding:14px 14px calc(24px + var(--sab))}
 .search{display:flex;align-items:center;gap:8px;background:#fff;border:1px solid var(--line);border-radius:12px;padding:0 12px;margin-bottom:10px}
@@ -305,7 +325,7 @@ textarea:focus{border-color:var(--navy2)}
 <aside id="drawer">
   <div class="dr-head">
     <div class="dr-title"><h2>조사기록</h2><button class="icon-btn" id="drClose" aria-label="닫기"><svg width="18" height="18" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.6" stroke-linecap="round"><path d="M6 6l12 12M18 6L6 18"/></svg></button></div>
-    <div class="dr-tabs"><button data-p="search" class="on">검색</button><button data-p="stats">통계</button><button data-p="set">설정·백업</button></div>
+    <div class="dr-tabs"><button data-p="search" class="on">검색</button><button data-p="stats">통계</button><button data-p="reg">메타데이터</button><button data-p="set">설정·백업</button></div>
   </div>
   <div class="dr-body" id="drBody"></div>
 </aside>
@@ -343,7 +363,7 @@ textarea:focus{border-color:var(--navy2)}
 /* =========================================================
    멸종위기 야생생물 전자야장 (식물·곤충)  v1.0
    ========================================================= */
-const APP_VER = '1.1.0';
+const APP_VER = '1.2.0';
 const $ = (s, el = document) => el.querySelector(s);
 const $$ = (s, el = document) => [...el.querySelectorAll(s)];
 const esc = v => String(v ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
@@ -393,7 +413,7 @@ let RECS = [];
 async function reload() { RECS = (await DB.all()).sort((a, b) => (b.f.date || '').localeCompare(a.f.date || '') || b.updatedAt - a.updatedAt); drawMarkers(); }
 
 /* ---------- 설정 ---------- */
-const SET = Object.assign({ name: '', org: '', aName: '', aOrg: '' }, JSON.parse(localStorage.getItem('es-set') || '{}'));
+const SET = Object.assign({ name: '', org: '', aName: '', aOrg: '', sid: '' }, JSON.parse(localStorage.getItem('es-set') || '{}'));
 const saveSet = () => localStorage.setItem('es-set', JSON.stringify(SET));
 
 /* =========================================================
@@ -772,7 +792,7 @@ function openDrawer() {
 }
 $('#btnMenu').onclick = openDrawer; $('#drClose').onclick = popLayer; $('#drBack').onclick = popLayer;
 $('.dr-tabs').addEventListener('click', e => { const b = e.target.closest('button'); if (!b) return; drPane = b.dataset.p; $$('.dr-tabs button').forEach(x => x.classList.toggle('on', x === b)); renderPane(); });
-function renderPane() { ({ search: paneSearch, stats: paneStats, set: paneSet })[drPane](); }
+function renderPane() { ({ search: paneSearch, stats: paneStats, reg: paneReg, set: paneSet })[drPane](); }
 
 /* ---------- 검색 ---------- */
 function recText(r) {
@@ -809,7 +829,7 @@ function detailHTML(r) {
     const rows = tab.flatMap(flatFields).map(fd => { const v = fmtVal(fd, r.f); return v ? `<dt>${esc(fd.dl || fd.label)}</dt><dd>${v}</dd>` : ''; }).join('');
     const media = tab.some(fd => fd.t === 'media') ? mediaView(r.f) : '';
     return rows || media ? `<h4>${TABS[r.taxon][ti]}</h4><dl>${rows}</dl>${media}` : '';
-  }).join('');
+  }).join('') + stdInfoHTML(r);
 }
 function mediaView(f) {
   let o = ''; if (f.sketch) o += `<div class="lab" style="margin-top:8px">약도</div><img class="sketch-prev" src="${f.sketch}">`;
@@ -985,6 +1005,7 @@ async function paneSet() {
   $('#drBody').innerHTML = `<div class="card set"><h3>기본 조사자 정보</h3><div class="hint">새 야장에 자동으로 입력되며, 통계의 ‘내 기록’ 기준과 지도 워터마크에 쓰입니다.</div>
       <div class="grid2"><div><label>책임 성명</label><input id="sN" value="${esc(SET.name)}"></div><div><label>소속</label><input id="sO" value="${esc(SET.org)}"></div>
       <div><label>보조 성명</label><input id="sAN" value="${esc(SET.aName)}"></div><div><label>소속</label><input id="sAO" value="${esc(SET.aOrg)}"></div></div>
+      <label>조사자 ID (향후 서버 계정 연결용 · 기관 부여 코드 또는 이메일)</label><input id="sID" value="${esc(SET.sid)}" placeholder="예: ES-2026-014">
       <button class="btn block" style="margin-top:10px" id="sSave">저장</button></div>
     <div class="card"><h3>내보내기</h3><div class="stack">
       <button class="btn ghost" id="xP">식물 야장 CSV (엑셀용)</button><button class="btn ghost" id="xI">곤충 야장 CSV (엑셀용)</button>
@@ -997,7 +1018,7 @@ async function paneSet() {
       <button class="btn red" id="xDel">전체 자료 삭제</button></div>
       <div class="hint" style="margin-top:10px">⚠ 야장 자료는 이 휴대폰의 앱 저장소에만 보관됩니다. 브라우저 데이터를 지우거나 앱을 삭제하면 사라지므로 조사 후 백업 파일을 꼭 내보내 두세요.<br>${est}${persisted ? ' · 영구 저장 허용됨' : ''}</div></div>
     <div class="hint" style="text-align:center">멸종위기종 전자야장 v${APP_VER} · 지도 © OpenStreetMap, Esri · 날씨 Open-Meteo · 주소 Nominatim</div>`;
-  $('#sSave').onclick = () => { SET.name = $('#sN').value.trim(); SET.org = $('#sO').value.trim(); SET.aName = $('#sAN').value.trim(); SET.aOrg = $('#sAO').value.trim(); saveSet(); updateWatermark(); ST.who = null; toast('저장했습니다'); };
+  $('#sSave').onclick = () => { SET.name = $('#sN').value.trim(); SET.org = $('#sO').value.trim(); SET.aName = $('#sAN').value.trim(); SET.aOrg = $('#sAO').value.trim(); SET.sid = $('#sID').value.trim(); saveSet(); updateWatermark(); ST.who = null; toast('저장했습니다'); };
   $('#pP').onclick = () => pdfRecords('plant'); $('#pI').onclick = () => pdfRecords('insect'); $('#pS').onclick = pdfStats;
   $('#xP').onclick = () => exportCSV('plant'); $('#xI').onclick = () => exportCSV('insect'); $('#xJ').onclick = exportJSON;
   $('#iJ').onchange = importJSON;
@@ -1092,7 +1113,7 @@ function R(fd) {
     case 'note': return `<div class="note ${fd.big ? 'big' : ''}">${esc(fd.label).replace(/\n/g, '<br>')}</div>`;
     case 'row': return `<div class="row">${fd.items.map(R).join('')}</div>`;
     case 'text': case 'number': case 'date': case 'time':
-      return `<label class="fld"><span>${lab(fd)}</span><div class="inrow"><input data-k="${fd.k}" type="${fd.t}" ${fd.t === 'number' ? `inputmode="decimal" step="${fd.step || 'any'}"` : ''} ${fd.list ? 'list="spList"' : ''} placeholder="${esc(fd.ph || '')}" value="${esc(f[fd.k] ?? '')}">${fd.unit ? `<span class="u">${fd.unit}</span>` : ''}${fd.now ? `<button type="button" class="nb" data-act="now" data-for="${fd.k}">지금</button>` : ''}</div></label>`;
+      return `<label class="fld"><span>${lab(fd)}</span><div class="inrow"><input data-k="${fd.k}" type="${fd.t}" ${fd.t === 'number' ? `inputmode="decimal" step="${fd.step || 'any'}"${fd.min != null ? ` min="${fd.min}"` : ''}${fd.max != null ? ` max="${fd.max}"` : ''}` : ''} ${fd.list ? 'list="spList"' : ''} placeholder="${esc(fd.ph || '')}" value="${esc(f[fd.k] ?? '')}">${fd.unit ? `<span class="u">${fd.unit}</span>` : ''}${fd.now ? `<button type="button" class="nb" data-act="now" data-for="${fd.k}">지금</button>` : ''}</div></label>`;
     case 'area': return `<label class="fld"><span>${lab(fd)}</span><textarea data-k="${fd.k}" placeholder="${esc(fd.ph || '')}">${esc(f[fd.k] ?? '')}</textarea></label>`;
     case 'radio': case 'check': return chipGroup(fd.k, fd.label, fd.opts, fd.t, fd.list, fd.req);
     case 'auto': return `<div class="auto-card"><p>조사일자 · 시각 · 날씨 · 기온 · 행정구역 · 경위도 · 고도를 한 번에 기입합니다. 조사지점에 서서 눌러 주세요.</p>
@@ -1163,11 +1184,12 @@ function treeHTML(fd) {
 }
 function rankHTML(fd) {
   const r = F.f[fd.k] || {};
-  const facs = ['thrA', 'thrN', 'thrB'].flatMap(k => I_THR[k].map(normOpt).map(o => `${THR_CAT[k]}, ${o.v}`));
+  const fOf = k => SCHEMA.insect[2].find(x => x.k === k), vOf = k => fOf(k).opts.map(o => normOpt(o).v);
+  const facs = ['thrA', 'thrN', 'thrB'].flatMap(k => vOf(k).map(v => `${THR_CAT[k]}, ${v}`));
   const s = (key, opts, ph) => `<div class="inrow"><select data-k="${fd.k}.${key}"><option value="">${ph}</option>${opts.map(o => `<option ${r[key] === o ? 'selected' : ''}>${esc(o)}</option>`).join('')}</select></div>`;
   return `<div class="item"><div class="item-h">${fd.label}</div><div class="stack">
-    ${s('factor', facs, '요인 (구분, 항목)')}<div class="row">${s('when', I_WHEN, '발생시기')}${s('sev', I_SEV, '강도')}</div>
-    <div class="row">${s('eff', EFF, '영향')}${s('range', RANGE, '범위')}</div>${s('pred', I_PRED, '미래 예측')}</div></div>`;
+    ${s('factor', facs, '요인 (구분, 항목)')}<div class="row">${s('when', vOf('thrWhen'), '발생시기')}${s('sev', vOf('thrSev'), '강도')}</div>
+    <div class="row">${s('eff', vOf('thrEff'), '영향')}${s('range', vOf('thrRange'), '범위')}</div>${s('pred', vOf('thrPred'), '미래 예측')}</div></div>`;
 }
 function prevHTML() {
   const f = F.f; if (!f.species) return '';
@@ -1188,7 +1210,7 @@ function mediaHTML(fd) {
 const compass = d => { if (d === '' || d == null) return ''; const n = ['N', 'NNE', 'NE', 'ENE', 'E', 'ESE', 'SE', 'SSE', 'S', 'SSW', 'SW', 'WSW', 'W', 'WNW', 'NW', 'NNW']; return n[Math.round(((+d % 360) + 360) % 360 / 22.5) % 16] + ' 방향'; };
 function refreshDatalist() {
   let dl = $('#spList'); if (!dl) { dl = document.createElement('datalist'); dl.id = 'spList'; document.body.appendChild(dl); }
-  const names = new Set(); RECS.forEach(r => { r.f.species && names.add(r.f.species); (r.f.co || []).forEach(c => c.name && names.add(c.name)); });
+  const names = new Set(REG ? speciesList().map(s => s.nameKo) : []); RECS.forEach(r => { r.f.species && names.add(r.f.species); (r.f.co || []).forEach(c => c.name && names.add(c.name)); });
   dl.innerHTML = [...names].sort().map(n => `<option value="${esc(n)}">`).join('');
 }
 
@@ -1319,7 +1341,12 @@ $('#fSave').onclick = async () => {
   if (!f.serial) f.serial = autoSerial();
   if (!f.tEnd) f.tEnd = nowHM();
   const old = RECS.find(r => r.id === F.id);
-  const rec = { id: F.id, taxon: F.taxon, createdAt: old ? old.createdAt : Date.now(), updatedAt: Date.now(), f };
+  const os = old && old.sync;
+  const rec = { id: F.id, taxon: F.taxon, createdAt: old ? old.createdAt : Date.now(), updatedAt: Date.now(), f,
+    rev: old ? (old.rev || 1) + 1 : 1, deviceId: (old && old.deviceId) || DEVICE_ID,
+    owner: { surveyorId: (old && old.owner && old.owner.surveyorId) || SET.sid || null, name: f.chiefName || null, org: f.chiefOrg || null },
+    sync: { serverId: null, lastSyncedAt: null, ...(os || {}), status: os && os.status === 'synced' ? 'modified' : (os && os.status) || 'local' } };
+  if (REG) { stamp(rec); if (rec.qc.issues.length && !(await qcBox(rec.qc.issues))) return; }
   try { await DB.put(rec); } catch (er) { return toast('저장 실패: 저장공간을 확인하세요'); }
   try { navigator.storage && navigator.storage.persist && navigator.storage.persist(); } catch (_) {}
   if (!SET.name && f.chiefName) { SET.name = f.chiefName; SET.org = f.chiefOrg || ''; saveSet(); updateWatermark(); }
@@ -1458,10 +1485,423 @@ function openSketch() {
 }
 
 /* =========================================================
+   메타데이터 레지스트리 (데이터 표준·코드목록·검증)
+   - registry.json(배포본)을 읽어 기기에 보관, 버전 비교 후 적용
+   - 입력 화면의 항목명·선택지·필수 여부를 레지스트리에서 가져옴
+   - 저장 시 표준 요소ID·코드값으로 변환(std)하고 레지스트리 규칙으로 검증(qc)
+   - 기록 구조(id·rev·owner·deviceId·sync)는 향후 서버 동기화를 전제로 설계
+   ========================================================= */
+let REG = null, RX = null, REG_SRC = '';
+const REG_KEY = 'es-registry', PROP_KEY = 'es-reg-proposals', SPEC_KEY = 'es-species-local';
+const DEVICE_ID = (() => { let d = localStorage.getItem('es-device'); if (!d) { d = 'dev-' + uid(); localStorage.setItem('es-device', d); } return d; })();
+const perT = (v, t) => v && typeof v === 'object' && !Array.isArray(v) ? v[t] : v;
+const iso = ms => ms ? new Date(ms).toISOString() : null;
+const semverCmp = (a, b) => { const x = String(a || 0).split('.').map(Number), y = String(b || 0).split('.').map(Number); for (let i = 0; i < 3; i++) { const d = (x[i] || 0) - (y[i] || 0); if (d) return d; } return 0; };
+const validRegistry = r => !!(r && r.registry && r.registry.id && r.registry.version && Array.isArray(r.dataElements) && Array.isArray(r.codeLists));
+const TYPE_KO = { string: '문자', text: '서술형 문자', integer: '정수', decimal: '실수', date: '날짜', time: '시각', datetime: '일시', code: '코드(단일 선택)', codeSet: '코드(복수 선택)', codeMap: '코드별 수량', list: '반복 목록', group: '복합 항목', binary: '이미지' };
+const OB_KO = { M: '필수', C: '조건부 필수', O: '선택' };
+const SENS_KO = { public: '일반', personal: '개인정보', restricted: '민감(출현좌표 등)' };
+const STATUS_KO = { standard: '표준', candidate: '후보', deprecated: '폐기', pilot: '시범 운영', draft: '초안', released: '확정' };
+const ISS_KO = { open: '검토 필요', resolved: '통합 완료', accepted: '분리 유지' };
+const SYNC_KO = { local: '기기에만 저장 (미전송)', modified: '수정됨 (재전송 필요)', synced: '서버 동기화 완료' };
+
+function initRegistry() {
+  try { const s = JSON.parse(localStorage.getItem(REG_KEY) || 'null'); if (validRegistry(s)) useRegistry(s, localStorage.getItem(REG_KEY + '-src') || '기기 저장본', false); } catch (_) {}
+  return fetch('registry.json', { cache: 'no-cache' }).then(r => r.ok ? r.json() : null).then(j => {
+    if (!validRegistry(j)) return;
+    const c = REG ? semverCmp(j.registry.version, REG.registry.version) : 1;
+    if (c > 0 || (c === 0 && REG_SRC !== '가져온 파일')) useRegistry(j, '배포본 (registry.json)');
+  }).catch(() => {});
+}
+function useRegistry(r, src, save = true) {
+  REG = r; REG_SRC = src;
+  if (save) { try { localStorage.setItem(REG_KEY, JSON.stringify(r)); localStorage.setItem(REG_KEY + '-src', src); } catch (_) {} }
+  indexRegistry(); applyRegistry();
+}
+function indexRegistry() {
+  const cl = {}, ci = {}, byKey = { plant: {}, insect: {} }, byId = {};
+  REG.codeLists.forEach(l => { cl[l.id] = l; ci[l.id] = {}; l.codes.forEach(c => ci[l.id][c.code] = c); });
+  REG.dataElements.forEach(e => { byId[e.id] = e; (e.applicability || []).forEach(t => { const k = perT(e.key, t); if (k && !e.derived && !e.system) byKey[t][k] = e; }); });
+  RX = { cl, ci, byKey, byId };
+}
+const codeValue = (c, t) => (c.labels && c.labels[t]) || c.pathKo || c.labelKo;
+function codesFor(id, t) {
+  const l = RX.cl[id]; if (!l) return [];
+  const ord = l.order && l.order[t];
+  const cs = ord ? ord.map(c => RX.ci[id][c]).filter(Boolean) : l.codes.filter(c => !c.applicability || c.applicability.includes(t));
+  return cs.filter(c => c.status !== 'deprecated' && c.selectable !== false);
+}
+function findCode(id, t, v) {
+  const l = RX && RX.cl[id]; if (!l || isEmpty(v)) return null;
+  return l.codes.find(c => c.selectable !== false && (codeValue(c, t) === v || c.labelKo === v || c.pathKo === v || (c.aliases || []).includes(v) || Object.values(c.labels || {}).includes(v))) || null;
+}
+function buildTree(id, t) {
+  const cs = RX.cl[id].codes.filter(c => c.status !== 'deprecated' && (!c.applicability || c.applicability.includes(t)));
+  const kids = p => cs.filter(c => (c.parent || null) === p);
+  const leaf = c => { const x = perT(c.textPrompt, t); return x ? { v: c.labelKo, x } : c.labelKo; };
+  return kids(null).map(b => { const groups = [], leaves = [];
+    kids(b.code).forEach(c => { const g = kids(c.code); g.length ? groups.push([c.labelKo, g.map(leaf)]) : leaves.push(leaf(c)); });
+    if (leaves.length) groups.unshift(['', leaves]); return [b.labelKo, groups]; });
+}
+function applyRegistry() { ['plant', 'insect'].forEach(t => SCHEMA[t].forEach(tab => tab.forEach(fd => patchFd(fd, t)))); }
+function patchFd(fd, t) {
+  if (fd.t === 'row') return fd.items.forEach(x => patchFd(x, t));
+  const e = RX.byKey[t][fd.t === 'stageN' ? 'stageN' : fd.k]; if (!e) return;
+  fd.el = e.id;
+  if (['text', 'number', 'date', 'time', 'area', 'radio', 'check'].includes(fd.t)) { const fl = perT(e.formLabel, t); if (fl) fd.label = fl; }
+  if (e.min != null) fd.min = e.min; if (e.max != null) fd.max = e.max;
+  const ob = perT(e.obligation, t); if (ob) fd.req = ob === 'M' || ob === 'C';
+  const lid = perT(e.codeList, t); if (!lid || !RX.cl[lid]) return;
+  if (fd.t === 'radio' || fd.t === 'check') fd.opts = codesFor(lid, t).map(c => ({ v: codeValue(c, t), x: perT(c.textPrompt, t) || null, d: c.description }));
+  if (fd.t === 'tree') fd.data = buildTree(lid, t);
+  if (fd.t === 'stageN') fd.stages = codesFor(lid, t).map(c => codeValue(c, t));
+}
+
+/* ---------- 종 코드표 ---------- */
+function speciesList() { let loc = []; try { loc = JSON.parse(localStorage.getItem(SPEC_KEY) || '[]'); } catch (_) {} return [...((REG && REG.species) || []).map(s => ({ ...s, _src: '배포본' })), ...loc.map(s => ({ ...s, _src: '로컬' }))]; }
+function speciesLookup(name) { if (!name) return null; const n = String(name).trim(); return speciesList().find(s => s.nameKo === n || (s.synonyms || []).includes(n)) || null; }
+function lev(a, b) { const m = a.length, n = b.length, d = Array.from({ length: m + 1 }, (_, i) => [i, ...Array(n).fill(0)]); for (let j = 1; j <= n; j++) d[0][j] = j;
+  for (let i = 1; i <= m; i++) for (let j = 1; j <= n; j++) d[i][j] = Math.min(d[i - 1][j] + 1, d[i][j - 1] + 1, d[i - 1][j - 1] + (a[i - 1] === b[j - 1] ? 0 : 1)); return d[m][n]; }
+
+/* ---------- 표준화 + 검증 ---------- */
+function scalar(e, raw, w) {
+  const T = e.dataType;
+  if (T === 'integer' || T === 'decimal') { const n = num(raw); if (n == null) { w('숫자 형식이 아님'); return raw; }
+    if (T === 'integer' && !Number.isInteger(n)) w('정수여야 함');
+    if ((e.min != null && n < e.min) || (e.max != null && n > e.max)) w(`허용범위(${e.min ?? ''}~${e.max ?? ''}${e.unit ? ' ' + e.unit : ''})를 벗어남: ${n}`);
+    return n; }
+  if (T === 'date') { if (!/^\d{4}-\d{2}-\d{2}$/.test(raw)) w('날짜 형식(YYYY-MM-DD)이 아님'); else if (raw > todayStr()) w('미래 날짜임'); return raw; }
+  if (T === 'time') { if (!/^\d{2}:\d{2}/.test(raw)) w('시각 형식(HH:MM)이 아님'); return String(raw).slice(0, 5); }
+  const s = String(raw).trim(); if (e.pattern && !new RegExp(e.pattern).test(s)) w('형식 규칙에 맞지 않음'); return s;
+}
+function conv(e, t, raw, f, k, w) {
+  const T = e.dataType;
+  if (T === 'binary') return k === 'photos' ? ((raw || []).length || undefined) : (raw ? true : undefined);
+  if (T === 'list') {
+    const arr = (raw || []).filter(x => x && Object.values(x).some(y => !isEmpty(y))); if (!arr.length) return undefined;
+    return arr.map((row, i) => { const o = {};
+      (e.components || []).forEach(c => { const x = row[c.name]; if (isEmpty(x)) return;
+        if (c.dataType === 'code') { const cd = findCode(c.codeList, t, x); o[c.name] = cd ? cd.code : x; if (!cd) w('error', `${i + 1}번째 ${c.nameKo} '${x}'이(가) 코드목록에 없음`); }
+        else o[c.name] = scalar(c, x, m => w('warn', `${i + 1}번째 ${c.nameKo}: ${m}`)); });
+      return o; });
+  }
+  if (T === 'group') {
+    if (!raw || isEmpty(raw.factor)) return undefined; const o = {};
+    (e.components || []).forEach(c => { const x = raw[c.name]; if (isEmpty(x)) return;
+      if (c.name === 'factor') { const [cat, lab] = x.split(', '); const lid = { '인위적': 'CL.THR_ANTH', '자연적': 'CL.THR_NAT', '생물적': 'CL.THR_BIO' }[cat]; const cd = lid && findCode(lid, t, lab);
+        o.factor = cd ? cd.code : x; if (!cd) w('error', `요인 '${x}'이(가) 코드목록에 없음`); }
+      else { const cd = findCode(c.codeList, t, x); o[c.name] = cd ? cd.code : x; if (!cd) w('error', `${c.nameKo} '${x}'이(가) 코드목록에 없음`); } });
+    return o;
+  }
+  if (T === 'codeMap') {
+    if (!raw) return undefined; const o = {}, lid = perT(e.codeList, t);
+    Object.entries(raw).forEach(([lab, n]) => { if (isEmpty(n)) return; const cd = findCode(lid, t, lab), nn = num(n);
+      if (nn == null) return w('error', `${lab} 개체수가 숫자가 아님`); if (!cd) w('error', `'${lab}'이(가) 코드목록에 없음`); o[cd ? cd.code : lab] = nn; });
+    return Object.keys(o).length ? o : undefined;
+  }
+  if (T === 'code' || T === 'codeSet') {
+    const lid = perT(e.codeList, t), vals = T === 'code' ? (isEmpty(raw) ? [] : [raw]) : (raw || []);
+    if (!vals.length) return undefined;
+    const out = vals.map(x => { const cd = findCode(lid, t, x);
+      if (!cd) { w('error', `'${x}'은(는) 코드목록(${lid})에 없는 값`); return x; }
+      if (cd.status === 'deprecated') w('warn', `'${x}'은(는) 폐기된 코드`);
+      const txt = perT(cd.textPrompt, t) && f[k + '__' + x];
+      return txt ? { code: cd.code, text: String(txt).trim() } : cd.code; });
+    return T === 'code' ? out[0] : out;
+  }
+  if (isEmpty(raw)) return undefined;
+  return scalar(e, raw, m => w('warn', m));
+}
+function toStd(rec) {
+  const t = rec.taxon, f = rec.f, v = {}, iss = [];
+  const add = (level, id, msg) => iss.push({ level, id, name: (RX.byId[id] || {}).nameKo || id, msg });
+  REG.dataElements.forEach(e => {
+    if (!(e.applicability || []).includes(t) || e.derived || e.system) return;
+    const k = perT(e.key, t); if (!k) return;
+    const val = conv(e, t, f[k], f, k, (l, m) => add(l, e.id, m));
+    if (val !== undefined) v[e.id] = val;
+    if (perT(e.obligation, t) === 'M' && val === undefined) add('error', e.id, '필수 항목이 비어 있음');
+  });
+  if (v['ES.LOC.LAT_OBS'] != null && v['ES.LOC.COORD_SOURCE'] == null) add('error', 'ES.LOC.COORD_SOURCE', '실측 좌표가 있으면 좌표값 취득원을 1개 선택해야 함');
+  if ((v['ES.LOC.LAT_OBS'] == null) !== (v['ES.LOC.LON_OBS'] == null)) add('error', 'ES.LOC.LAT_OBS', '위도·경도 중 하나만 입력됨');
+  if (v['ES.EVT.TIME_START'] && v['ES.EVT.TIME_END'] && v['ES.EVT.TIME_END'] < v['ES.EVT.TIME_START']) add('warn', 'ES.EVT.TIME_END', '종료시각이 시작시각보다 이름');
+  const sp = speciesLookup(f.species);
+  if (sp) { if (sp.sci) v['ES.TAX.SCI_NAME'] = sp.sci; if (sp.code) v['ES.TAX.CODE'] = sp.code; }
+  else if (f.species && speciesList().length) {
+    const near = speciesList().map(s => [s.nameKo, lev(s.nameKo, String(f.species).trim())]).sort((a, b) => a[1] - b[1])[0];
+    add('warn', 'ES.TAX.VERNACULAR', near && near[1] <= 2 ? `종 코드표에 없는 국명 — '${near[0]}'의 오기인지 확인` : '종 코드표에 없는 국명 (목록 외 종인지 확인)');
+  }
+  v['ES.REC.TAXON_GROUP'] = t === 'plant' ? 'PL' : 'IN';
+  const d = num(f.estDen), u = num(f.estUnit), a = num(f.estArea); if (t === 'plant' && d != null && u && a != null) v['ES.POP.EST_COUNT'] = Math.round(d / u * a);
+  Object.assign(v, { 'ES.REC.ID': rec.id, 'ES.REC.CREATED': iso(rec.createdAt), 'ES.REC.MODIFIED': iso(rec.updatedAt), 'ES.REC.REVISION': rec.rev || 1,
+    'ES.REC.REGISTRY_VERSION': REG.registry.version, 'ES.REC.DEVICE_ID': rec.deviceId || DEVICE_ID });
+  if (rec.owner && rec.owner.surveyorId) v['ES.REC.SURVEYOR_ID'] = rec.owner.surveyorId;
+  return { values: v, issues: iss };
+}
+function stamp(rec) {
+  if (!REG) return rec;
+  const r = toStd(rec);
+  rec.std = r.values; rec.rv = REG.registry.version; rec.regId = REG.registry.id;
+  rec.qc = { at: Date.now(), errors: r.issues.filter(i => i.level === 'error').length, warns: r.issues.filter(i => i.level === 'warn').length, issues: r.issues };
+  return rec;
+}
+const issueList = iss => `<ul class="qc-list">${iss.map(i => `<li class="${i.level}"><b>${i.level === 'error' ? '오류' : '경고'}</b> ${esc(i.name)} — ${esc(i.msg)}<span>${esc(i.id)}</span></li>`).join('')}</ul>`;
+const qcBox = iss => new Promise(res => {
+  let ok = false; const e = iss.filter(i => i.level === 'error').length;
+  showModal(`<h3>표준 검증 결과</h3><div class="hint">레지스트리 v${esc(REG.registry.version)} 기준 · 오류 ${e}건 · 경고 ${iss.length - e}건</div>${issueList(iss)}
+    <div class="hint" style="margin-top:8px">그대로 저장해도 검증 결과가 기록에 함께 남습니다.</div>`, { acts: [['돌아가서 수정'], ['그대로 저장', 'primary', () => { ok = true; }]], onClose: () => res(ok) });
+});
+
+/* ---------- 서버 연동 준비 (현재 비활성) — SERVER_API.md 참고 ---------- */
+const SYNC = {
+  endpoint: localStorage.getItem('es-sync-endpoint') || null,
+  mode() { return this.endpoint ? '서버 연동' : '기기 전용'; },
+  pending() { return RECS.filter(r => !r.sync || r.sync.status !== 'synced').length; },
+  payload(list = RECS) { return stdPackage(list); },
+  async push() { throw new Error('서버 연동은 아직 설정되지 않았습니다'); }
+};
+function envelope(r) {
+  return { id: r.id, taxon: r.taxon, registryId: r.regId || null, registryVersion: r.rv || null, revision: r.rev || 1,
+    createdAt: iso(r.createdAt), updatedAt: iso(r.updatedAt), owner: r.owner || null, deviceId: r.deviceId || DEVICE_ID,
+    sync: r.sync || { status: 'local' }, qc: r.qc ? { errors: r.qc.errors, warns: r.qc.warns, checkedAt: iso(r.qc.at) } : null,
+    values: r.std || (REG ? toStd(r).values : null) };
+}
+function stdPackage(list) {
+  return { format: 'ES-DataPackage', formatVersion: '1.0', registry: REG ? { id: REG.registry.id, version: REG.registry.version } : null,
+    exportedAt: new Date().toISOString(), deviceId: DEVICE_ID, surveyor: { id: SET.sid || null, name: SET.name || null, org: SET.org || null },
+    note: '사진·약도 원본은 포함하지 않음 (전체 백업 파일 참고). 출현좌표는 민감정보로 취급.', recordCount: list.length, records: list.map(envelope) };
+}
+
+/* ---------- 메타데이터 화면 ---------- */
+let regView = 'el', regQ = '', regT = 'all';
+const taxBadges = e => (e.applicability || []).map(t => `<span class="tag ${t}">${taxKo(t)}</span>`).join(' ');
+function obText(e) {
+  const ap = e.applicability || [], o = ap.map(t => perT(e.obligation, t));
+  return ap.length === 2 && o[0] !== o[1] ? ap.map((t, i) => `${taxKo(t)} ${OB_KO[o[i]] || '-'}`).join(' · ') : (OB_KO[o[0]] || '-');
+}
+function paneReg() {
+  const B = $('#drBody');
+  if (!REG) { B.innerHTML = `<div class="empty">레지스트리를 불러오지 못했습니다.<br>인터넷에 연결한 뒤 앱을 다시 열거나, 레지스트리 파일을 가져오세요.</div>
+    <div class="card"><label class="btn line block" style="cursor:pointer">레지스트리 JSON 가져오기<input type="file" id="rgImp" accept=".json,application/json" hidden></label></div>`;
+    $('#rgImp').onchange = importRegistry; return; }
+  const R0 = REG.registry;
+  B.innerHTML = `<div class="card reg-head"><div class="rh-t">${esc(R0.nameKo)}</div>
+    <div class="rh-m"><span class="vb">v${esc(R0.version)}</span><span class="sb">${esc(STATUS_KO[R0.status] || R0.status)}</span><code>${esc(R0.id)}</code></div>
+    <div class="rh-g"><div><b>${REG.dataElements.length}</b><span>데이터 요소</span></div><div><b>${REG.codeLists.length}</b><span>코드목록</span></div>
+      <div><b>${REG.codeLists.reduce((s, l) => s + l.codes.length, 0)}</b><span>코드</span></div><div><b>${speciesList().length}</b><span>종 코드</span></div></div>
+    <div class="hint">발행 ${esc(R0.issued)} · ${esc(REG_SRC)} · 관리기관 ${esc(R0.publisher || '-')}</div></div>
+    <div class="chips radio rv" id="rgV">${[['el', '데이터 요소'], ['cl', '코드목록'], ['iss', '표준화 이슈'], ['io', '검증·내보내기']].map(([v, l]) => `<button class="chip ${regView === v ? 'on' : ''}" data-v="${v}">${l}</button>`).join('')}</div>
+    <div id="rgBody"></div>`;
+  $('#rgV').onclick = e => { const b = e.target.closest('.chip'); if (b) { regView = b.dataset.v; paneReg(); } };
+  ({ el: regEls, cl: regCLs, iss: regIss, io: regIO })[regView]();
+}
+function regEls() {
+  $('#rgBody').innerHTML = `<div class="search"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#646b7d" stroke-width="2.4" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="M20 20l-4-4"/></svg>
+    <input id="rgQ" type="search" placeholder="요소ID, 국문·영문명, 정의, DwC 용어" value="${esc(regQ)}"></div>
+    <div class="fchips chips radio" id="rgT">${[['all', '전체'], ['plant', '식물'], ['insect', '곤충'], ['both', '공통']].map(([v, l]) => `<button class="chip ${regT === v ? 'on' : ''}" data-v="${v}">${l}</button>`).join('')}</div><div id="rgL"></div>`;
+  const run = () => {
+    const q = regQ.toLowerCase();
+    const list = REG.dataElements.filter(e => { const ap = e.applicability || [];
+      if ((regT === 'plant' || regT === 'insect') && !ap.includes(regT)) return false; if (regT === 'both' && ap.length < 2) return false;
+      return !q || [e.id, e.nameKo, e.nameEn, e.definition, e.dwcTerm].join(' ').toLowerCase().includes(q); });
+    $('#rgL').innerHTML = `<div class="res-meta">${list.length}개 요소</div>` + (REG.groups || []).map(g => { const es = list.filter(e => e.group === g.id); if (!es.length) return '';
+      return `<div class="rg-g">${esc(g.nameKo)}<span>${g.id} · ${es.length}</span></div>` + es.map(e => `<button class="rec el" data-el="${e.id}">
+        <div class="t2">${esc(e.nameKo)}${e.sensitivity === 'restricted' ? ' 🔒' : ''}</div><code>${e.id}</code>
+        <div class="s"><span class="tag ty">${TYPE_KO[e.dataType] || e.dataType}</span> <span class="tag ob">${obText(e)}</span> ${taxBadges(e)}${e.derived || e.system ? ' <span class="tag sys">자동 생성</span>' : ''}</div></button>`).join(''); }).join('');
+  };
+  $('#rgQ').oninput = e => { regQ = e.target.value; run(); };
+  $('#rgT').onclick = e => { const b = e.target.closest('.chip'); if (!b) return; regT = b.dataset.v; $$('#rgT .chip').forEach(x => x.classList.toggle('on', x === b)); run(); };
+  $('#rgL').onclick = e => { const b = e.target.closest('[data-el]'); if (b) showElement(b.dataset.el); };
+  run();
+}
+function clTable(id) {
+  const l = RX.cl[id]; if (!l) return `<div class="hint">코드목록 ${esc(id)} 없음</div>`;
+  const lab = (c, t) => (!c.applicability || c.applicability.includes(t)) && c.selectable !== false ? esc(codeValue(c, t).split(' > ').pop()) + (perT(c.textPrompt, t) ? ' <i>+기재</i>' : '') : '—';
+  return `<div class="tbl-wrap"><table class="st cl"><tr><th>코드</th><th>표준 라벨</th><th>식물 표기</th><th>곤충 표기</th>${l.codes.some(c => c.dwc) ? '<th>DwC</th>' : ''}</tr>${l.codes.map(c => `<tr class="${c.selectable === false ? 'grp' : ''} ${c.status === 'deprecated' ? 'dep' : ''}">
+    <td><code>${esc(c.code)}</code></td><td style="padding-left:${4 + ((c.level || 1) - 1) * 12}px">${esc(c.labelKo)}${c.description ? `<div class="hint">${esc(c.description)}</div>` : ''}</td>
+    <td>${lab(c, 'plant')}</td><td>${lab(c, 'insect')}</td>${l.codes.some(x => x.dwc) ? `<td>${esc(c.dwc || '')}</td>` : ''}</tr>`).join('')}</table></div>`;
+}
+function showElement(id) {
+  const e = RX.byId[id]; if (!e) return;
+  const per = (obj, fmt = x => esc(x)) => obj ? (e.applicability || []).filter(t => perT(obj, t)).map(t => `<b>${taxKo(t)}</b> ${fmt(perT(obj, t))}`).join('<br>') : '';
+  const lists = [...new Set((e.applicability || []).map(t => perT(e.codeList, t)).filter(Boolean))];
+  const rows = [['요소 ID', `<code>${e.id}</code>`], ['영문명', esc(e.nameEn)], ['정의', esc(e.definition)], ['그룹', esc(((REG.groups || []).find(g => g.id === e.group) || {}).nameKo || e.group)],
+    ['자료형', TYPE_KO[e.dataType] || e.dataType], ['단위', esc(e.unit || '')], ['허용범위', e.min != null || e.max != null ? `${e.min ?? ''} ~ ${e.max ?? ''}` : ''], ['형식 규칙', e.pattern ? `<code>${esc(e.pattern)}</code>` : ''],
+    ['코드목록', lists.map(l => `<code>${l}</code> ${esc((RX.cl[l] || {}).nameKo || '')}`).join('<br>')], ['적용 분류군', taxBadges(e)], ['의무성', per(e.obligation, x => OB_KO[x] || x)], ['조건', esc(e.condition || '')],
+    ['원본 야장 항목', per(e.formRef)], ['야장 표기', per(e.formLabel)], ['입력 키', e.key ? per(typeof e.key === 'object' ? e.key : Object.fromEntries((e.applicability || []).map(t => [t, e.key])), x => `<code>${esc(x)}</code>`) : ''],
+    ['산출 방식', esc(e.derived || (e.system ? '앱이 자동 기록' : ''))], ['DwC 용어', esc(e.dwcTerm || '')], ['민감도', SENS_KO[e.sensitivity] || ''], ['상태', STATUS_KO[e.status] || e.status], ['도입 버전', esc(e.since || '')], ['비고', esc(e.note || '')],
+    ['구성 요소', (e.components || []).map(c => `${esc(c.nameKo)} <code>${c.name}</code> · ${TYPE_KO[c.dataType] || c.dataType}${c.unit ? ' · ' + esc(c.unit) : ''}${c.codeList ? ' · <code>' + esc(c.codeList) + '</code>' : ''}`).join('<br>')]].filter(r => r[1]);
+  const props = proposals().filter(p => p.elementId === id);
+  const used = RECS.filter(r => r.std && r.std[id] !== undefined).length;
+  showModal(`<h3>${esc(e.nameKo)}</h3><div class="hint">${esc(e.nameEn || '')} · 사용 기록 ${used}건</div><div class="dt"><dl>${rows.map(([a, b]) => `<dt>${a}</dt><dd>${b}</dd>`).join('')}</dl></div>
+    ${lists.map(l => `<div class="sec" style="margin-top:14px">${esc(l)} · ${esc((RX.cl[l] || {}).nameKo || '')}</div>${clTable(l)}`).join('')}
+    <div class="sec" style="margin-top:14px">개정 제안</div>${props.map(p => `<div class="prop">${esc(p.text)}<span>${esc(p.by || '')} · ${new Date(p.at).toLocaleDateString('ko-KR')}</span></div>`).join('')}
+    <textarea id="propT" placeholder="정의·코드·단위 등 고칠 점을 적어 두면, 검증·내보내기 메뉴에서 관리자에게 전달할 수 있습니다."></textarea>`,
+    { acts: [['닫기'], ['제안 저장', 'primary', () => { const t = $('#propT').value.trim(); if (!t) { toast('제안 내용을 입력하세요'); return false; } addProposal(id, t); toast('개정 제안을 저장했습니다'); }]] });
+}
+function regCLs() {
+  $('#rgBody').innerHTML = `<div class="res-meta">${REG.codeLists.length}개 코드목록 · 누르면 펼쳐집니다</div>` + REG.codeLists.map(l => {
+    const users = REG.dataElements.filter(e => (e.applicability || []).some(t => perT(e.codeList, t) === l.id) || (e.components || []).some(c => (c.codeList || '').includes(l.id)));
+    return `<details class="tree-g"><summary><span>${esc(l.nameKo)} <code>${esc(l.id)}</code></span><span class="cnt">${l.codes.filter(c => c.selectable !== false).length}</span></summary>
+      <div class="tree-sub"><div class="hint" style="margin-bottom:6px">사용 요소: ${users.map(e => `<code>${e.id}</code>`).join(', ') || '-'}${l.hierarchical ? ' · 계층형(회색 행은 분류 단계)' : ''}</div>${clTable(l.id)}</div></details>`;
+  }).join('');
+}
+function regIss() {
+  const iss = REG.issues || [];
+  const cnt = s => iss.filter(i => i.status === s).length;
+  $('#rgBody').innerHTML = `<div class="res-meta">검토 필요 ${cnt('open')} · 통합 완료 ${cnt('resolved')} · 분리 유지 ${cnt('accepted')}</div>` + iss.map(i => `<div class="card iss ${i.status}">
+    <h3><span>${esc(i.title)}</span><span class="tag st-${i.status}">${ISS_KO[i.status] || i.status}</span></h3>
+    <div class="hint">${esc(i.id)} · ${(i.elements || []).map(id => `<a href="#" data-el="${id}"><code>${id}</code></a>`).join(', ')}</div>
+    <p>${esc(i.detail)}</p><p class="res"><b>조치</b> ${esc(i.resolution || '')}</p></div>`).join('');
+  $('#rgBody').onclick = e => { const a = e.target.closest('[data-el]'); if (a) { e.preventDefault(); showElement(a.dataset.el); } };
+}
+function regIO() {
+  const v = REG.registry.version;
+  const cur = RECS.filter(r => r.rv === v), old = RECS.filter(r => r.rv && r.rv !== v), none = RECS.filter(r => !r.rv);
+  const er = cur.reduce((s, r) => s + ((r.qc && r.qc.errors) || 0), 0), wr = cur.reduce((s, r) => s + ((r.qc && r.qc.warns) || 0), 0);
+  const sp = speciesList(), spLoc = sp.filter(s => s._src === '로컬').length;
+  $('#rgBody').innerHTML = `
+    <div class="card"><h3>기록의 표준 적합성</h3>
+      <div class="kpis"><div class="kpi"><div class="v">${cur.length}</div><div class="l">현재 버전(v${esc(v)}) 적용</div></div><div class="kpi"><div class="v">${old.length + none.length}</div><div class="l">이전 버전·미적용</div></div>
+      <div class="kpi"><div class="v" style="color:var(--danger)">${er}</div><div class="l">검증 오류</div></div><div class="kpi"><div class="v" style="color:#b36a0e">${wr}</div><div class="l">검증 경고</div></div></div>
+      <button class="btn block" id="rgRe">전체 기록 재검증·재표준화</button>
+      <div class="hint" style="margin-top:6px">모든 야장을 현재 레지스트리 기준으로 다시 변환·검증합니다. 입력값은 바뀌지 않습니다.</div></div>
+    <div class="card"><h3>표준 형식 내보내기</h3><div class="stack">
+      <button class="btn ghost" id="rgDwc">Darwin Core 출현기록 CSV</button>
+      <button class="btn ghost" id="rgPkg">표준 데이터 패키지 (JSON · 서버 업로드 형식)</button></div>
+      <div class="hint" style="margin-top:6px">출현좌표가 포함되므로 외부 공개 시 좌표 비공개 또는 일반화가 필요합니다.</div></div>
+    <div class="card"><h3>레지스트리 파일</h3><div class="stack">
+      <button class="btn line" id="rgDict">자료사전 CSV (데이터 요소 정의)</button>
+      <button class="btn line" id="rgCl">코드목록 CSV</button>
+      <button class="btn line" id="rgJson">레지스트리 JSON 내보내기</button>
+      <label class="btn line" style="cursor:pointer">레지스트리 JSON 가져오기 (새 버전 적용)<input type="file" id="rgImp" accept=".json,application/json" hidden></label></div></div>
+    <div class="card"><h3>종 코드표 <span class="hint">${sp.length}종 (배포본 ${sp.length - spLoc} · 로컬 ${spLoc})</span></h3><div class="stack">
+      <label class="btn line" style="cursor:pointer">종 코드표 CSV 가져오기<input type="file" id="spImp" accept=".csv,text/csv" hidden></label>
+      <button class="btn line" id="spTpl">종 코드표 CSV 양식 받기</button>${spLoc ? '<button class="btn red" id="spDel">로컬 종 코드표 삭제</button>' : ''}</div>
+      <div class="hint" style="margin-top:6px">국명·학명·국가생물종코드·분류군·멸종위기등급·이명 열. 가져오면 종명 입력 목록과 오기 검사에 쓰입니다.</div></div>
+    <div class="card"><h3>개정 제안 <span class="hint">${proposals().length}건</span></h3>
+      <button class="btn line block" id="rgProp">개정 제안 CSV 내보내기</button></div>
+    <div class="card"><h3>서버 연동 준비</h3><div class="dt"><dl>
+      <dt>저장 방식</dt><dd>${SYNC.mode()}</dd><dt>기기 ID</dt><dd><code>${DEVICE_ID}</code></dd><dt>조사자 ID</dt><dd>${esc(SET.sid || '미설정 (설정·백업에서 입력)')}</dd>
+      <dt>전송 대기</dt><dd>${SYNC.pending()}건</dd></dl></div>
+      <div class="hint" style="margin-top:6px">기록마다 고유 ID·수정 차수·작성 기기·조사자 ID·동기화 상태가 저장되어, 서버가 준비되면 표준 데이터 패키지 형식 그대로 전송할 수 있습니다.</div></div>`;
+  $('#rgRe').onclick = restandardizeAll;
+  $('#rgDwc').onclick = exportDwC; $('#rgPkg').onclick = () => { if (!RECS.length) return toast('내보낼 자료가 없습니다');
+    saveFile(new Blob([JSON.stringify(stdPackage(RECS), null, 1)], { type: 'application/json' }), `전자야장_표준패키지_${todayStr().replace(/-/g, '')}.json`); };
+  $('#rgDict').onclick = exportDict; $('#rgCl').onclick = exportCodeLists;
+  $('#rgJson').onclick = () => saveFile(new Blob([JSON.stringify(REG, null, 1)], { type: 'application/json' }), `registry_v${REG.registry.version}.json`);
+  $('#rgImp').onchange = importRegistry; $('#spImp').onchange = importSpecies; $('#spTpl').onclick = speciesTemplate;
+  if ($('#spDel')) $('#spDel').onclick = async () => { if (await confirmBox('로컬에서 가져온 종 코드표를 삭제할까요?', '삭제', true)) { localStorage.removeItem(SPEC_KEY); paneReg(); } };
+  $('#rgProp').onclick = exportProposals;
+}
+async function restandardizeAll() {
+  if (!RECS.length) return toast('기록이 없습니다');
+  for (const r of RECS) { migrate(r); stamp(r); await DB.put(r); }
+  await reload(); paneReg(); toast(`${RECS.length}건을 v${REG.registry.version} 기준으로 재검증했습니다`);
+}
+function migrate(r) {
+  r.f.hab = habVal(r.f.hab);
+  if (!r.deviceId) r.deviceId = DEVICE_ID; if (!r.rev) r.rev = 1; if (!r.sync) r.sync = { status: 'local', serverId: null, lastSyncedAt: null };
+  if (!r.owner) r.owner = { surveyorId: SET.sid || null, name: r.f.chiefName || null, org: r.f.chiefOrg || null };
+  return r;
+}
+
+/* ---------- 내보내기·가져오기 ---------- */
+const csvCell = v => { v = String(v ?? ''); return /[",\n\r]/.test(v) ? `"${v.replace(/"/g, '""')}"` : v; };
+const csvBlob = rows => new Blob(['﻿' + rows.map(r => r.map(csvCell).join(',')).join('\r\n')], { type: 'text/csv;charset=utf-8' });
+function exportDict() {
+  const per = (e, o) => t => (e.applicability || []).includes(t) ? (perT(o, t) ?? '') : '';
+  const rows = [['요소ID', '그룹', '국문명', '영문명', '정의', '자료형', '단위', '최솟값', '최댓값', '형식규칙', '코드목록(식물)', '코드목록(곤충)', '적용분류군', '의무성(식물)', '의무성(곤충)', '조건', '야장항목(식물)', '야장항목(곤충)', '입력키(식물)', '입력키(곤충)', '산출방식', 'DwC용어', '민감도', '상태', '도입버전', '비고'],
+    ...REG.dataElements.map(e => [e.id, e.group, e.nameKo, e.nameEn, e.definition, TYPE_KO[e.dataType] || e.dataType, e.unit, e.min, e.max, e.pattern, per(e, e.codeList)('plant'), per(e, e.codeList)('insect'),
+      (e.applicability || []).map(taxKo).join('·'), OB_KO[per(e, e.obligation)('plant')] || '', OB_KO[per(e, e.obligation)('insect')] || '', e.condition,
+      per(e, e.formRef)('plant'), per(e, e.formRef)('insect'), per(e, e.key)('plant'), per(e, e.key)('insect'), e.derived || (e.system ? '앱 자동 기록' : ''), e.dwcTerm, SENS_KO[e.sensitivity], STATUS_KO[e.status], e.since, e.note])];
+  saveFile(csvBlob(rows), `자료사전_${REG.registry.id}_v${REG.registry.version}.csv`);
+}
+function exportCodeLists() {
+  const rows = [['코드목록ID', '코드목록명', '코드', '표준라벨', '경로', '상위코드', '선택가능', '식물표기', '곤충표기', '추가기재', '설명', 'DwC값', '상태', '도입버전']];
+  REG.codeLists.forEach(l => l.codes.forEach(c => rows.push([l.id, l.nameKo, c.code, c.labelKo, c.pathKo || '', c.parent || '', c.selectable === false ? 'N' : 'Y',
+    (!c.applicability || c.applicability.includes('plant')) ? codeValue(c, 'plant') : '', (!c.applicability || c.applicability.includes('insect')) ? codeValue(c, 'insect') : '',
+    c.textPrompt ? Object.values(c.textPrompt).filter(Boolean)[0] : '', c.description || '', c.dwc || '', STATUS_KO[c.status] || c.status, c.since || ''])));
+  saveFile(csvBlob(rows), `코드목록_${REG.registry.id}_v${REG.registry.version}.csv`);
+}
+function tzOff() { const m = -new Date().getTimezoneOffset(); return `${m >= 0 ? '+' : '-'}${pad(Math.floor(Math.abs(m) / 60))}:${pad(Math.abs(m) % 60)}`; }
+function exportDwC() {
+  if (!RECS.length) return toast('내보낼 자료가 없습니다');
+  const cols = ['occurrenceID', 'basisOfRecord', 'eventDate', 'year', 'month', 'day', 'samplingProtocol', 'vernacularName', 'scientificName', 'taxonID', 'kingdom', 'class', 'individualCount', 'lifeStage', 'habitat',
+    'country', 'countryCode', 'stateProvince', 'locality', 'locationRemarks', 'locationID', 'decimalLatitude', 'decimalLongitude', 'geodeticDatum', 'coordinateUncertaintyInMeters', 'georeferenceProtocol',
+    'minimumElevationInMeters', 'maximumElevationInMeters', 'recordedBy', 'associatedTaxa', 'occurrenceRemarks', 'informationWithheld', 'modified', 'dynamicProperties'];
+  const tz = tzOff();
+  const rows = RECS.map(r => {
+    const f = r.f, t = r.taxon, sp = speciesLookup(f.species), s = r.std || (REG ? toStd(r).values : {});
+    const ev = f.date ? (f.tStart && f.tEnd ? `${f.date}T${f.tStart}${tz}/${f.date}T${f.tEnd}${tz}` : f.tStart ? `${f.date}T${f.tStart}${tz}` : f.date) : '';
+    const stage = (f.stage || []).map(x => { const c = REG && findCode(t === 'plant' ? 'CL.STAGE_PL' : 'CL.STAGE_IN', t, x); return (c && c.dwc) || x; }).join(' | ');
+    const src = f.src ? (f['src__' + f.src] ? `${f.src}(${f['src__' + f.src]})` : f.src) : '';
+    const dyn = {}; Object.entries(s).forEach(([k, v]) => { if (/^ES\.(THR|ENV|EVT\.WEATHER|EVT\.AIR_TEMP|POP\.(TREND|DIST|REPRO|HABIT|COUNT_CLASS|STAGE_COUNT))/.test(k)) dyn[k] = v; });
+    dyn.registry = r.rv ? `${r.regId} v${r.rv}` : null;
+    return { occurrenceID: `urn:es:${r.id}`, basisOfRecord: 'HumanObservation', eventDate: ev, year: (f.date || '').slice(0, 4), month: +(f.date || '').slice(5, 7) || '', day: +(f.date || '').slice(8, 10) || '',
+      samplingProtocol: t === 'insect' ? (f.method || []).join(' | ') : '멸종위기 야생생물(식물) 현지조사', vernacularName: f.species || '', scientificName: (sp && sp.sci) || '', taxonID: (sp && sp.code) || '',
+      kingdom: t === 'plant' ? 'Plantae' : 'Animalia', class: t === 'insect' ? 'Insecta' : '', individualCount: f.count ?? '', lifeStage: stage, habitat: habVal(f.hab),
+      country: '대한민국', countryCode: 'KR', stateProvince: (f.addr || '').split(/\s+/)[0] || '', locality: f.addr || '', locationRemarks: f.locDesc || '', locationID: f.siteCode || '',
+      decimalLatitude: f.lat ?? '', decimalLongitude: f.lon ?? '', geodeticDatum: f.lat != null && f.lat !== '' ? 'WGS84' : '', coordinateUncertaintyInMeters: f.gpsAcc ?? '', georeferenceProtocol: src,
+      minimumElevationInMeters: f.elev ?? '', maximumElevationInMeters: f.elev ?? '', recordedBy: [f.chiefName, f.asstName].filter(Boolean).join(' | '),
+      associatedTaxa: (f.co || []).filter(x => x.name).map(x => x.layer ? `${x.name}(${x.layer})` : x.n ? `${x.name} ${x.n}` : x.name).join(' | '),
+      occurrenceRemarks: f.comment || '', informationWithheld: '멸종위기종 출현좌표 — 외부 공개 시 비공개 또는 일반화 필요', modified: iso(r.updatedAt), dynamicProperties: JSON.stringify(dyn) };
+  });
+  saveFile(csvBlob([cols, ...rows.map(o => cols.map(c => o[c]))]), `DarwinCore_occurrence_${todayStr().replace(/-/g, '')}.csv`);
+}
+async function importRegistry(ev) {
+  const file = ev.target.files[0]; ev.target.value = ''; if (!file) return;
+  let j; try { j = JSON.parse(await file.text()); } catch (_) { return toast('JSON 파일을 읽을 수 없습니다'); }
+  if (!validRegistry(j)) return toast('레지스트리 형식이 아닙니다 (registry·dataElements·codeLists 필요)');
+  if (REG && j.registry.id !== REG.registry.id && !(await confirmBox(`다른 레지스트리(${esc(j.registry.id)})입니다. 교체할까요?`, '교체', true))) return;
+  if (REG && semverCmp(j.registry.version, REG.registry.version) < 0 && !(await confirmBox(`가져온 버전(v${esc(j.registry.version)})이 현재(v${esc(REG.registry.version)})보다 낮습니다. 적용할까요?`, '적용', true))) return;
+  useRegistry(j, '가져온 파일'); paneReg(); toast(`레지스트리 v${j.registry.version}을 적용했습니다`);
+}
+function parseCSV(text) {
+  const rows = []; let row = [], cell = '', q = false; text = text.replace(/^﻿/, '');
+  for (let i = 0; i < text.length; i++) { const ch = text[i];
+    if (q) { if (ch === '"') { if (text[i + 1] === '"') { cell += '"'; i++; } else q = false; } else cell += ch; }
+    else if (ch === '"') q = true; else if (ch === ',') { row.push(cell); cell = ''; }
+    else if (ch === '\n' || ch === '\r') { if (ch === '\r' && text[i + 1] === '\n') i++; row.push(cell); rows.push(row); row = []; cell = ''; }
+    else cell += ch; }
+  if (cell || row.length) { row.push(cell); rows.push(row); }
+  return rows.filter(r => r.some(c => c.trim()));
+}
+async function importSpecies(ev) {
+  const file = ev.target.files[0]; ev.target.value = ''; if (!file) return;
+  const rows = parseCSV(await file.text()); if (rows.length < 2) return toast('자료가 없습니다');
+  const h = rows[0].map(x => x.trim()); const col = (...names) => h.findIndex(x => names.includes(x));
+  const ci = { nameKo: col('국명', 'nameKo'), sci: col('학명', 'scientificName'), code: col('국가생물종코드', '종코드', 'taxonID'), group: col('분류군', 'group'), grade: col('멸종위기등급', '등급', 'grade'), syn: col('이명', 'synonyms') };
+  if (ci.nameKo < 0) return toast("첫 줄에 '국명' 열이 필요합니다");
+  const list = rows.slice(1).map(r => ({ nameKo: (r[ci.nameKo] || '').trim(), sci: ci.sci >= 0 ? (r[ci.sci] || '').trim() : '', code: ci.code >= 0 ? (r[ci.code] || '').trim() : '',
+    group: ci.group >= 0 ? (r[ci.group] || '').trim() : '', grade: ci.grade >= 0 ? (r[ci.grade] || '').trim() : '',
+    synonyms: ci.syn >= 0 ? (r[ci.syn] || '').split(/[;|]/).map(s => s.trim()).filter(Boolean) : [] })).filter(s => s.nameKo && !/^\(?예시\)?/.test(s.nameKo));
+  const map = {}; [...(JSON.parse(localStorage.getItem(SPEC_KEY) || '[]')), ...list].forEach(s => map[s.nameKo] = s);
+  localStorage.setItem(SPEC_KEY, JSON.stringify(Object.values(map))); paneReg(); toast(`종 코드 ${list.length}건을 가져왔습니다`);
+}
+function speciesTemplate() {
+  saveFile(csvBlob([['국명', '학명', '국가생물종코드', '분류군', '멸종위기등급', '이명'], ['(예시) 한라송이풀', 'Pedicularis hallaisanensis', '', '식물', '', ''], ['(예시) 붉은점모시나비', 'Parnassius bremeri', '', '곤충', '', '']]), '종코드표_양식.csv');
+}
+function proposals() { try { return JSON.parse(localStorage.getItem(PROP_KEY) || '[]'); } catch (_) { return []; } }
+function addProposal(elementId, text) { const p = proposals(); p.push({ id: uid(), elementId, text, at: Date.now(), by: SET.name || '', sid: SET.sid || '', device: DEVICE_ID, registryVersion: REG.registry.version }); localStorage.setItem(PROP_KEY, JSON.stringify(p)); }
+function exportProposals() {
+  const p = proposals(); if (!p.length) return toast('저장된 개정 제안이 없습니다');
+  saveFile(csvBlob([['제안ID', '요소ID', '국문명', '제안내용', '제안자', '조사자ID', '기기ID', '레지스트리버전', '일시'], ...p.map(x => [x.id, x.elementId, (RX.byId[x.elementId] || {}).nameKo || '', x.text, x.by, x.sid, x.device, x.registryVersion, iso(x.at)])]), `레지스트리_개정제안_${todayStr().replace(/-/g, '')}.csv`);
+}
+function stdInfoHTML(r) {
+  if (!r.rv) return `<h4>표준화·검증 정보</h4><div class="hint">레지스트리 적용 전 기록입니다. 메타데이터 › 검증·내보내기에서 재검증하면 표준화됩니다.</div>`;
+  return `<h4>표준화·검증 정보</h4><dl><dt>레지스트리</dt><dd>${esc(r.regId || '')} v${esc(r.rv)}</dd><dt>표준 요소</dt><dd>${Object.keys(r.std || {}).length}개</dd>
+    <dt>검증 결과</dt><dd>${r.qc ? `오류 ${r.qc.errors} · 경고 ${r.qc.warns}` : '-'}</dd><dt>기록 ID</dt><dd><code>${esc(r.id)}</code></dd><dt>수정 차수</dt><dd>${r.rev || 1}</dd>
+    <dt>작성 기기</dt><dd><code>${esc(r.deviceId || '')}</code></dd><dt>조사자 ID</dt><dd>${esc((r.owner && r.owner.surveyorId) || '-')}</dd><dt>동기화</dt><dd>${SYNC_KO[(r.sync || {}).status] || '-'}</dd></dl>
+    ${r.qc && r.qc.issues && r.qc.issues.length ? issueList(r.qc.issues) : ''}`;
+}
+
+/* =========================================================
    시작
    ========================================================= */
 window.showDetail = showDetail; window.openForm = openForm;
 (async () => {
+  initRegistry();
   try { await DB.open(); await reload(); if (RECS.length) fitAll(); } catch (e) { toast('저장소를 열 수 없습니다: ' + e); }
   if ('serviceWorker' in navigator) navigator.serviceWorker.register('./sw.js').catch(() => {});
   if (!SET.name) setTimeout(() => toast('☰ 메뉴 > 설정·백업에서 조사자 정보를 먼저 입력해 두세요', 3500), 1200);
