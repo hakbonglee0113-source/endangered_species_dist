@@ -1,0 +1,1284 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#16235a">
+<meta name="color-scheme" content="light">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="전자야장">
+<title>멸종위기종 전자야장</title>
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="icon" type="image/png" href="icons/favicon-32.png">
+<link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css">
+<style>
+:root{
+  --navy:#16235a;--navy2:#24387f;--navy-soft:#e8ecf7;
+  --ink:#141a2b;--muted:#646b7d;--line:#dfe3ec;--bg:#f4f6fb;--card:#fff;
+  --plant:#2d7a4f;--plant-soft:#e5f2ea;--insect:#b36a0e;--insect-soft:#faefdf;
+  --danger:#c0352b;--ok:#2d7a4f;
+  --sat:env(safe-area-inset-top);--sab:env(safe-area-inset-bottom);
+  --r:14px;
+}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html,body{margin:0;height:100%;background:var(--bg);color:var(--ink);
+  font-family:-apple-system,BlinkMacSystemFont,"Apple SD Gothic Neo","Noto Sans KR","Malgun Gothic",Roboto,sans-serif;
+  font-size:15px;line-height:1.45;overscroll-behavior:none}
+button{font:inherit;color:inherit;cursor:pointer}
+input,select,textarea{font:inherit;font-size:16px;color:var(--ink)}
+[hidden]{display:none!important}
+
+/* ---------- MAP SCREEN ---------- */
+#map{position:fixed;inset:0;z-index:1;background:#dfe5ee;
+  -webkit-user-select:none;user-select:none;-webkit-touch-callout:none}
+#wm{position:fixed;inset:0;z-index:400;pointer-events:none;opacity:.5}
+#shield{position:fixed;inset:0;z-index:450;background:var(--navy);display:none;
+  align-items:center;justify-content:center;color:#fff;text-align:center;padding:24px}
+#shield.on{display:flex}
+#shield img{width:72px;height:72px;border-radius:16px;margin-bottom:12px}
+.fab-row{position:fixed;z-index:500;display:flex;gap:8px;align-items:center}
+.top-l{top:calc(12px + var(--sat));left:12px}
+.top-r{top:calc(12px + var(--sat));right:12px}
+.seg{display:flex;background:#fff;border-radius:12px;box-shadow:0 2px 10px rgba(20,30,60,.18);padding:3px}
+.seg button{border:0;background:none;padding:7px 14px;border-radius:9px;font-size:14px;font-weight:600;color:var(--muted)}
+.seg button.on{background:var(--navy);color:#fff}
+#btnInstall{border:0;background:rgba(255,255,255,.95);color:var(--navy);font-size:12px;font-weight:700;
+  padding:6px 10px;border-radius:999px;box-shadow:0 2px 8px rgba(20,30,60,.18);display:flex;gap:4px;align-items:center}
+#btnMenu{width:46px;height:46px;border:0;border-radius:13px;background:var(--navy);color:#fff;
+  display:grid;place-items:center;box-shadow:0 4px 14px rgba(22,35,90,.35)}
+#btnAdd{position:fixed;z-index:500;right:18px;bottom:calc(22px + var(--sab));width:62px;height:62px;border-radius:50%;
+  border:0;background:var(--navy);color:#fff;box-shadow:0 6px 18px rgba(22,35,90,.4);display:grid;place-items:center;
+  animation:float 3.2s ease-in-out infinite}
+@keyframes float{0%,100%{transform:translateY(0)}50%{transform:translateY(-6px)}}
+#btnMenu{animation:float 3.2s ease-in-out infinite .6s}
+.mini-btn{position:fixed;z-index:500;left:14px;width:44px;height:44px;border-radius:12px;border:0;background:#fff;color:var(--navy);
+  box-shadow:0 2px 10px rgba(20,30,60,.2);display:grid;place-items:center}
+#btnLocate{bottom:calc(24px + var(--sab))}
+#btnFit{bottom:calc(76px + var(--sab))}
+#countChip{position:fixed;z-index:500;left:66px;bottom:calc(32px + var(--sab));background:rgba(255,255,255,.95);
+  padding:5px 10px;border-radius:999px;font-size:12px;font-weight:600;color:var(--navy);box-shadow:0 2px 8px rgba(20,30,60,.15)}
+.leaflet-control-attribution{font-size:9px!important}
+.leaflet-bottom.leaflet-right{bottom:calc(var(--sab));right:96px}
+.pt{width:16px;height:16px;border-radius:50%;border:3px solid #fff;box-shadow:0 1px 5px rgba(0,0,0,.45)}
+.pt.plant{background:var(--plant)}.pt.insect{background:var(--insect)}
+.leaflet-tooltip.lbl{background:rgba(255,255,255,.94);border:0;border-radius:8px;padding:3px 7px;font-size:11px;line-height:1.3;
+  box-shadow:0 1px 6px rgba(0,0,0,.25);color:var(--ink);text-align:center;font-weight:600}
+.leaflet-tooltip.lbl b{font-weight:800}
+.leaflet-tooltip.lbl .d{font-weight:500;color:var(--muted);font-size:10px}
+.me-dot{width:18px;height:18px;border-radius:50%;background:#2a6df4;border:3px solid #fff;box-shadow:0 0 0 6px rgba(42,109,244,.25)}
+.pop h4{margin:0 0 4px;font-size:15px}
+.pop .m{color:var(--muted);font-size:12px;margin-bottom:8px}
+.pop .bt{display:flex;gap:6px}
+
+/* ---------- GENERIC ---------- */
+.btn{border:0;border-radius:11px;padding:11px 16px;font-weight:700;background:var(--navy);color:#fff;display:inline-flex;gap:6px;align-items:center;justify-content:center}
+.btn.sm{padding:7px 11px;font-size:13px;border-radius:9px}
+.btn.ghost{background:var(--navy-soft);color:var(--navy)}
+.btn.line{background:#fff;color:var(--navy);border:1px solid var(--line)}
+.btn.red{background:#fdecea;color:var(--danger)}
+.btn.block{width:100%}
+.btn:disabled{opacity:.5}
+.backdrop{position:fixed;inset:0;background:rgba(10,16,40,.45);z-index:600;opacity:0;pointer-events:none;transition:opacity .25s}
+.backdrop.on{opacity:1;pointer-events:auto}
+
+/* ---------- DRAWER ---------- */
+#drawer{position:fixed;top:0;right:0;bottom:0;width:min(440px,90vw);z-index:700;background:var(--bg);
+  transform:translateX(102%);transition:transform .3s cubic-bezier(.2,.8,.2,1);display:flex;flex-direction:column;
+  box-shadow:-8px 0 30px rgba(10,16,40,.25)}
+#drawer.on{transform:none}
+.dr-head{background:var(--navy);color:#fff;padding:calc(14px + var(--sat)) 16px 0}
+.dr-title{display:flex;align-items:center;justify-content:space-between;margin-bottom:10px}
+.dr-title h2{margin:0;font-size:18px}
+.icon-btn{width:38px;height:38px;border:0;border-radius:10px;background:rgba(255,255,255,.12);color:#fff;display:grid;place-items:center}
+.dr-tabs{display:flex;gap:4px}
+.dr-tabs button{flex:1;border:0;background:none;color:rgba(255,255,255,.7);padding:10px 0;font-weight:700;border-bottom:3px solid transparent}
+.dr-tabs button.on{color:#fff;border-color:#fff}
+.dr-body{flex:1;overflow:auto;padding:14px 14px calc(24px + var(--sab))}
+.search{display:flex;align-items:center;gap:8px;background:#fff;border:1px solid var(--line);border-radius:12px;padding:0 12px;margin-bottom:10px}
+.search input{flex:1;border:0;outline:0;padding:12px 0;background:none}
+.fchips{display:flex;gap:6px;margin-bottom:10px;flex-wrap:wrap}
+.res-meta{font-size:12px;color:var(--muted);margin:4px 2px 8px}
+.rec{background:#fff;border-radius:12px;padding:12px 14px;margin-bottom:8px;border:1px solid var(--line);display:block;width:100%;text-align:left}
+.rec .t{display:flex;align-items:center;gap:8px;font-weight:800;font-size:15px}
+.rec .s{color:var(--muted);font-size:12.5px;margin-top:3px}
+.tag{font-size:11px;font-weight:800;padding:2px 7px;border-radius:6px}
+.tag.plant{background:var(--plant-soft);color:var(--plant)}.tag.insect{background:var(--insect-soft);color:var(--insect)}
+mark{background:#ffe58a;color:inherit;padding:0 1px;border-radius:3px}
+.empty{text-align:center;color:var(--muted);padding:36px 10px}
+
+/* stats */
+.kpis{display:grid;grid-template-columns:repeat(2,1fr);gap:8px;margin-bottom:12px}
+.kpi{background:#fff;border:1px solid var(--line);border-radius:12px;padding:10px 12px}
+.kpi .v{font-size:22px;font-weight:800;color:var(--navy);font-variant-numeric:tabular-nums}
+.kpi .l{font-size:12px;color:var(--muted)}
+.card{background:#fff;border:1px solid var(--line);border-radius:12px;padding:12px 14px;margin-bottom:10px}
+.card h3{margin:0 0 10px;font-size:14px}
+.bars .b{display:grid;grid-template-columns:minmax(70px,38%) 1fr auto;gap:8px;align-items:center;font-size:12.5px;margin:5px 0}
+.bars .b span:first-child{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.bars .tr{height:10px;background:#eef1f7;border-radius:5px;overflow:hidden}
+.bars .fill{height:100%;border-radius:5px;background:var(--navy2)}
+.bars .n{font-variant-numeric:tabular-nums;font-weight:700;min-width:24px;text-align:right}
+table.st{width:100%;border-collapse:collapse;font-size:12px;font-variant-numeric:tabular-nums}
+table.st th,table.st td{padding:6px 4px;border-bottom:1px solid #eef0f5;text-align:right;white-space:nowrap}
+table.st th:first-child,table.st td:first-child{text-align:left;white-space:normal}
+table.st th{color:var(--muted);font-weight:600}
+.tbl-wrap{overflow-x:auto}
+.filters{display:grid;grid-template-columns:1fr 1fr 1fr;gap:6px;margin-bottom:12px}
+.filters select,.set input{width:100%;padding:9px 8px;border:1px solid var(--line);border-radius:10px;background:#fff;font-size:14px}
+.set label{display:block;font-size:12.5px;color:var(--muted);margin:8px 0 4px}
+.set .grid2{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.stack{display:flex;flex-direction:column;gap:8px}
+.hint{font-size:12px;color:var(--muted)}
+
+/* ---------- FULL SCREENS ---------- */
+.screen{position:fixed;inset:0;z-index:800;background:var(--bg);display:flex;flex-direction:column;
+  transform:translateY(100%);transition:transform .32s cubic-bezier(.2,.8,.2,1)}
+.screen.on{transform:none}
+.sc-head{background:var(--navy);color:#fff;padding:calc(10px + var(--sat)) 10px 10px;display:flex;align-items:center;gap:8px}
+.sc-head h2{flex:1;margin:0;font-size:17px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.taxa{flex:1;display:flex;flex-direction:column;justify-content:center;padding:24px 20px calc(24px + var(--sab))}
+.taxa p{text-align:center;color:var(--muted);margin:0 0 18px}
+.taxa-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.taxon{aspect-ratio:1/1.1;border-radius:24px;border:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:12px;
+  font-size:22px;font-weight:800;box-shadow:0 6px 20px rgba(20,30,60,.12);transition:transform .15s}
+.taxon:active{transform:scale(.97)}
+.taxon.plant{background:var(--plant-soft);color:var(--plant);border:2px solid #bfe0cb}
+.taxon.insect{background:var(--insect-soft);color:var(--insect);border:2px solid #f0d3a7}
+.taxon small{font-size:12px;font-weight:600;opacity:.8}
+.draft-box{margin-top:20px;background:#fff;border:1px dashed var(--navy2);border-radius:14px;padding:12px 14px;display:flex;gap:10px;align-items:center}
+.draft-box div{flex:1;font-size:13px}
+
+/* form */
+.ftabs{display:flex;overflow-x:auto;background:#fff;border-bottom:1px solid var(--line);scrollbar-width:none;flex-shrink:0}
+.ftabs::-webkit-scrollbar{display:none}
+.ftabs button{flex-shrink:0;border:0;background:none;padding:12px 14px;font-size:13.5px;font-weight:700;color:var(--muted);border-bottom:3px solid transparent;white-space:nowrap}
+.ftabs button.on{color:var(--navy);border-color:var(--navy)}
+.ftabs button.na{color:#b5bac6}
+#fbody{flex:1;overflow:auto;padding:12px 14px 20px;-webkit-overflow-scrolling:touch}
+.ffoot{display:flex;gap:8px;padding:10px 14px calc(10px + var(--sab));background:#fff;border-top:1px solid var(--line)}
+.ffoot .btn{flex:1}
+.sec{font-size:13px;font-weight:800;color:var(--navy);margin:18px 2px 8px;display:flex;align-items:center;gap:6px}
+.sec:first-child{margin-top:4px}
+.sec::before{content:"";width:4px;height:14px;border-radius:2px;background:var(--navy)}
+.fld{display:block;margin-bottom:12px}
+.fld>span,.lab{display:block;font-size:12.5px;font-weight:700;color:#3d4458;margin-bottom:5px}
+.req{color:var(--danger)}
+.inrow{display:flex;align-items:center;background:#fff;border:1px solid var(--line);border-radius:11px;overflow:hidden}
+.inrow:focus-within{border-color:var(--navy2);box-shadow:0 0 0 3px rgba(36,56,127,.12)}
+.inrow input,.inrow select{flex:1;min-width:0;border:0;outline:0;padding:11px 12px;background:none}
+.inrow .u{padding:0 12px;color:var(--muted);font-size:13px}
+.inrow .nb{border:0;background:var(--navy-soft);color:var(--navy);font-size:12px;font-weight:700;padding:0 10px;align-self:stretch}
+textarea{width:100%;min-height:84px;border:1px solid var(--line);border-radius:11px;padding:10px 12px;resize:vertical;outline:0;background:#fff}
+textarea:focus{border-color:var(--navy2)}
+.row{display:grid;gap:8px;grid-template-columns:repeat(auto-fit,minmax(96px,1fr))}
+.row .inrow input[type=time]{padding-right:4px}
+.chips{display:flex;flex-wrap:wrap;gap:6px}
+.chip{border:1px solid var(--line);background:#fff;border-radius:999px;padding:7px 12px;font-size:13.5px;font-weight:600;color:#3d4458}
+.chip.on{background:var(--navy);border-color:var(--navy);color:#fff}
+.chip.on::before{content:"✓ "}
+.chips.radio .chip.on::before{content:"● "}
+.chips.list{flex-direction:column}
+.chips.list .chip{border-radius:11px;text-align:left;padding:9px 12px}
+.chip .d{display:block;font-weight:500;font-size:12px;opacity:.75}
+.xtra{margin-top:6px;width:100%;padding:9px 12px;border:1px solid var(--line);border-radius:10px;outline:0;background:#fffdf3}
+.auto-card{background:linear-gradient(135deg,var(--navy),var(--navy2));color:#fff;border-radius:16px;padding:14px;margin-bottom:6px}
+.auto-card .btn{background:#fff;color:var(--navy);width:100%;padding:13px}
+.auto-card p{margin:0 0 10px;font-size:12.5px;opacity:.85}
+#autoStat{margin-top:10px;font-size:12.5px;display:grid;gap:3px}
+#autoStat:empty{display:none}
+.coord{background:#fff;border:1px solid var(--line);border-radius:13px;padding:10px 12px;margin-bottom:12px}
+.coord .lab{display:flex;justify-content:space-between;align-items:center}
+.dms{display:flex;align-items:center;gap:4px;margin:6px 0}
+.dms .ax{width:22px;font-weight:800;color:var(--navy)}
+.dms input{flex:0 0 54px;width:54px;min-width:0;padding:9px 6px;border:1px solid var(--line);border-radius:9px;text-align:center;outline:0;font-variant-numeric:tabular-nums}
+.dms i{font-style:normal;color:var(--muted)}
+.dec{font-size:11.5px;color:var(--muted);font-variant-numeric:tabular-nums}
+.cbtns{display:flex;gap:6px;margin-top:6px;flex-wrap:wrap}
+.item{background:#fff;border:1px solid var(--line);border-radius:13px;padding:10px 12px;margin-bottom:10px}
+.item-h{display:flex;justify-content:space-between;align-items:center;font-weight:800;font-size:13px;color:var(--navy);margin-bottom:6px}
+.co-row{display:grid;grid-template-columns:1fr 92px 36px;gap:6px;margin-bottom:6px;align-items:center}
+.co-row input,.co-row select{padding:10px;border:1px solid var(--line);border-radius:10px;width:100%;min-width:0;background:#fff;outline:0}
+.del{border:0;background:#fdecea;color:var(--danger);border-radius:9px;height:38px;font-weight:800}
+.tree-g{background:#fff;border:1px solid var(--line);border-radius:13px;margin-bottom:8px;overflow:hidden}
+.tree-g summary{padding:11px 14px;font-weight:800;list-style:none;display:flex;justify-content:space-between}
+.tree-g summary::-webkit-details-marker{display:none}
+.tree-g summary .cnt{background:var(--navy);color:#fff;border-radius:999px;font-size:11px;padding:1px 8px}
+.tree-g summary .cnt:empty{display:none}
+.tree-sub{padding:4px 14px 12px}
+.tree-sub .lab{color:var(--muted);font-weight:600}
+.note{background:var(--navy-soft);color:var(--navy);border-radius:12px;padding:12px 14px;font-size:13px;margin-bottom:12px}
+.note.big{padding:28px 18px;text-align:center;font-size:14px}
+.prev{background:#fff7e0;border:1px solid #f1dca0;border-radius:12px;padding:10px 12px;font-size:13px;margin-bottom:12px}
+.thumbs{display:flex;flex-wrap:wrap;gap:8px;margin:8px 0}
+.thumbs .th{position:relative;width:88px;height:88px;border-radius:10px;overflow:hidden;border:1px solid var(--line);background:#fff}
+.thumbs img{width:100%;height:100%;object-fit:cover}
+.thumbs .x{position:absolute;top:3px;right:3px;width:24px;height:24px;border-radius:50%;border:0;background:rgba(0,0,0,.6);color:#fff;font-size:13px}
+.sketch-prev{width:100%;border:1px solid var(--line);border-radius:12px;background:#fff;display:block}
+.calc{font-size:13px;background:#fff;border:1px solid var(--line);border-radius:11px;padding:10px 12px;margin-bottom:12px}
+
+/* modal */
+.modal{position:fixed;inset:0;z-index:950;display:flex;align-items:center;justify-content:center;padding:18px}
+.modal .bg{position:absolute;inset:0;background:rgba(10,16,40,.55)}
+.modal .box{position:relative;background:#fff;border-radius:18px;max-width:440px;width:100%;max-height:88vh;overflow:auto;padding:20px;box-shadow:0 20px 50px rgba(0,0,0,.3)}
+.modal .box h3{margin:0 0 10px;font-size:17px}
+.modal .acts{display:flex;gap:8px;margin-top:16px}
+.modal .acts .btn{flex:1}
+.modal.full .box{max-width:none;height:100%;max-height:none;border-radius:0;padding:0;display:flex;flex-direction:column}
+.modal.full{padding:0}
+.warn .box{text-align:center;border-top:6px solid var(--danger)}
+.warn .ic{width:56px;height:56px;border-radius:50%;background:#fdecea;color:var(--danger);display:grid;place-items:center;margin:4px auto 12px;font-size:28px}
+.warn p{font-size:16px;font-weight:700;line-height:1.55;margin:0}
+.steps{margin:6px 0 0;padding-left:20px}.steps li{margin:6px 0}
+.dt h4{font-size:13px;color:var(--navy);margin:16px 0 6px;padding-bottom:4px;border-bottom:2px solid var(--navy-soft)}
+.dt dl{margin:0;display:grid;grid-template-columns:112px 1fr;gap:5px 10px;font-size:13px}
+.dt dt{color:var(--muted)}.dt dd{margin:0;word-break:break-word}
+#toast{position:fixed;left:50%;bottom:calc(100px + var(--sab));transform:translateX(-50%) translateY(20px);opacity:0;z-index:2000;
+  background:#141a2b;color:#fff;padding:10px 16px;border-radius:12px;font-size:13.5px;transition:.25s;pointer-events:none;max-width:86vw;text-align:center}
+#toast.on{opacity:1;transform:translateX(-50%)}
+.cross{position:absolute;left:50%;top:50%;width:34px;height:34px;margin:-17px 0 0 -17px;z-index:500;pointer-events:none}
+.sk-tools{display:flex;gap:6px;padding:10px;background:#fff;border-top:1px solid var(--line);flex-wrap:wrap;align-items:center;padding-bottom:calc(10px + var(--sab))}
+.sk-tools .sw{width:30px;height:30px;border-radius:50%;border:3px solid #fff;box-shadow:0 0 0 1px var(--line)}
+.sk-tools .sw.on{box-shadow:0 0 0 2px var(--navy)}
+#skc{flex:1;touch-action:none;background:#fff;width:100%}
+@media print{body *{visibility:hidden!important}body::after{content:"멸종위기 야생생물의 출현좌표는 화면캡쳐가 금지되어 있습니다";visibility:visible;position:fixed;top:40%;left:0;right:0;text-align:center;font-size:22px}}
+</style>
+</head>
+<body>
+
+<div id="map"></div>
+<div id="wm"></div>
+<div id="shield"><div><img src="icons/icon-192.png" alt=""><div style="font-weight:700">멸종위기종 전자야장</div><div style="font-size:13px;opacity:.8;margin-top:4px">좌표 보호를 위해 화면이 가려졌습니다</div></div></div>
+
+<div class="fab-row top-l">
+  <div class="seg" id="layerSeg"><button data-l="road" class="on">도로</button><button data-l="sat">위성</button></div>
+</div>
+<div class="fab-row top-r">
+  <button id="btnInstall" title="앱 설치"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round"><path d="M12 4v11M7 10l5 5 5-5M5 20h14"/></svg>설치</button>
+  <button id="btnMenu" aria-label="메뉴"><svg width="22" height="22" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M4 7h16M4 12h16M4 17h16"/></svg></button>
+</div>
+<button class="mini-btn" id="btnFit" aria-label="전체 조사지점 보기"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M4 9V4h5M20 9V4h-5M4 15v5h5M20 15v5h-5"/></svg></button>
+<button class="mini-btn" id="btnLocate" aria-label="내 위치"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><path d="M12 2v3M12 19v3M2 12h3M19 12h3"/></svg></button>
+<div id="countChip">조사지점 0</div>
+<button id="btnAdd" aria-label="새 야장"><svg width="30" height="30" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.6" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg></button>
+
+<!-- Drawer -->
+<div class="backdrop" id="drBack"></div>
+<aside id="drawer">
+  <div class="dr-head">
+    <div class="dr-title"><h2>조사기록</h2><button class="icon-btn" id="drClose" aria-label="닫기"><svg width="18" height="18" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.6" stroke-linecap="round"><path d="M6 6l12 12M18 6L6 18"/></svg></button></div>
+    <div class="dr-tabs"><button data-p="search" class="on">검색</button><button data-p="stats">통계</button><button data-p="set">설정·백업</button></div>
+  </div>
+  <div class="dr-body" id="drBody"></div>
+</aside>
+
+<!-- Taxon chooser -->
+<section class="screen" id="scTaxon">
+  <div class="sc-head"><button class="icon-btn" data-back aria-label="뒤로"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round"><path d="M15 5l-7 7 7 7"/></svg></button><h2>새 야장 작성</h2></div>
+  <div class="taxa">
+    <p>조사할 분류군을 선택하세요</p>
+    <div class="taxa-grid">
+      <button class="taxon plant" data-taxon="plant">
+        <svg width="56" height="56" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 21v-9"/><path d="M12 12C12 7 8.5 4 4 4c0 5 3.5 8 8 8z"/><path d="M12 14c0-4 3-6.5 8-6.5 0 4-3 6.5-8 6.5z"/></svg>
+        식물<small>현지조사표 1·2</small></button>
+      <button class="taxon insect" data-taxon="insect">
+        <svg width="56" height="56" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><ellipse cx="12" cy="14" rx="4" ry="6"/><circle cx="12" cy="6.5" r="2"/><path d="M10.6 5l-2-2.5M13.4 5l2-2.5M8 11L4 9M8 14H3.5M8.4 17L5 20M16 11l4-2M16 14h4.5M15.6 17L19 20M12 8.5v11.5"/></svg>
+        곤충<small>현지조사표 1·2</small></button>
+    </div>
+    <div id="draftBox"></div>
+  </div>
+</section>
+
+<!-- Form -->
+<section class="screen" id="scForm">
+  <div class="sc-head"><button class="icon-btn" data-back aria-label="뒤로"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round"><path d="M15 5l-7 7 7 7"/></svg></button><h2 id="fTitle">현지조사표</h2><button class="btn sm" id="fSave" style="background:#fff;color:var(--navy)">저장</button></div>
+  <nav class="ftabs" id="fTabs"></nav>
+  <div id="fbody"></div>
+  <div class="ffoot"><button class="btn line" id="fPrev">◀ 이전</button><button class="btn ghost" id="fNext">다음 ▶</button></div>
+</section>
+
+<div id="toast"></div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js"></script>
+<script>
+'use strict';
+/* =========================================================
+   멸종위기 야생생물 전자야장 (식물·곤충)  v1.0
+   ========================================================= */
+const APP_VER = '1.0.0';
+const $ = (s, el = document) => el.querySelector(s);
+const $$ = (s, el = document) => [...el.querySelectorAll(s)];
+const esc = v => String(v ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const sel = k => `[data-k="${CSS.escape(k)}"]`;
+const pad = (n, l = 2) => String(n).padStart(l, '0');
+const todayStr = (d = new Date()) => `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())}`;
+const nowHM = (d = new Date()) => `${pad(d.getHours())}:${pad(d.getMinutes())}`;
+const dotDate = s => (s || '').replace(/-/g, '/');
+const num = v => (v === '' || v == null || isNaN(+v)) ? null : +v;
+const isEmpty = v => v == null || v === '' || (Array.isArray(v) && !v.length);
+const uid = () => Date.now().toString(36) + Math.random().toString(36).slice(2, 8);
+
+function toast(msg, ms = 2200) {
+  const t = $('#toast'); t.textContent = msg; t.classList.add('on');
+  clearTimeout(toast._t); toast._t = setTimeout(() => t.classList.remove('on'), ms);
+}
+
+/* ---------- 좌표 변환 ---------- */
+function toDMS(dec) {
+  if (dec == null || dec === '' || isNaN(dec)) return { d: '', m: '', s: '' };
+  const a = Math.abs(+dec); let d = Math.floor(a); let mf = (a - d) * 60; let m = Math.floor(mf);
+  let s = Math.round((mf - m) * 60 * 100) / 100;
+  if (s >= 60) { s = 0; m++; } if (m >= 60) { m = 0; d++; }
+  return { d, m, s };
+}
+function fromDMS(d, m, s) {
+  if (d === '' && m === '' && s === '') return null;
+  const v = (+d || 0) + (+m || 0) / 60 + (+s || 0) / 3600;
+  return isNaN(v) ? null : Math.round(v * 1e7) / 1e7;
+}
+function dmsStr(dec) { if (dec == null || dec === '') return ''; const x = toDMS(dec); return `${x.d}°${pad(x.m)}′${x.s.toFixed(2).padStart(5, '0')}″`; }
+function distM(a, b, c, d) { const R = 6371000, r = Math.PI / 180; const x = Math.sin((c - a) * r / 2) ** 2 + Math.cos(a * r) * Math.cos(c * r) * Math.sin((d - b) * r / 2) ** 2; return 2 * R * Math.asin(Math.sqrt(x)); }
+
+/* ---------- IndexedDB ---------- */
+const DB = {
+  db: null,
+  open() { return new Promise((res, rej) => { const r = indexedDB.open('esurvey-ko', 1);
+    r.onupgradeneeded = () => r.result.createObjectStore('records', { keyPath: 'id' });
+    r.onsuccess = () => { this.db = r.result; res(); }; r.onerror = () => rej(r.error); }); },
+  req(mode, fn) { return new Promise((res, rej) => { const q = fn(this.db.transaction('records', mode).objectStore('records')); q.onsuccess = () => res(q.result); q.onerror = () => rej(q.error); }); },
+  all() { return this.req('readonly', s => s.getAll()); },
+  put(r) { return this.req('readwrite', s => s.put(r)); },
+  del(id) { return this.req('readwrite', s => s.delete(id)); },
+  clear() { return this.req('readwrite', s => s.clear()); }
+};
+let RECS = [];
+async function reload() { RECS = (await DB.all()).sort((a, b) => (b.f.date || '').localeCompare(a.f.date || '') || b.updatedAt - a.updatedAt); drawMarkers(); }
+
+/* ---------- 설정 ---------- */
+const SET = Object.assign({ name: '', org: '', aName: '', aOrg: '' }, JSON.parse(localStorage.getItem('es-set') || '{}'));
+const saveSet = () => localStorage.setItem('es-set', JSON.stringify(SET));
+
+/* =========================================================
+   현지조사표 항목 정의
+   ========================================================= */
+const EFF = ['빠른 개체 감소 유발', '느린 감소 유발', '변동 유발', '무시할 만한 수준', '감소 없음'];
+const RANGE = ['10%미만', '10%~40%', '40%~70%', '70%~90%', '90%이상'];
+const ETC = { v: '기타', x: '내용 기재' };
+
+const PLANT_HAB = [
+  ['산림지역', [['아고산', ['하록활엽수림', '상록침엽수림', '혼효림']], ['냉온대', ['하록활엽수림', '상록침엽수림', '혼효림']],
+    ['난온대', ['상록활엽수림', '하록활엽수림', '상록침엽수림', '혼효림']], ['식재림', ['하록활엽수림', '상록침엽수림', '혼효림']],
+    ['암각지', ['암각지 초본군락', '암각지 관목군락']], ['숲가장자리', ['임연 초본군락', '임연 관목군락']]]],
+  ['초지', [['자연초지', ['해안풍충초지', '산지자연초지', '기타 초지']], ['인공초지', ['목초지', '골프장', '묘지', '기타 초지']]]],
+  ['습지', [['저층습원', ['부엽침수군락', '부유식물군락', '침수', '초본식물군락', '목본식물군락']], ['중간습원', ['부엽침수군락', '부유식물군락', '침수', '초본식물군락', '목본식물군락']], ['고층습원', ['초본식물군락']]]],
+  ['하천', [['하천 수변', ['침수식물군락', '유수변 초본식물군락', '유수변 관목식물군락']], ['고수부지 및 제방', ['고수부지 및 제방 초본식생', '관목 및 교목식물군락']]]],
+  ['해안', [['해안사구/자갈해안', ['해안사구 초원군락', '자갈해안 초본식생', '해안사구 관목림', '해안사구 교목림']], ['염습지', ['염습지 초본식생', '침수 초본군락']], ['해안단애(절벽)', ['해안절벽 초본군락', '해안절벽 관목림', '해안절벽 교목림']]]],
+  ['농경지역', [['', ['논', '밭', '과수원', ETC]]]],
+  ['인공서식지', [['', ['공터', '채광지역', '인공수로', ETC]]]],
+  ['기타', [['', [{ v: '생육지 유형에 포함되지 않는 경우', x: '상세 설명' }]]]]
+];
+const INSECT_HAB = [
+  ['도시화지역', ['주거지', '상업지역', '공업지', ETC]], ['농업지역', ['논', '밭', '과수원', ETC]],
+  ['초지', ['건생초지', '아고산초지', '인공초지']], ['나지', ['산지절벽', '나지']],
+  ['산림', ['난온대 상록활엽수림', '냉온대 활엽수림', '침엽수림', '혼효림', '숲가장자리']],
+  ['습지', ['저층습지', '중층습지', '고층습지', '인공습지']],
+  ['하천', ['하상', '수변', '고수부지 및 제방', '인공하천', '하안단구(절벽)']],
+  ['해안', ['해안사구', '염습지', '해안단애(절벽)', '자갈해안', '조상대']]
+].map(([a, l]) => [a, [['', l]]]);
+
+const I_THR = {
+  thrA: ['매립', '간척', '골재/석재채취', '도로(철도)신설/확장', '벌채', '하천/호소 구조변경', '인간출입', '포획/채취', '수질오염', ETC],
+  thrN: ['산불', '태풍', '가뭄', '산사태', '홍수', '폭설', '이상기온', '천이', ETC],
+  thrB: ['천적', '경쟁', '질병', '외래종', ETC]
+};
+const I_WHEN = ['과거(재발가능성 없음)', '과거(재발예상)', '현재(진행 중)', '미래(발생예상)'];
+const I_SEV = ['일부', '미약', '보통', '위협', '심각'];
+const I_PRED = ['단기', '중기반복(<5년)', '중기지속(<5년)', '장기반복(>5년)', '장기지속(>5년)'];
+const THR_CAT = { thrA: '인위적', thrN: '자연적', thrB: '생물적' };
+
+const TAB_NAMES = ['1. 조사지역 정보 등', '2. 개체군 정보', '3. 서식지 특성(위협요인)', '4. 환경요소', '5. 공동/동서출현종', '6. 기타사항'];
+
+const common1 = (taxon) => [
+  { t: 'auto' },
+  { t: 'sec', label: '기본 항목' },
+  { k: 'species', label: '조사종명(국명)', t: 'text', req: 1, list: 1, ph: taxon === 'plant' ? '예: 한라송이풀' : '예: 붉은점모시나비' },
+  { t: 'serial' },
+  { k: 'date', label: '조사일자', t: 'date', req: 1 },
+  { t: 'row', items: [{ k: 'tStart', label: '시작시각', t: 'time', now: 1 }, { k: 'tEnd', label: '종료시각', t: 'time', now: 1 }] },
+  { k: 'weather', label: '날씨', t: 'radio', opts: ['맑음', '흐림', '비', ETC] },
+  { t: 'row', items: [{ k: 'temp', label: '기온', t: 'number', unit: '℃', step: '0.1' }, { k: 'elev', label: '고도', t: 'number', unit: 'm' }] },
+  { k: 'wxNote', label: '기상 상세', t: 'text', ph: '습도·풍속 등 (자동 기입)' },
+  { t: 'sec', label: '조사자' },
+  { t: 'row', items: [{ k: 'chiefName', label: '책임 (성명)', t: 'text' }, { k: 'chiefOrg', label: '소속', t: 'text' }] },
+  { t: 'row', items: [{ k: 'asstName', label: '보조 (성명)', t: 'text' }, { k: 'asstOrg', label: '소속', t: 'text' }] }
+];
+const coordBlock = (src) => [
+  { t: 'sec', label: '경·위도 좌표값 (도/분/초)' },
+  { t: 'coord', label: '실측 (현장 측정)', lat: 'lat', lon: 'lon', gps: 1 },
+  { k: 'gpsAcc', label: 'GPS 수평 정확도', t: 'number', unit: '±m' },
+  { t: 'coord', label: '기존 (제공된 필수조사지 좌표)', lat: 'lat0', lon: 'lon0' },
+  { k: 'src', label: '좌표값 취득원 (1개만 선택)', t: 'radio', opts: src, req: 1 }
+];
+
+const SCHEMA = {
+  plant: [
+    [...common1('plant'),
+      { t: 'sec', label: '조사지 구분' },
+      { k: 'siteType', label: '조사지 구분', t: 'radio', opts: ['필수', '신규'] },
+      { t: 'sec', label: '조사지역' },
+      { k: 'addr', label: '행정구역 (동/리, 지번까지)', t: 'text' },
+      { k: 'locDesc', label: '위치설명', t: 'area', ph: '조사지역 명칭(계곡/산/하천/해안/섬 등), 이동 경로 및 방법, 주변 지명·구조물 등' },
+      ...coordBlock(['GPS', '구글지도', '카카오맵', '네이버지도', { v: '기타', x: '취득 방법' }])],
+    [{ t: 'prev' },
+      { t: 'sec', label: '개체수' },
+      { k: 'count', label: '개체수 (지상부 줄기 기준)', t: 'number', unit: '개체' },
+      { k: 'trend', label: '기존 대비 변동', t: 'radio', opts: ['증가', '감소', '변동 없음'] },
+      { k: 'habitable', label: '서식 가능 여부 (※ 미확인 시 체크)', t: 'radio', opts: ['서식가능', '불가'] },
+      { k: 'changeWhy', label: '변동사유', t: 'area', ph: '개체변동이나 생육 불가 이유에 대하여 상세 설명' },
+      { t: 'sec', label: '개체군 구조' },
+      { k: 'distType', label: '분포형태', t: 'radio', opts: ['단생', '단생/산발', '단집단', '다집단', '집단/산재', '밀생'] },
+      { t: 'row', items: [{ k: 'reproN', label: '생식가능개체수', t: 'number', unit: '개체' }, { k: 'height', label: '개체평균높이', t: 'number', unit: 'cm', step: '0.1' }, { k: 'area', label: '분포면적', t: 'number', unit: '㎡', step: '0.1' }] },
+      { k: 'stage', label: '성장단계', t: 'check', opts: ['유묘', '영양생장기', '개화 및 결실기', { v: '기타', x: '단계 기재' }] },
+      { t: 'stageN', stages: ['유묘', '영양생장기', '개화 및 결실기', '기타'] },
+      { t: 'sec', label: '소집단 좌표 · 개체수 · 주요 공동/동서출현종' },
+      { t: 'sub' }],
+    [{ t: 'sec', label: '서식처 유형' },
+      { t: 'tree', k: 'hab', data: PLANT_HAB },
+      { t: 'sec', label: '개체군 위협요인 — 주요 요인' },
+      { t: 'note', label: '조사지점 또는 인접 지역에서 생육에 영향을 미치는 요인만 체크합니다. 위협요인이 다양하면 6번 탭 코멘트란에 기재하세요.' },
+      { k: 'thrA', label: '인위적', t: 'check', opts: ['매립', '간척', '개간 및 농지 확장', '골재/석재채취', '도로(철도)신설/확장', '인공구조물 설치', '하천/호소 구조변경', '수질오염', '벌채', '인간출입', '포획/채취', ETC] },
+      { k: 'thrN', label: '자연적', t: 'check', opts: ['산불', '태풍', '가뭄', '사태', '홍수', '폭설', '이상기온', ETC] },
+      { k: 'thrB', label: '생물적', t: 'check', opts: ['천적', '경쟁', '질병', '외래종', ETC] },
+      { k: 'thrSev', label: '강도', t: 'radio', opts: ['낮은 강도', '중간 강도', '고강도', '해당없음'] },
+      { k: 'thrEff', label: '영향', t: 'radio', opts: EFF },
+      { k: 'thrRange', label: '범위', t: 'radio', opts: RANGE }],
+    [{ t: 'sec', label: '환경요소 (서식지 평가항목)' },
+      { k: 'rock', label: '암석노출', t: 'radio', opts: ['0%', '<5%', '<25%', '<50%', '>51%'] },
+      { t: 'row', items: [{ k: 'plotArea', label: '조사범위', t: 'number', unit: '㎡' }, { k: 'aspect', label: '방위', t: 'number', unit: '°' }] },
+      { t: 'sensor', kind: 'aspect' },
+      { k: 'litter', label: '낙엽층 (cm)', t: 'radio', opts: ['0-5', '6-10', '11-30', '31-100', '100이상'] },
+      { t: 'row', items: [{ k: 'elev', label: '해발고도', t: 'number', unit: 'm' }, { k: 'slope', label: '경사도', t: 'number', unit: '°' }] },
+      { t: 'sensor', kind: 'slope' },
+      { k: 'light', label: '빛조건', t: 'radio', opts: ['음지', '반음지', '양지'] },
+      { k: 'micro', label: '미세지형', t: 'radio', opts: ['평면', '함몰', '요철', '돌출'] },
+      { k: 'moist', label: '토습', t: 'radio', list: 1, opts: [
+        { v: '건', d: '손바닥에 물기가 전혀 남지 않음' }, { v: '적', d: '토양을 강하게 누르면 손바닥에 물기가 남음' },
+        { v: '습', d: '강하게 누르면 물기가 남지만, 물방울이 떨어지지 않음' }, { v: '다습', d: '강하게 누르면 물방울이 떨어짐' },
+        { v: '과습', d: '토양을 손바닥에 올려놓으면 물방울이 떨어짐' }, { v: '기타(수중)' }] }],
+    [{ t: 'sec', label: '공동/동서출현종' },
+      { t: 'note', label: '생육지에 분포하는 주요 식물 종을 기재하고 층을 선택합니다. T: 교목층 · S: 관목층 · H: 초본층' },
+      { t: 'co', mode: 'layer' }],
+    [{ t: 'sec', label: '입지위치도' },
+      { t: 'media', sketch: '입지위치도' },
+      { t: 'sec', label: '코멘트 및 기타' },
+      { k: 'comment', label: '코멘트 및 기타 (주요 특이사항, 생태 현황)', t: 'area' },
+      { k: 'popReason', label: '개체군(개체수) 판단 사유', t: 'area' },
+      { t: 'sec', label: '개체수 추정 시' },
+      { t: 'row', items: [{ k: 'estDen', label: '단위면적당 개체수', t: 'number', unit: '개체' }, { k: 'estUnit', label: '단위면적', t: 'number', unit: '㎡' }, { k: 'estArea', label: '분포면적', t: 'number', unit: '㎡' }] },
+      { t: 'est' },
+      { t: 'sec', label: '서식처 특성' },
+      { k: 'habDesc', label: '서식처 특성 기술', t: 'area' },
+      { k: 'epiHost', label: '착생식물의 경우 부착 대상', t: 'text', ph: '예: 소나무 수피, 화강암 노두' }]
+  ],
+  insect: [
+    [...common1('insect'),
+      { t: 'sec', label: '개체군' },
+      { t: 'row', items: [{ k: 'popName', label: '개체군명', t: 'text' }, { k: 'popCode', label: '개체군 코드', t: 'text' }] },
+      { t: 'row', items: [{ k: 'siteName', label: '조사지역명', t: 'text' }, { k: 'siteCode', label: '조사지역 코드', t: 'text' }] },
+      { k: 'siteType', label: '조사지 구분', t: 'radio', opts: ['필수', '신규'] },
+      { k: 'unconf', label: '미확인 시 서식 가능 여부', t: 'radio', opts: ['가능', { v: '불가능', x: '이유' }] },
+      { t: 'sec', label: '조사지역' },
+      { k: 'addr', label: '행정구역 (동/리, 지번까지)', t: 'text' },
+      { k: 'locDesc', label: '위치설명', t: 'area', ph: '상세위치 설명, 조사지 경로 및 명칭 등' },
+      ...coordBlock([{ v: 'GPS', x: '모델명' }, '구글맵', '다음맵', '네이버맵', { v: '기타', x: '취득 방법' }])],
+    [{ t: 'prev' },
+      { t: 'sec', label: '개체수' },
+      { k: 'count', label: '개체수', t: 'number', unit: '개체' },
+      { k: 'countCls', label: '개체수 구간 (자동 선택)', t: 'radio', opts: ['0', '1-10', '11-50', '50-100', '101 이상'] },
+      { t: 'sec', label: '개체군' },
+      { k: 'method', label: '조사방법', t: 'check', opts: ['선조사', '정점조사', '뜰채', '유아등', { v: '함정트랩', x: '먹이' }, '말레이즈트랩', { v: '기타', x: '조사방법' }] },
+      { k: 'stage', label: '성장단계', t: 'check', opts: ['알', '유충', '번데기', '성충'] },
+      { t: 'stageN', stages: ['알', '유충', '번데기', '성충'] },
+      { t: 'row', items: [{ k: 'reproPct', label: '생식가능 개체수 비율', t: 'number', unit: '%' }, { k: 'size', label: '개체평균크기', t: 'number', unit: 'cm', step: '0.1' }] }],
+    [{ t: 'sec', label: '서식지 유형' },
+      { t: 'tree', k: 'hab', data: INSECT_HAB },
+      { t: 'sec', label: '서식지/개체군 위협요인 — 주요 요인' },
+      { k: 'thrCat', label: '구분 (중복 체크 가능)', t: 'check', opts: ['인위적', '자연적', '생물적', '해당사항 없음'] },
+      { k: 'thrA', label: '인위적', t: 'check', opts: I_THR.thrA },
+      { k: 'thrN', label: '자연적', t: 'check', opts: I_THR.thrN },
+      { k: 'thrB', label: '생물적', t: 'check', opts: I_THR.thrB },
+      { k: 'thrWhen', label: '발생 시기', t: 'radio', opts: I_WHEN },
+      { k: 'thrSev', label: '강도', t: 'radio', opts: I_SEV },
+      { k: 'thrEff', label: '영향', t: 'radio', opts: EFF },
+      { k: 'thrRange', label: '범위', t: 'radio', opts: RANGE },
+      { k: 'thrPred', label: '미래 예측', t: 'radio', opts: I_PRED },
+      { t: 'sec', label: '2·3순위 위협요인' },
+      { t: 'rank', k: 'thr2', label: '2순위' },
+      { t: 'rank', k: 'thr3', label: '3순위' }],
+    [{ t: 'note', big: 1, label: '곤충 현지조사표에는 환경요소(서식지 평가항목)가 없습니다.\n서식지 정보는 3번 탭에서 입력해 주세요.' }],
+    [{ t: 'sec', label: '공동/동서출현종' },
+      { t: 'co', mode: 'count' }],
+    [{ t: 'sec', label: '조사지 약도' },
+      { t: 'media', sketch: '조사지 약도' },
+      { t: 'sec', label: '코멘트 및 기타' },
+      { k: 'comment', label: '코멘트 및 기타', t: 'area' },
+      { k: 'habDesc', label: '서식처 특성 기술', t: 'area' }]
+  ]
+};
+const normOpt = o => typeof o === 'string' ? { v: o, x: o === '기타' ? '내용 기재' : null } : o;
+
+/* =========================================================
+   지도
+   ========================================================= */
+const map = L.map('map', { zoomControl: false, attributionControl: true, preferCanvas: false }).setView([36.2, 127.9], 7);
+const LAYERS = {
+  road: L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', { maxZoom: 19, crossOrigin: 'anonymous', attribution: '© OpenStreetMap' }),
+  sat: L.layerGroup([
+    L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}', { maxZoom: 19, maxNativeZoom: 18, crossOrigin: 'anonymous', attribution: 'Esri, Maxar, Earthstar' }),
+    L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/Reference/World_Boundaries_and_Places/MapServer/tile/{z}/{y}/{x}', { maxZoom: 19, maxNativeZoom: 18, crossOrigin: 'anonymous' })
+  ])
+};
+let curLayer = localStorage.getItem('es-layer') === 'sat' ? 'sat' : 'road';
+function setLayer(l) {
+  Object.values(LAYERS).forEach(x => map.removeLayer(x)); LAYERS[l].addTo(map); curLayer = l; localStorage.setItem('es-layer', l);
+  $$('#layerSeg button').forEach(b => b.classList.toggle('on', b.dataset.l === l));
+}
+setLayer(curLayer);
+$('#layerSeg').addEventListener('click', e => { const b = e.target.closest('button'); if (b) setLayer(b.dataset.l); });
+
+const mk = L.layerGroup().addTo(map); const MK = {};
+function drawMarkers() {
+  mk.clearLayers(); for (const k in MK) delete MK[k];
+  let n = 0;
+  RECS.forEach(r => {
+    const { lat, lon } = r.f; if (num(lat) == null || num(lon) == null) return; n++;
+    const m = L.marker([+lat, +lon], { icon: L.divIcon({ className: '', html: `<div class="pt ${r.taxon}"></div>`, iconSize: [16, 16], iconAnchor: [8, 8] }) })
+      .bindTooltip(`<span class="d">${esc(dotDate(r.f.date))}</span><br><b>${esc(r.f.species || '(종명 미기재)')}</b>`, { permanent: true, direction: 'top', offset: [0, -8], className: 'lbl' })
+      .bindPopup(() => `<div class="pop"><h4>${esc(r.f.species || '')}</h4><div class="m">${r.taxon === 'plant' ? '식물' : '곤충'} · ${esc(dotDate(r.f.date))} · ${esc(r.f.serial || '')}<br>${esc(r.f.chiefName || '')} · 개체수 ${esc(r.f.count ?? '-')}</div>
+        <div class="bt"><button class="btn sm" onclick="showDetail('${r.id}')">상세</button><button class="btn sm ghost" onclick="openForm('${r.taxon}','${r.id}')">수정</button></div></div>`);
+    m.addTo(mk); MK[r.id] = m;
+  });
+  $('#countChip').textContent = `조사지점 ${n}`;
+}
+function fitAll() {
+  const pts = RECS.filter(r => num(r.f.lat) != null).map(r => [+r.f.lat, +r.f.lon]);
+  if (pts.length) map.fitBounds(pts, { padding: [60, 60], maxZoom: 15 }); else map.setView([36.2, 127.9], 7);
+}
+$('#btnFit').onclick = fitAll;
+let meMarker = null;
+$('#btnLocate').onclick = async () => {
+  toast('현재 위치 확인 중…');
+  try { const p = await getPosition(6000); const ll = [p.coords.latitude, p.coords.longitude];
+    if (meMarker) meMarker.setLatLng(ll); else meMarker = L.marker(ll, { icon: L.divIcon({ className: '', html: '<div class="me-dot"></div>', iconSize: [18, 18], iconAnchor: [9, 9] }), interactive: false }).addTo(map);
+    map.setView(ll, 16); } catch (e) { toast(e.message); }
+};
+function flyTo(id) { const r = RECS.find(x => x.id === id); if (!r || num(r.f.lat) == null) return toast('좌표가 없는 기록입니다'); map.setView([+r.f.lat, +r.f.lon], 17); setTimeout(() => MK[id] && MK[id].openPopup(), 350); }
+
+/* =========================================================
+   화면 캡쳐 방지
+   ========================================================= */
+const CAP_MSG = '멸종위기 야생생물의 출현좌표는 화면캡쳐가 금지되어 있습니다';
+const shield = $('#shield');
+function mapVisible() { return !$('.screen.on') && !$('.modal'); }
+function captureWarn() {
+  shield.classList.add('on');
+  try { navigator.clipboard && navigator.clipboard.writeText(CAP_MSG).catch(() => {}); } catch (_) {}
+  if ($('.modal.warn')) return;
+  showModal(`<div class="ic">⚠</div><p>${CAP_MSG}</p>`, { cls: 'warn', acts: [['확인', 'primary']], onClose: () => shield.classList.remove('on') });
+}
+function updateWatermark() {
+  const who = SET.name || '조사자 미설정'; const d = new Date();
+  const txt = `캡쳐금지 · 멸종위기종 출현좌표 · ${who} · ${todayStr(d)} ${nowHM(d)}`;
+  const svg = `<svg xmlns='http://www.w3.org/2000/svg' width='360' height='220'><text x='0' y='120' transform='rotate(-24 180 110)' font-family='sans-serif' font-size='13' font-weight='700' fill='rgba(22,35,90,0.16)'>${esc(txt)}</text></svg>`;
+  $('#wm').style.background = `url("data:image/svg+xml;charset=utf-8,${encodeURIComponent(svg)}")`;
+}
+updateWatermark(); setInterval(updateWatermark, 60000);
+document.addEventListener('keyup', e => { if (e.key === 'PrintScreen') { e.preventDefault(); captureWarn(); } });
+document.addEventListener('keydown', e => {
+  const k = (e.key || '').toLowerCase();
+  if (e.key === 'PrintScreen' || (e.metaKey && e.shiftKey && ['3', '4', '5', 's'].includes(k)) || (e.ctrlKey && e.shiftKey && k === 's') || ((e.ctrlKey || e.metaKey) && k === 'p')) { e.preventDefault(); captureWarn(); }
+});
+$('#map').addEventListener('contextmenu', e => { e.preventDefault(); captureWarn(); });
+// 3손가락 스와이프 캡쳐 제스처 감지 (삼성·샤오미 등)
+document.addEventListener('touchstart', e => { if (e.touches.length >= 3 && mapVisible()) captureWarn(); }, { passive: true });
+// 앱 전환/최근 앱 미리보기, 데스크톱 캡쳐 도구 사용 시 지도 가림
+document.addEventListener('visibilitychange', () => { if (document.hidden) shield.classList.add('on'); else if (!$('.modal.warn')) setTimeout(() => shield.classList.remove('on'), 150); });
+window.addEventListener('blur', () => { if (!/Android|iPhone|iPad/i.test(navigator.userAgent)) shield.classList.add('on'); });
+window.addEventListener('focus', () => { if (!$('.modal.warn')) shield.classList.remove('on'); });
+window.addEventListener('beforeprint', captureWarn);
+let lpT; $('#map').addEventListener('touchstart', e => { if (e.touches.length === 1) lpT = setTimeout(captureWarn, 900); }, { passive: true });
+['touchend', 'touchmove', 'touchcancel'].forEach(ev => $('#map').addEventListener(ev, () => clearTimeout(lpT), { passive: true }));
+
+/* =========================================================
+   레이어(뒤로가기) 관리
+   ========================================================= */
+const LAY = [];
+function pushLayer(name, close) { LAY.push({ name, close }); history.pushState({ n: LAY.length }, ''); }
+function popLayer() { if (LAY.length) history.back(); }
+history.replaceState({ n: 0 }, '');
+window.addEventListener('popstate', e => {
+  const target = (e.state && e.state.n) || 0;
+  while (LAY.length > target) {
+    const top = LAY.pop();
+    if (top.close() === false) { LAY.push(top); history.pushState({ n: LAY.length }, ''); break; }
+  }
+});
+document.addEventListener('click', e => { if (e.target.closest('[data-back]')) popLayer(); });
+
+/* ---------- 모달 ---------- */
+function showModal(html, o = {}) {
+  const m = document.createElement('div'); m.className = 'modal ' + (o.cls || '');
+  const acts = (o.acts || []).map((a, i) => `<button class="btn ${a[1] === 'primary' ? '' : a[1] || 'line'}" data-i="${i}">${a[0]}</button>`).join('');
+  m.innerHTML = `<div class="bg"></div><div class="box">${html}${acts ? `<div class="acts">${acts}</div>` : ''}</div>`;
+  document.body.appendChild(m);
+  let done = false;
+  const close = () => { if (done) return; done = true; m.remove(); o.onClose && o.onClose(); };
+  pushLayer('modal', close);
+  m.addEventListener('click', e => {
+    const b = e.target.closest('.acts button');
+    if (b) { const a = o.acts[+b.dataset.i]; if (a[2] && a[2]() === false) return; popLayer(); }
+    else if (e.target.classList.contains('bg') && !o.sticky) popLayer();
+  });
+  return { el: m, close: () => popLayer() };
+}
+const confirmBox = (msg, ok = '확인', danger) => new Promise(res => {
+  let r = false; showModal(`<h3>확인</h3><div>${msg}</div>`, { acts: [['취소'], [ok, danger ? 'red' : 'primary', () => { r = true; }]], onClose: () => res(r) });
+});
+
+/* =========================================================
+   설치 (PWA)
+   ========================================================= */
+let deferredPrompt = null;
+const isStandalone = () => matchMedia('(display-mode: standalone)').matches || navigator.standalone === true;
+const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent) || (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
+if (isStandalone()) $('#btnInstall').hidden = true;
+window.addEventListener('beforeinstallprompt', e => { e.preventDefault(); deferredPrompt = e; });
+window.addEventListener('appinstalled', () => { $('#btnInstall').hidden = true; toast('설치가 완료되었습니다'); });
+$('#btnInstall').onclick = async () => {
+  if (deferredPrompt) { deferredPrompt.prompt(); const r = await deferredPrompt.userChoice; deferredPrompt = null; if (r.outcome === 'accepted') $('#btnInstall').hidden = true; return; }
+  if (isIOS) {
+    const crios = /CriOS/.test(navigator.userAgent);
+    showModal(`<h3>iPhone·iPad에 설치하기</h3><div class="hint">iOS는 정책상 자동 설치 버튼을 지원하지 않아, 아래 순서로 홈 화면에 추가합니다.</div>
+      <ol class="steps">${crios
+        ? '<li>크롬 주소창 오른쪽의 <b>공유 아이콘(□↑)</b>을 누릅니다.</li><li>목록에서 <b>홈 화면에 추가</b>를 선택합니다.</li><li>오른쪽 위 <b>추가</b>를 누르면 아이콘이 생깁니다.</li>'
+        : '<li>화면 아래(또는 위)의 <b>공유 버튼(□↑)</b>을 누릅니다.</li><li><b>홈 화면에 추가</b>를 선택합니다.</li><li><b>추가</b>를 누르면 아이콘이 생깁니다.</li>'}</ol>
+      <div class="hint" style="margin-top:8px">iOS 16.4 이상에서는 크롬에서도 설치할 수 있습니다.</div>`, { acts: [['확인', 'primary']] });
+  } else {
+    showModal(`<h3>앱 설치하기</h3><ol class="steps"><li>크롬 오른쪽 위 <b>⋮ 메뉴</b>를 누릅니다.</li><li><b>앱 설치</b> 또는 <b>홈 화면에 추가</b>를 선택합니다.</li></ol>
+      <div class="hint" style="margin-top:8px">이미 설치되어 있다면 홈 화면의 ‘전자야장’ 아이콘으로 실행하세요.</div>`, { acts: [['확인', 'primary']] });
+  }
+};
+
+/* =========================================================
+   서랍 메뉴 (검색 · 통계 · 설정)
+   ========================================================= */
+let drPane = 'search', qText = '', qTaxon = 'all';
+function openDrawer() {
+  $('#drawer').classList.add('on'); $('#drBack').classList.add('on'); renderPane();
+  pushLayer('drawer', () => { $('#drawer').classList.remove('on'); $('#drBack').classList.remove('on'); });
+}
+$('#btnMenu').onclick = openDrawer; $('#drClose').onclick = popLayer; $('#drBack').onclick = popLayer;
+$('.dr-tabs').addEventListener('click', e => { const b = e.target.closest('button'); if (!b) return; drPane = b.dataset.p; $$('.dr-tabs button').forEach(x => x.classList.toggle('on', x === b)); renderPane(); });
+function renderPane() { ({ search: paneSearch, stats: paneStats, set: paneSet })[drPane](); }
+
+/* ---------- 검색 ---------- */
+function recText(r) {
+  const f = r.f; const parts = [r.taxon === 'plant' ? '식물' : '곤충'];
+  if (f.date) parts.push(f.date, f.date.replace(/-/g, '/'), f.date.replace(/-/g, '.'), f.date.replace(/-/g, ''));
+  SCHEMA[r.taxon].forEach(tab => tab.forEach(fd => flatFields(fd).forEach(x => { const v = fmtVal(x, f, true); if (v) parts.push(v); })));
+  return parts.join(' ').toLowerCase();
+}
+function paneSearch() {
+  $('#drBody').innerHTML = `
+    <div class="search"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#646b7d" stroke-width="2.4" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="M20 20l-4-4"/></svg>
+      <input id="q" type="search" placeholder="종명, 조사일자, 조사자, 조사표번호, 지역 등" value="${esc(qText)}" autocomplete="off"></div>
+    <div class="fchips chips radio" id="qT">${[['all', '전체'], ['plant', '식물'], ['insect', '곤충']].map(([v, l]) => `<button class="chip ${qTaxon === v ? 'on' : ''}" data-v="${v}">${l}</button>`).join('')}</div>
+    <div id="qRes"></div>`;
+  const run = () => {
+    const toks = qText.toLowerCase().split(/\s+/).filter(Boolean);
+    const list = RECS.filter(r => (qTaxon === 'all' || r.taxon === qTaxon) && (!toks.length || (t => toks.every(k => t.includes(k)))(recText(r))));
+    const hl = s => { let o = esc(s); toks.forEach(t => { if (t.length) o = o.replace(new RegExp(t.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'), 'gi'), m => `<mark>${m}</mark>`); }); return o; };
+    $('#qRes').innerHTML = `<div class="res-meta">${toks.length ? '검색 결과' : '전체 기록'} ${list.length}건</div>` + (list.length ? list.map(r => `
+      <button class="rec" data-id="${r.id}"><div class="t"><span class="tag ${r.taxon}">${r.taxon === 'plant' ? '식물' : '곤충'}</span>${hl(r.f.species || '(종명 미기재)')}</div>
+      <div class="s">${hl(dotDate(r.f.date))} · ${hl(r.f.serial || '번호없음')} · ${hl(r.f.chiefName || '조사자 미기재')}</div>
+      <div class="s">${hl(r.f.addr || '')}${r.f.count != null && r.f.count !== '' ? ` · 개체수 ${esc(r.f.count)}` : ''}</div></button>`).join('')
+      : `<div class="empty">${RECS.length ? '일치하는 기록이 없습니다' : '아직 저장된 야장이 없습니다.<br>지도 화면의 + 버튼으로 시작하세요.'}</div>`);
+  };
+  $('#q').addEventListener('input', e => { qText = e.target.value; run(); });
+  $('#qT').addEventListener('click', e => { const b = e.target.closest('.chip'); if (!b) return; qTaxon = b.dataset.v; $$('#qT .chip').forEach(x => x.classList.toggle('on', x === b)); run(); });
+  $('#qRes').addEventListener('click', e => { const b = e.target.closest('.rec'); if (b) showDetail(b.dataset.id); });
+  run();
+}
+
+/* ---------- 상세 보기 ---------- */
+function detailHTML(r) {
+  return SCHEMA[r.taxon].map((tab, ti) => {
+    const rows = tab.flatMap(flatFields).map(fd => { const v = fmtVal(fd, r.f); return v ? `<dt>${esc(fd.dl || fd.label)}</dt><dd>${v}</dd>` : ''; }).join('');
+    const media = tab.some(fd => fd.t === 'media') ? mediaView(r.f) : '';
+    return rows || media ? `<h4>${TAB_NAMES[ti]}</h4><dl>${rows}</dl>${media}` : '';
+  }).join('');
+}
+function mediaView(f) {
+  let o = ''; if (f.sketch) o += `<div class="lab" style="margin-top:8px">약도</div><img class="sketch-prev" src="${f.sketch}">`;
+  if (f.photos && f.photos.length) o += `<div class="thumbs">${f.photos.map(p => `<div class="th"><img src="${p}"></div>`).join('')}</div>`;
+  return o;
+}
+function showDetail(id) {
+  const r = RECS.find(x => x.id === id); if (!r) return;
+  map.closePopup();
+  showModal(`<h3><span class="tag ${r.taxon}">${r.taxon === 'plant' ? '식물' : '곤충'}</span> ${esc(r.f.species || '')}</h3><div class="hint">${esc(r.f.serial || '')} · 최종수정 ${new Date(r.updatedAt).toLocaleString('ko-KR')}</div><div class="dt">${detailHTML(r)}</div>`, {
+    acts: [['삭제', 'red', () => { delRec(r); return false; }], ['지도', 'ghost', () => { closeAllTo(0); setTimeout(() => flyTo(id), 400); return false; }], ['수정', 'primary', () => { openForm(r.taxon, id); return false; }]]
+  });
+}
+async function delRec(r) {
+  if (!(await confirmBox(`<b>${esc(r.f.species)}</b> (${esc(r.f.serial || '')}) 기록을 삭제할까요?<br>삭제한 자료는 복구할 수 없습니다.`, '삭제', true))) return;
+  await DB.del(r.id); await reload(); popLayer(); toast('삭제했습니다'); setTimeout(() => $('#drawer.on') && renderPane(), 80);
+}
+function closeAllTo(n) { const k = LAY.length - n; if (k > 0) history.go(-k); }
+
+/* ---------- 통계 ---------- */
+const ST = { who: null, taxon: 'all', year: 'all' };
+const stat = arr => {
+  const a = arr.map(num).filter(v => v != null).sort((x, y) => x - y); const n = a.length; if (!n) return null;
+  const sum = a.reduce((s, v) => s + v, 0), mean = sum / n;
+  const sd = n > 1 ? Math.sqrt(a.reduce((s, v) => s + (v - mean) ** 2, 0) / (n - 1)) : 0;
+  const med = n % 2 ? a[(n - 1) / 2] : (a[n / 2 - 1] + a[n / 2]) / 2;
+  return { n, sum, mean, sd, med, min: a[0], max: a[n - 1] };
+};
+const fx = (v, d = 1) => v == null ? '-' : (Math.round(v * 10 ** d) / 10 ** d).toLocaleString('ko-KR');
+function bars(entries, color) {
+  if (!entries.length) return '<div class="hint">자료 없음</div>';
+  const mx = Math.max(...entries.map(e => e[1]));
+  return `<div class="bars">${entries.map(([l, v]) => `<div class="b"><span title="${esc(l)}">${esc(l)}</span><div class="tr"><div class="fill" style="width:${(v / mx * 100).toFixed(1)}%;${color ? `background:${color}` : ''}"></div></div><span class="n">${v}</span></div>`).join('')}</div>`;
+}
+const tally = (list, fn) => { const m = {}; list.forEach(r => [].concat(fn(r) || []).forEach(k => { if (k) m[k] = (m[k] || 0) + 1; })); return Object.entries(m).sort((a, b) => b[1] - a[1]); };
+function paneStats() {
+  const people = [...new Set(RECS.map(r => r.f.chiefName).filter(Boolean))].sort();
+  if (ST.who == null) ST.who = SET.name && people.includes(SET.name) ? SET.name : 'all';
+  const years = [...new Set(RECS.map(r => (r.f.date || '').slice(0, 4)).filter(Boolean))].sort().reverse();
+  const L = RECS.filter(r => (ST.who === 'all' || r.f.chiefName === ST.who) && (ST.taxon === 'all' || r.taxon === ST.taxon) && (ST.year === 'all' || (r.f.date || '').startsWith(ST.year)));
+  const opt = (arr, cur) => arr.map(([v, l]) => `<option value="${esc(v)}" ${cur === v ? 'selected' : ''}>${esc(l)}</option>`).join('');
+  let h = `<div class="filters">
+    <select id="sW">${opt([['all', '조사자 전체'], ...people.map(p => [p, p])], ST.who)}</select>
+    <select id="sT">${opt([['all', '분류군 전체'], ['plant', '식물'], ['insect', '곤충']], ST.taxon)}</select>
+    <select id="sY">${opt([['all', '전체 기간'], ...years.map(y => [y, y + '년'])], ST.year)}</select></div>`;
+  if (!L.length) { $('#drBody').innerHTML = h + '<div class="empty">조건에 맞는 야장이 없습니다</div>'; bindSF(); return; }
+  const cnt = stat(L.map(r => r.f.count));
+  const spp = [...new Set(L.map(r => r.f.species).filter(Boolean))];
+  const days = new Set(L.map(r => r.f.date).filter(Boolean)).size;
+  h += `<div class="kpis"><div class="kpi"><div class="v">${L.length}</div><div class="l">조사표 수</div></div>
+    <div class="kpi"><div class="v">${spp.length}</div><div class="l">조사 대상종 수</div></div>
+    <div class="kpi"><div class="v">${cnt ? fx(cnt.sum, 0) : '-'}</div><div class="l">확인 개체수 합계</div></div>
+    <div class="kpi"><div class="v">${days}</div><div class="l">조사 일수</div></div></div>`;
+  // 종별 기술통계
+  const bySp = {}; L.forEach(r => (bySp[r.f.species || '(미기재)'] ||= []).push(r));
+  h += `<div class="card"><h3>종별 개체수 기술통계</h3><div class="tbl-wrap"><table class="st"><tr><th>종명</th><th>조사</th><th>합계</th><th>평균</th><th>SD</th><th>중앙값</th><th>최소</th><th>최대</th></tr>${
+    Object.entries(bySp).sort((a, b) => b[1].length - a[1].length).map(([sp, rs]) => { const s = stat(rs.map(r => r.f.count));
+      return `<tr><td>${esc(sp)}</td><td>${rs.length}</td><td>${s ? fx(s.sum, 0) : '-'}</td><td>${s ? fx(s.mean) : '-'}</td><td>${s ? fx(s.sd) : '-'}</td><td>${s ? fx(s.med) : '-'}</td><td>${s ? fx(s.min, 0) : '-'}</td><td>${s ? fx(s.max, 0) : '-'}</td></tr>`; }).join('')}</table></div>
+    <div class="hint" style="margin-top:6px">SD: 표본표준편차(n−1). 개체수 미기재 야장은 계산에서 제외</div></div>`;
+  // 환경 변수
+  const vars = [['elev', '고도(m)'], ['temp', '기온(℃)'], ['slope', '경사도(°)'], ['aspect', '방위(°)'], ['height', '개체평균높이(cm)'], ['area', '분포면적(㎡)'], ['reproN', '생식가능개체수'], ['reproPct', '생식가능비율(%)'], ['size', '개체평균크기(cm)']]
+    .map(([k, l]) => [l, stat(L.map(r => r.f[k]))]).filter(x => x[1]);
+  if (vars.length) h += `<div class="card"><h3>측정 변수 기술통계</h3><div class="tbl-wrap"><table class="st"><tr><th>변수</th><th>n</th><th>평균</th><th>SD</th><th>최소</th><th>최대</th></tr>${vars.map(([l, s]) => `<tr><td>${l}</td><td>${s.n}</td><td>${fx(s.mean)}</td><td>${fx(s.sd)}</td><td>${fx(s.min)}</td><td>${fx(s.max)}</td></tr>`).join('')}</table></div></div>`;
+  h += `<div class="card"><h3>월별 조사 횟수</h3>${bars(tally(L, r => (r.f.date || '').slice(0, 7)).sort((a, b) => a[0].localeCompare(b[0])))}</div>`;
+  h += `<div class="card"><h3>시·도별 조사 횟수</h3>${bars(tally(L, r => (r.f.addr || '').split(/\s+/)[0]))}</div>`;
+  h += `<div class="card"><h3>위협요인 빈도</h3>${bars(tally(L, r => ['thrA', 'thrN', 'thrB'].flatMap(k => (r.f[k] || []).map(v => `${THR_CAT[k]}·${v}`))).slice(0, 15), '#c0352b')}</div>`;
+  h += `<div class="card"><h3>서식지(처) 유형 — 대분류</h3>${bars(tally(L, r => [...new Set((r.f.hab || []).map(p => p.split(' > ')[0]))]), '#2d7a4f')}</div>`;
+  h += `<div class="card"><h3>성장단계 기록 빈도</h3>${bars(tally(L, r => r.f.stage), '#b36a0e')}</div>`;
+  const pl = L.filter(r => r.taxon === 'plant');
+  if (pl.length) {
+    h += `<div class="card"><h3>식물 분포형태</h3>${bars(tally(pl, r => r.f.distType))}</div>`;
+    h += `<div class="card"><h3>식물 빛조건 · 토습</h3>${bars([...tally(pl, r => r.f.light && '빛 ' + r.f.light), ...tally(pl, r => r.f.moist && '토습 ' + r.f.moist)])}</div>`;
+  }
+  const ins = L.filter(r => r.taxon === 'insect');
+  if (ins.length) h += `<div class="card"><h3>곤충 조사방법</h3>${bars(tally(ins, r => r.f.method))}</div>`;
+  $('#drBody').innerHTML = h; bindSF();
+}
+function bindSF() {
+  $('#sW').onchange = e => { ST.who = e.target.value; paneStats(); };
+  $('#sT').onchange = e => { ST.taxon = e.target.value; paneStats(); };
+  $('#sY').onchange = e => { ST.year = e.target.value; paneStats(); };
+}
+
+/* ---------- 설정·백업 ---------- */
+async function paneSet() {
+  let est = ''; try { const e = await navigator.storage.estimate(); est = `사용 ${(e.usage / 1048576).toFixed(1)}MB / 가용 ${(e.quota / 1048576).toFixed(0)}MB`; } catch (_) {}
+  const persisted = navigator.storage && navigator.storage.persisted ? await navigator.storage.persisted() : false;
+  $('#drBody').innerHTML = `<div class="card set"><h3>기본 조사자 정보</h3><div class="hint">새 야장에 자동으로 입력되며, 통계의 ‘내 기록’ 기준과 지도 워터마크에 쓰입니다.</div>
+      <div class="grid2"><div><label>책임 성명</label><input id="sN" value="${esc(SET.name)}"></div><div><label>소속</label><input id="sO" value="${esc(SET.org)}"></div>
+      <div><label>보조 성명</label><input id="sAN" value="${esc(SET.aName)}"></div><div><label>소속</label><input id="sAO" value="${esc(SET.aOrg)}"></div></div>
+      <button class="btn block" style="margin-top:10px" id="sSave">저장</button></div>
+    <div class="card"><h3>내보내기</h3><div class="stack">
+      <button class="btn ghost" id="xP">식물 야장 CSV (엑셀용)</button><button class="btn ghost" id="xI">곤충 야장 CSV (엑셀용)</button>
+      <button class="btn line" id="xJ">전체 백업 파일(JSON, 사진 포함)</button></div></div>
+    <div class="card"><h3>가져오기 · 관리</h3><div class="stack">
+      <label class="btn line" style="cursor:pointer">백업 파일 불러오기<input type="file" id="iJ" accept=".json,application/json" hidden></label>
+      <button class="btn red" id="xDel">전체 자료 삭제</button></div>
+      <div class="hint" style="margin-top:10px">⚠ 야장 자료는 이 휴대폰의 앱 저장소에만 보관됩니다. 브라우저 데이터를 지우거나 앱을 삭제하면 사라지므로 조사 후 백업 파일을 꼭 내보내 두세요.<br>${est}${persisted ? ' · 영구 저장 허용됨' : ''}</div></div>
+    <div class="hint" style="text-align:center">멸종위기종 전자야장 v${APP_VER} · 지도 © OpenStreetMap, Esri · 날씨 Open-Meteo · 주소 Nominatim</div>`;
+  $('#sSave').onclick = () => { SET.name = $('#sN').value.trim(); SET.org = $('#sO').value.trim(); SET.aName = $('#sAN').value.trim(); SET.aOrg = $('#sAO').value.trim(); saveSet(); updateWatermark(); ST.who = null; toast('저장했습니다'); };
+  $('#xP').onclick = () => exportCSV('plant'); $('#xI').onclick = () => exportCSV('insect'); $('#xJ').onclick = exportJSON;
+  $('#iJ').onchange = importJSON;
+  $('#xDel').onclick = async () => { if (!RECS.length) return toast('삭제할 자료가 없습니다'); if (await confirmBox(`저장된 야장 <b>${RECS.length}건</b>을 모두 삭제합니다. 되돌릴 수 없습니다.`, '모두 삭제', true)) { await DB.clear(); await reload(); paneSet(); toast('모두 삭제했습니다'); } };
+}
+async function saveFile(blob, name) {
+  const file = new File([blob], name, { type: blob.type });
+  if (navigator.canShare && navigator.canShare({ files: [file] }) && /Android|iPhone|iPad/i.test(navigator.userAgent)) {
+    try { await navigator.share({ files: [file], title: name }); return; } catch (e) { if (e.name === 'AbortError') return; }
+  }
+  const a = document.createElement('a'); a.href = URL.createObjectURL(blob); a.download = name; document.body.appendChild(a); a.click(); a.remove(); setTimeout(() => URL.revokeObjectURL(a.href), 4000);
+}
+function exportCSV(taxon) {
+  const list = RECS.filter(r => r.taxon === taxon); if (!list.length) return toast('내보낼 자료가 없습니다');
+  const fields = []; SCHEMA[taxon].forEach((tab, ti) => tab.flatMap(flatFields).forEach(fd => fields.push([`${ti + 1}.${fd.dl || fd.label}`, fd])));
+  const head = ['분류군', ...fields.map(x => x[0]), '실측위도(십진)', '실측경도(십진)', '사진수', '최종수정'];
+  const q = v => { v = String(v ?? ''); return /[",\n\r]/.test(v) ? `"${v.replace(/"/g, '""')}"` : v; };
+  const rows = list.map(r => [taxon === 'plant' ? '식물' : '곤충', ...fields.map(([, fd]) => fmtVal(fd, r.f, true)), r.f.lat ?? '', r.f.lon ?? '', (r.f.photos || []).length, new Date(r.updatedAt).toLocaleString('ko-KR')]);
+  const csv = '﻿' + [head, ...rows].map(r => r.map(q).join(',')).join('\r\n');
+  saveFile(new Blob([csv], { type: 'text/csv;charset=utf-8' }), `현지조사표_${taxon === 'plant' ? '식물' : '곤충'}_${todayStr().replace(/-/g, '')}.csv`);
+}
+function exportJSON() {
+  if (!RECS.length) return toast('내보낼 자료가 없습니다');
+  saveFile(new Blob([JSON.stringify({ app: 'esurvey-ko', ver: APP_VER, exported: new Date().toISOString(), records: RECS })], { type: 'application/json' }), `전자야장_백업_${todayStr().replace(/-/g, '')}.json`);
+}
+async function importJSON(e) {
+  const f = e.target.files[0]; if (!f) return;
+  try { const d = JSON.parse(await f.text()); const list = d.records || d; if (!Array.isArray(list)) throw 0;
+    let n = 0; for (const r of list) if (r && r.id && r.f && r.taxon) { await DB.put(r); n++; }
+    await reload(); toast(`${n}건을 불러왔습니다`); } catch (_) { toast('올바른 백업 파일이 아닙니다'); }
+  e.target.value = '';
+}
+
+/* =========================================================
+   새 야장: 분류군 선택
+   ========================================================= */
+const DRAFT_KEY = 'es-draft';
+$('#btnAdd').onclick = () => {
+  const d = JSON.parse(localStorage.getItem(DRAFT_KEY) || 'null');
+  $('#draftBox').innerHTML = d ? `<div class="draft-box"><div><b>작성 중인 야장</b><br>${d.taxon === 'plant' ? '식물' : '곤충'} · ${esc(d.f.species || '종명 미기재')} · ${esc(dotDate(d.f.date))}</div><button class="btn sm" id="dRes">이어쓰기</button><button class="btn sm red" id="dDel">삭제</button></div>` : '';
+  if (d) { $('#dRes').onclick = () => openForm(d.taxon, d.id, d); $('#dDel').onclick = () => { localStorage.removeItem(DRAFT_KEY); $('#draftBox').innerHTML = ''; }; }
+  $('#scTaxon').classList.add('on');
+  pushLayer('taxon', () => $('#scTaxon').classList.remove('on'));
+};
+$('#scTaxon').addEventListener('click', e => { const b = e.target.closest('[data-taxon]'); if (b) openForm(b.dataset.taxon); });
+
+/* =========================================================
+   전자야장 입력 폼
+   ========================================================= */
+let F = null; // {taxon, id, f, isNew, tab, dirty, serialManual}
+function openForm(taxon, id, draft) {
+  const ex = id && RECS.find(r => r.id === id);
+  if (draft) F = { taxon, id: draft.id, f: draft.f, isNew: draft.isNew, tab: 0, dirty: true, serialManual: draft.serialManual };
+  else if (ex) F = { taxon, id, f: JSON.parse(JSON.stringify(ex.f)), isNew: false, tab: 0, dirty: false, serialManual: true };
+  else F = { taxon, id: uid(), isNew: true, tab: 0, dirty: false, serialManual: false,
+    f: { date: todayStr(), chiefName: SET.name, chiefOrg: SET.org, asstName: SET.aName, asstOrg: SET.aOrg, sub: [], co: [], photos: [], hab: [] } };
+  if (draft) { const p = JSON.parse(localStorage.getItem(DRAFT_KEY + '-m') || 'null'); if (p && p.id === F.id) { F.f.photos = p.photos || []; F.f.sketch = p.sketch; } }
+  F.f.sub ||= []; F.f.co ||= []; F.f.photos ||= []; F.f.hab ||= [];
+  $('#fTitle').textContent = `${taxon === 'plant' ? '식물' : '곤충'} 현지조사표${F.isNew ? '' : ' · 수정'}`;
+  $('#fTabs').innerHTML = TAB_NAMES.map((n, i) => `<button data-t="${i}" class="${taxon === 'insect' && i === 3 ? 'na' : ''}">${taxon === 'insect' && i === 3 ? '4. 환경요소(곤충 미해당)' : n}</button>`).join('');
+  const wasLayer = LAY.length && ['taxon', 'modal'].includes(LAY[LAY.length - 1].name);
+  if (wasLayer) { const top = LAY[LAY.length - 1]; top.close(); LAY[LAY.length - 1] = { name: 'form', close: closeForm }; }
+  else pushLayer('form', closeForm);
+  $('#scForm').classList.add('on'); setTab(0);
+}
+function closeForm() {
+  if (F && F.dirty && !confirm('저장하지 않은 내용이 있습니다.\n작성 중인 내용은 임시저장되어 다음에 이어쓸 수 있습니다.\n화면을 닫을까요?')) return false;
+  $('#scForm').classList.remove('on'); F = null;
+}
+$('#fTabs').addEventListener('click', e => { const b = e.target.closest('button'); if (b) setTab(+b.dataset.t); });
+$('#fPrev').onclick = () => F.tab > 0 && setTab(F.tab - 1);
+$('#fNext').onclick = () => F.tab < 5 && setTab(F.tab + 1);
+function setTab(i) {
+  F.tab = i; $$('#fTabs button').forEach((b, j) => b.classList.toggle('on', j === i));
+  $('#fTabs button.on').scrollIntoView({ inline: 'center', block: 'nearest', behavior: 'smooth' });
+  renderTab(); $('#fbody').scrollTop = 0;
+  $('#fPrev').disabled = i === 0; $('#fNext').textContent = i === 5 ? '마지막 탭' : '다음 ▶'; $('#fNext').disabled = i === 5;
+}
+function renderTab() { const st = $('#fbody').scrollTop; $('#fbody').innerHTML = SCHEMA[F.taxon][F.tab].map(fd => R(fd)).join(''); $('#fbody').scrollTop = st; refreshDatalist(); }
+
+/* ---------- 경로 기반 값 접근 ---------- */
+function getP(path) { return path.split('.').reduce((o, k) => o == null ? undefined : o[k], F.f); }
+function setP(path, v) { const ks = path.split('.'); let o = F.f; ks.slice(0, -1).forEach(k => { o[k] ??= {}; o = o[k]; }); o[ks[ks.length - 1]] = v; }
+
+/* ---------- 렌더러 ---------- */
+const lab = (fd) => `${esc(fd.label)}${fd.req ? ' <span class="req">*</span>' : ''}`;
+function R(fd) {
+  const f = F.f;
+  switch (fd.t) {
+    case 'sec': return `<div class="sec">${esc(fd.label)}</div>`;
+    case 'note': return `<div class="note ${fd.big ? 'big' : ''}">${esc(fd.label).replace(/\n/g, '<br>')}</div>`;
+    case 'row': return `<div class="row">${fd.items.map(R).join('')}</div>`;
+    case 'text': case 'number': case 'date': case 'time':
+      return `<label class="fld"><span>${lab(fd)}</span><div class="inrow"><input data-k="${fd.k}" type="${fd.t}" ${fd.t === 'number' ? `inputmode="decimal" step="${fd.step || 'any'}"` : ''} ${fd.list ? 'list="spList"' : ''} placeholder="${esc(fd.ph || '')}" value="${esc(f[fd.k] ?? '')}">${fd.unit ? `<span class="u">${fd.unit}</span>` : ''}${fd.now ? `<button type="button" class="nb" data-act="now" data-for="${fd.k}">지금</button>` : ''}</div></label>`;
+    case 'area': return `<label class="fld"><span>${lab(fd)}</span><textarea data-k="${fd.k}" placeholder="${esc(fd.ph || '')}">${esc(f[fd.k] ?? '')}</textarea></label>`;
+    case 'radio': case 'check': return chipGroup(fd.k, fd.label, fd.opts, fd.t, fd.list, fd.req);
+    case 'auto': return `<div class="auto-card"><p>조사일자 · 시각 · 날씨 · 기온 · 행정구역 · 경위도 · 고도를 한 번에 기입합니다. 조사지점에 서서 눌러 주세요.</p>
+      <button type="button" class="btn" data-act="auto"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M13 2L4 14h7l-1 8 9-12h-7z"/></svg>현재 위치·날씨 자동 기입</button><div id="autoStat"></div></div>`;
+    case 'serial': return `<label class="fld"><span>조사표번호 <span class="hint">(일련번호_국명)</span></span><div class="inrow"><input data-k="serial" value="${esc(f.serial ?? '')}" placeholder="예: 001_한라송이풀"><button type="button" class="nb" data-act="serial">자동</button></div></label>`;
+    case 'coord': return coordHTML(fd);
+    case 'stageN': return `<div class="lab">단계별 개체수</div><div class="row" style="margin-bottom:12px">${fd.stages.map(s => `<div class="inrow"><span class="u" style="padding-left:10px;white-space:nowrap;font-size:12px">${esc(s)}</span><input data-k="stageN.${s}" type="number" inputmode="numeric" value="${esc((f.stageN || {})[s] ?? '')}"></div>`).join('')}</div>`;
+    case 'sub': return subHTML();
+    case 'co': return coHTML(fd.mode);
+    case 'tree': return treeHTML(fd);
+    case 'rank': return rankHTML(fd);
+    case 'prev': return prevHTML();
+    case 'sensor': return `<div class="cbtns" style="margin:-4px 0 12px"><button type="button" class="btn sm line" data-act="${fd.kind}">${fd.kind === 'aspect' ? '🧭 휴대폰 나침반으로 방위 측정' : '📐 휴대폰을 경사면에 놓고 경사도 측정'}</button>${fd.kind === 'aspect' && f.aspect !== '' && f.aspect != null ? `<span class="hint" style="align-self:center">${compass(f.aspect)}</span>` : ''}</div>`;
+    case 'est': { const d = num(f.estDen), u = num(f.estUnit), a = num(f.estArea);
+      return `<div class="calc">추정 개체수 = 단위면적당 개체수 ÷ 단위면적 × 분포면적 = <b>${d != null && u && a != null ? fx(d / u * a, 0) + ' 개체' : '-'}</b></div>`; }
+    case 'media': return mediaHTML(fd);
+  }
+  return '';
+}
+function chipGroup(k, label, opts, mode, list, req) {
+  const v = getP(k); const on = o => mode === 'radio' ? v === o.v : (Array.isArray(v) && v.includes(o.v));
+  const os = opts.map(normOpt);
+  return `<div class="fld"><span class="lab">${esc(label)}${req ? ' <span class="req">*</span>' : ''}</span>
+    <div class="chips ${mode} ${list ? 'list' : ''}" data-k="${esc(k)}" data-mode="${mode}">${os.map(o => `<button type="button" class="chip ${on(o) ? 'on' : ''}" data-v="${esc(o.v)}">${esc(o.v)}${o.d ? `<span class="d">${esc(o.d)}</span>` : ''}</button>`).join('')}</div>
+    ${os.filter(o => o.x).map(o => `<input class="xtra" data-k="${esc(k + '__' + o.v)}" data-of="${esc(k)}" data-ov="${esc(o.v)}" placeholder="${esc(o.v)} : ${esc(o.x)}" value="${esc(F.f[k + '__' + o.v] ?? '')}" ${on(o) ? '' : 'hidden'}>`).join('')}</div>`;
+}
+function dmsInputs(path, ax) {
+  const x = toDMS(getP(path));
+  return `<div class="dms" data-dk="${path}"><span class="ax">${ax}</span>
+    <input data-p="d" inputmode="numeric" value="${x.d}" placeholder="도"><i>°</i><input data-p="m" inputmode="numeric" value="${x.m}" placeholder="분"><i>′</i><input data-p="s" inputmode="decimal" value="${x.s}" placeholder="초" style="flex:1 1 auto;width:auto"><i>″</i></div>`;
+}
+function coordHTML(fd) {
+  const la = getP(fd.lat), lo = getP(fd.lon);
+  return `<div class="coord"><div class="lab"><span>${esc(fd.label)}</span><span class="dec" data-dec="${fd.lat}">${la != null && la !== '' ? `${(+la).toFixed(6)}, ${(+lo || 0).toFixed(6)}` : ''}</span></div>
+    ${dmsInputs(fd.lat, 'N')}${dmsInputs(fd.lon, 'E')}
+    <div class="cbtns">${fd.gps ? `<button type="button" class="btn sm ghost" data-act="gps" data-lat="${fd.lat}" data-lon="${fd.lon}">📍 현재 GPS</button>` : ''}<button type="button" class="btn sm line" data-act="pick" data-lat="${fd.lat}" data-lon="${fd.lon}">🗺 지도에서 지정</button></div></div>`;
+}
+function subHTML() {
+  const s = F.f.sub;
+  return s.map((g, i) => `<div class="item"><div class="item-h">소집단 ${i + 1}<button type="button" class="btn sm red" data-act="subDel" data-i="${i}">삭제</button></div>
+    ${dmsInputs(`sub.${i}.lat`, 'N')}${dmsInputs(`sub.${i}.lon`, 'E')}
+    <div class="cbtns" style="margin-bottom:8px"><button type="button" class="btn sm ghost" data-act="gps" data-lat="sub.${i}.lat" data-lon="sub.${i}.lon">📍 현재 GPS</button><button type="button" class="btn sm line" data-act="pick" data-lat="sub.${i}.lat" data-lon="sub.${i}.lon">🗺 지도</button></div>
+    <div class="row"><label class="fld"><span>개체수</span><div class="inrow"><input data-k="sub.${i}.n" type="number" inputmode="numeric" value="${esc(g.n ?? '')}"></div></label></div>
+    <label class="fld"><span>주요 공동/동서출현종 (층 T,S,H)</span><div class="inrow"><input data-k="sub.${i}.co" value="${esc(g.co ?? '')}" placeholder="예: 신갈나무(T), 조릿대(S)"></div></label></div>`).join('')
+    + `<button type="button" class="btn ghost block" data-act="subAdd">＋ 소집단 추가 ${s.length ? `(${s.length})` : ''}</button>
+    ${s.length ? `<div class="hint" style="margin-top:6px">소집단 개체수 합계: <b>${s.reduce((a, g) => a + (num(g.n) || 0), 0)}</b></div>` : ''}`;
+}
+function coHTML(mode) {
+  const c = F.f.co;
+  return c.map((r, i) => `<div class="co-row"><input data-k="co.${i}.name" list="spList" placeholder="국명" value="${esc(r.name ?? '')}">
+      ${mode === 'layer' ? `<select data-k="co.${i}.layer">${['', 'T', 'S', 'H'].map(l => `<option ${r.layer === l ? 'selected' : ''} value="${l}">${l ? `${l} (${{ T: '교목', S: '관목', H: '초본' }[l]})` : '층'}</option>`).join('')}</select>`
+        : `<input data-k="co.${i}.n" type="number" inputmode="numeric" placeholder="개체수" value="${esc(r.n ?? '')}">`}
+      <button type="button" class="del" data-act="coDel" data-i="${i}">✕</button></div>`).join('')
+    + `<button type="button" class="btn ghost block" data-act="coAdd" style="margin-top:4px">＋ 출현종 추가</button>`;
+}
+function treeHTML(fd) {
+  const v = F.f[fd.k] || [];
+  return fd.data.map(([big, mids]) => {
+    const c = v.filter(p => p.split(' > ')[0] === big).length;
+    return `<details class="tree-g" ${c ? 'open' : ''}><summary>${esc(big)}<span class="cnt">${c || ''}</span></summary><div class="tree-sub">
+      ${mids.map(([mid, smalls]) => {
+        const os = smalls.map(normOpt).map(o => ({ ...o, path: [big, mid, o.v].filter(Boolean).join(' > ') }));
+        return `${mid ? `<div class="lab" style="margin-top:6px">${esc(mid)}</div>` : ''}<div class="chips" data-k="${fd.k}" data-mode="check">${os.map(o => `<button type="button" class="chip ${v.includes(o.path) ? 'on' : ''}" data-v="${esc(o.path)}">${esc(o.v)}</button>`).join('')}</div>
+          ${os.filter(o => o.x).map(o => `<input class="xtra" data-k="${esc(fd.k + '__' + o.path)}" data-of="${fd.k}" data-ov="${esc(o.path)}" placeholder="${esc(o.x)}" value="${esc(F.f[fd.k + '__' + o.path] ?? '')}" ${v.includes(o.path) ? '' : 'hidden'}>`).join('')}`;
+      }).join('')}</div></details>`;
+  }).join('');
+}
+function rankHTML(fd) {
+  const r = F.f[fd.k] || {};
+  const facs = ['thrA', 'thrN', 'thrB'].flatMap(k => I_THR[k].map(normOpt).map(o => `${THR_CAT[k]}, ${o.v}`));
+  const s = (key, opts, ph) => `<div class="inrow"><select data-k="${fd.k}.${key}"><option value="">${ph}</option>${opts.map(o => `<option ${r[key] === o ? 'selected' : ''}>${esc(o)}</option>`).join('')}</select></div>`;
+  return `<div class="item"><div class="item-h">${fd.label}</div><div class="stack">
+    ${s('factor', facs, '요인 (구분, 항목)')}<div class="row">${s('when', I_WHEN, '발생시기')}${s('sev', I_SEV, '강도')}</div>
+    <div class="row">${s('eff', EFF, '영향')}${s('range', RANGE, '범위')}</div>${s('pred', I_PRED, '미래 예측')}</div></div>`;
+}
+function prevHTML() {
+  const f = F.f; if (!f.species) return '';
+  const prev = RECS.filter(r => r.id !== F.id && r.taxon === F.taxon && r.f.species === f.species && (r.f.date || '') <= (f.date || '9'))
+    .map(r => ({ r, d: num(f.lat) != null && num(r.f.lat) != null ? distM(+f.lat, +f.lon, +r.f.lat, +r.f.lon) : null }))
+    .filter(x => x.d == null || x.d < 300).sort((a, b) => (b.r.f.date || '').localeCompare(a.r.f.date || ''))[0];
+  if (!prev) return '';
+  return `<div class="prev">📋 직전 기록 (${esc(dotDate(prev.r.f.date))}, ${esc(prev.r.f.serial || '')}${prev.d != null ? `, ${Math.round(prev.d)}m 거리` : ''}) : 개체수 <b>${esc(prev.r.f.count ?? '-')}</b>${prev.r.f.siteType ? ` · ${esc(prev.r.f.siteType)}` : ''}</div>`;
+}
+function mediaHTML(fd) {
+  const f = F.f;
+  return `${f.sketch ? `<img class="sketch-prev" src="${f.sketch}" alt="${esc(fd.sketch)}">` : `<div class="note">${esc(fd.sketch)}: 조사지 경로, 조사범위, 개체·집단 분포 위치·수량, 관측 위치, 주요 지형지물을 그려 주세요.</div>`}
+    <div class="cbtns" style="margin:8px 0 14px"><button type="button" class="btn sm" data-act="sketch">✏️ ${esc(fd.sketch)} ${f.sketch ? '다시 그리기' : '그리기'}</button>${f.sketch ? '<button type="button" class="btn sm red" data-act="sketchDel">약도 삭제</button>' : ''}</div>
+    <div class="lab">현장 사진 (${f.photos.length})</div>
+    <div class="thumbs">${f.photos.map((p, i) => `<div class="th"><img src="${p}"><button type="button" class="x" data-act="photoDel" data-i="${i}">✕</button></div>`).join('')}</div>
+    <label class="btn sm ghost" style="cursor:pointer">📷 사진 추가<input type="file" accept="image/*" multiple hidden data-act-file="photo"></label>`;
+}
+const compass = d => { if (d === '' || d == null) return ''; const n = ['N', 'NNE', 'NE', 'ENE', 'E', 'ESE', 'SE', 'SSE', 'S', 'SSW', 'SW', 'WSW', 'W', 'WNW', 'NW', 'NNW']; return n[Math.round(((+d % 360) + 360) % 360 / 22.5) % 16] + ' 방향'; };
+function refreshDatalist() {
+  let dl = $('#spList'); if (!dl) { dl = document.createElement('datalist'); dl.id = 'spList'; document.body.appendChild(dl); }
+  const names = new Set(); RECS.forEach(r => { r.f.species && names.add(r.f.species); (r.f.co || []).forEach(c => c.name && names.add(c.name)); });
+  dl.innerHTML = [...names].sort().map(n => `<option value="${esc(n)}">`).join('');
+}
+
+/* ---------- 표시용 포맷 (상세/검색/CSV 공용) ---------- */
+function flatFields(fd) {
+  if (fd.t === 'row') return fd.items;
+  if (['text', 'number', 'date', 'time', 'area', 'radio', 'check', 'coord', 'stageN', 'sub', 'co', 'tree', 'rank'].includes(fd.t)) return [fd];
+  if (fd.t === 'serial') return [{ t: 'text', k: 'serial', label: '조사표번호' }];
+  if (fd.t === 'est') return [{ t: 'est', label: '추정 개체수' }];
+  return [];
+}
+function fmtVal(fd, f, plain) {
+  const X = s => plain ? s : esc(s);
+  const extra = (k, v) => f[k + '__' + v] ? `${v}(${f[k + '__' + v]})` : v;
+  switch (fd.t) {
+    case 'text': case 'number': case 'date': case 'time': case 'area': return isEmpty(f[fd.k]) ? '' : X(f[fd.k] + (fd.unit && !plain ? ' ' + fd.unit : ''));
+    case 'radio': return f[fd.k] ? X(extra(fd.k, f[fd.k])) : '';
+    case 'check': return isEmpty(f[fd.k]) ? '' : X(f[fd.k].map(v => extra(fd.k, v)).join(plain ? '; ' : ', '));
+    case 'tree': return isEmpty(f[fd.k]) ? '' : (plain ? f[fd.k].map(v => extra(fd.k, v)).join('; ') : f[fd.k].map(v => esc(extra(fd.k, v))).join('<br>'));
+    case 'coord': { const la = f[fd.lat], lo = f[fd.lon]; if (la == null || la === '') return ''; return X(`N ${dmsStr(la)} / E ${dmsStr(lo)}${plain ? '' : ` (${(+la).toFixed(6)}, ${(+lo).toFixed(6)})`}`); }
+    case 'stageN': { const s = f.stageN || {}; const t = Object.entries(s).filter(([, v]) => v !== '' && v != null).map(([k, v]) => `${k} ${v}`); return t.length ? X(t.join(', ')) : ''; }
+    case 'sub': return (f.sub || []).length ? (plain ? f.sub.map((g, i) => `[${i + 1}] N${dmsStr(g.lat)} E${dmsStr(g.lon)} ${g.n ?? ''}개체 ${g.co || ''}`).join(' | ')
+      : f.sub.map((g, i) => `${i + 1}) N ${esc(dmsStr(g.lat))} · E ${esc(dmsStr(g.lon))} · ${esc(g.n ?? '-')}개체${g.co ? ` · ${esc(g.co)}` : ''}`).join('<br>')) : '';
+    case 'co': { const c = (f.co || []).filter(x => x.name); return c.length ? X(c.map(x => x.layer ? `${x.name}(${x.layer})` : x.n ? `${x.name} ${x.n}` : x.name).join(plain ? '; ' : ', ')) : ''; }
+    case 'rank': { const r = f[fd.k]; if (!r || !r.factor) return ''; return X(`요인(${r.factor}) 발생시기(${r.when || ''}) 강도(${r.sev || ''}) 영향(${r.eff || ''}) 범위(${r.range || ''}) 예측(${r.pred || ''})`); }
+    case 'est': { const d = num(f.estDen), u = num(f.estUnit), a = num(f.estArea); return d != null && u && a != null ? X(Math.round(d / u * a) + (plain ? '' : ' 개체')) : ''; }
+  }
+  return '';
+}
+// 상세/CSV 라벨 보완
+SCHEMA.plant[0].find(x => x.t === 'coord').dl = '실측 좌표'; SCHEMA.insect[0].find(x => x.t === 'coord').dl = '실측 좌표';
+['plant', 'insect'].forEach(t => { const c = SCHEMA[t][0].filter(x => x.t === 'coord'); c[1].dl = '기존 좌표'; });
+SCHEMA.plant[1].find(x => x.t === 'stageN').label = '단계별 개체수'; SCHEMA.insect[1].find(x => x.t === 'stageN').label = '단계별 개체수';
+SCHEMA.plant[1].find(x => x.t === 'sub').label = '소집단';
+SCHEMA.plant[4].find(x => x.t === 'co').label = '공동/동서출현종'; SCHEMA.insect[4].find(x => x.t === 'co').label = '공동/동서출현종';
+SCHEMA.plant[2].find(x => x.t === 'tree').label = '서식처 유형'; SCHEMA.insect[2].find(x => x.t === 'tree').label = '서식지 유형';
+
+/* ---------- 값 변경 처리 ---------- */
+let draftT;
+function changed(k) {
+  F.dirty = true; hooks(k);
+  clearTimeout(draftT); draftT = setTimeout(saveDraft, 400);
+}
+function saveDraft() {
+  if (!F) return; const { photos, sketch, ...rest } = F.f;
+  try { localStorage.setItem(DRAFT_KEY, JSON.stringify({ taxon: F.taxon, id: F.id, isNew: F.isNew, serialManual: F.serialManual, f: rest })); } catch (_) {}
+  try { localStorage.setItem(DRAFT_KEY + '-m', JSON.stringify({ id: F.id, photos, sketch })); } catch (_) { localStorage.removeItem(DRAFT_KEY + '-m'); }
+}
+function setInput(k, v) { $$(sel(k), $('#fbody')).forEach(el => { if (el.tagName !== 'DIV' && el.value !== String(v ?? '')) el.value = v ?? ''; }); }
+function syncChips(k) {
+  const v = getP(k);
+  $$(`.chips${sel(k)}`, $('#fbody')).forEach(g => $$('.chip', g).forEach(c => c.classList.toggle('on', g.dataset.mode === 'radio' ? v === c.dataset.v : (Array.isArray(v) && v.includes(c.dataset.v)))));
+  $$(`.xtra[data-of="${CSS.escape(k)}"]`, $('#fbody')).forEach(x => { x.hidden = !(Array.isArray(v) ? v.includes(x.dataset.ov) : v === x.dataset.ov); });
+  if (k === 'hab') $$('.tree-g', $('#fbody')).forEach(d => { const big = d.querySelector('summary').firstChild.textContent; const c = (F.f.hab || []).filter(p => p.split(' > ')[0] === big).length; d.querySelector('.cnt').textContent = c || ''; });
+}
+function hooks(k) {
+  const f = F.f;
+  if ((k === 'species' || k === 'date') && !F.serialManual) { f.serial = autoSerial(); setInput('serial', f.serial); }
+  if (k === 'serial') F.serialManual = true;
+  if (k === 'count' && F.taxon === 'insect') { const c = num(f.count); f.countCls = c == null ? '' : c === 0 ? '0' : c <= 10 ? '1-10' : c <= 50 ? '11-50' : c <= 100 ? '50-100' : '101 이상'; syncChips('countCls'); }
+  if (k.startsWith('stageN.') && num(getP(k)) > 0) { const s = k.slice(7); f.stage ||= []; if (!f.stage.includes(s)) { f.stage.push(s); syncChips('stage'); } }
+  if (F.taxon === 'insect' && THR_CAT[k] && (f[k] || []).length) { f.thrCat ||= []; if (!f.thrCat.includes(THR_CAT[k])) { f.thrCat = f.thrCat.filter(x => x !== '해당사항 없음'); f.thrCat.push(THR_CAT[k]); syncChips('thrCat'); } }
+  if (['estDen', 'estUnit', 'estArea'].includes(k)) { const c = $('.calc', $('#fbody')); if (c) c.outerHTML = R({ t: 'est' }); }
+  if (k.startsWith('sub.') && k.endsWith('.n')) { const h = $$('#fbody .hint b').pop(); if (h) h.textContent = f.sub.reduce((a, g) => a + (num(g.n) || 0), 0); }
+}
+function autoSerial() {
+  const sp = (F.f.species || '').trim(); if (!sp) return F.f.serial || '';
+  const nums = RECS.filter(r => r.id !== F.id && r.f.species === sp).map(r => parseInt((r.f.serial || '').split('_')[0], 10)).filter(n => !isNaN(n));
+  return `${pad((nums.length ? Math.max(...nums) : 0) + 1, 3)}_${sp}`;
+}
+
+const fb = $('#fbody');
+fb.addEventListener('input', e => {
+  const el = e.target;
+  if (el.dataset.k && !el.closest('.chips')) { setP(el.dataset.k, el.value); setInput(el.dataset.k, el.value); changed(el.dataset.k); return; }
+  const g = el.closest('.dms'); if (g) {
+    const path = g.dataset.dk; const v = fromDMS(...['d', 'm', 's'].map(p => $(`[data-p="${p}"]`, g).value.trim()));
+    setP(path, v); const latP = path.replace(/lon(\d?)$/, 'lat$1'), lonP = latP.replace(/lat(\d?)$/, 'lon$1');
+    const dec = $(`[data-dec="${CSS.escape(latP)}"]`, fb);
+    if (dec) { const lat = getP(latP); dec.textContent = lat != null && lat !== '' ? `${(+lat).toFixed(6)}, ${(+(getP(lonP) || 0)).toFixed(6)}` : ''; }
+    changed(path);
+  }
+});
+fb.addEventListener('change', e => { const el = e.target; if (el.dataset.k && el.tagName === 'SELECT') { setP(el.dataset.k, el.value); changed(el.dataset.k); }
+  if (el.dataset.actFile === 'photo') addPhotos(el.files); });
+// 좌표 입력칸은 다른 dms 좌표와 연동: 실측 위도 변경 시 표시 갱신 위해 위도 그룹의 data-dec 기준 사용
+fb.addEventListener('click', async e => {
+  const chip = e.target.closest('.chip');
+  if (chip) { const g = chip.parentElement, k = g.dataset.k, v = chip.dataset.v;
+    if (g.dataset.mode === 'radio') setP(k, getP(k) === v ? '' : v);
+    else { const a = [...(getP(k) || [])]; const i = a.indexOf(v); i >= 0 ? a.splice(i, 1) : a.push(v); setP(k, a); }
+    syncChips(k); changed(k); return; }
+  const b = e.target.closest('[data-act]'); if (!b) return;
+  const act = b.dataset.act, f = F.f;
+  if (act === 'auto') return autoFill(b);
+  if (act === 'now') { f[b.dataset.for] = nowHM(); setInput(b.dataset.for, f[b.dataset.for]); changed(b.dataset.for); }
+  if (act === 'serial') { F.serialManual = false; f.serial = autoSerial(); setInput('serial', f.serial); changed('species'); if (!f.species) toast('조사종명을 먼저 입력하세요'); }
+  if (act === 'gps') { b.disabled = true; b.textContent = '측위 중…';
+    try { const p = await getPosition(); setP(b.dataset.lat, round7(p.coords.latitude)); setP(b.dataset.lon, round7(p.coords.longitude));
+      if (b.dataset.lat === 'lat') { f.gpsAcc = Math.round(p.coords.accuracy); if (!f.src) f.src = 'GPS'; }
+      changed(b.dataset.lat); renderTab(); toast(`위치 입력 완료 (±${Math.round(p.coords.accuracy)}m)`); }
+    catch (er) { toast(er.message); b.disabled = false; b.textContent = '📍 현재 GPS'; } }
+  if (act === 'pick') openPicker(b.dataset.lat, b.dataset.lon);
+  if (act === 'subAdd') { f.sub.push({}); changed('sub'); renderTab(); }
+  if (act === 'subDel') { f.sub.splice(+b.dataset.i, 1); changed('sub'); renderTab(); }
+  if (act === 'coAdd') { f.co.push({}); changed('co'); renderTab(); const ins = $$('.co-row input', fb); ins.length && ins[ins.length - (F.taxon === 'plant' ? 1 : 2)].focus(); }
+  if (act === 'coDel') { f.co.splice(+b.dataset.i, 1); changed('co'); renderTab(); }
+  if (act === 'sketch') openSketch();
+  if (act === 'sketchDel') { f.sketch = null; changed('sketch'); renderTab(); }
+  if (act === 'photoDel') { f.photos.splice(+b.dataset.i, 1); changed('photos'); renderTab(); }
+  if (act === 'aspect') measureAspect(b);
+  if (act === 'slope') measureSlope(b);
+});
+const round7 = v => Math.round(v * 1e7) / 1e7;
+
+/* ---------- 저장 ---------- */
+$('#fSave').onclick = async () => {
+  const f = F.f;
+  if (!f.species || !f.species.trim()) { setTab(0); return toast('조사종명(국명)을 입력하세요'); }
+  if (!f.date) { setTab(0); return toast('조사일자를 입력하세요'); }
+  if (num(f.lat) == null || num(f.lon) == null) { if (!(await confirmBox('실측 좌표가 없어 지도에 표시되지 않습니다.<br>그대로 저장할까요?', '저장'))) return; }
+  else if (!f.src) { setTab(0); return toast('좌표값 취득원을 하나 선택하세요'); }
+  if (!f.serial) f.serial = autoSerial();
+  if (!f.tEnd) f.tEnd = nowHM();
+  const old = RECS.find(r => r.id === F.id);
+  const rec = { id: F.id, taxon: F.taxon, createdAt: old ? old.createdAt : Date.now(), updatedAt: Date.now(), f };
+  try { await DB.put(rec); } catch (er) { return toast('저장 실패: 저장공간을 확인하세요'); }
+  try { navigator.storage && navigator.storage.persist && navigator.storage.persist(); } catch (_) {}
+  if (!SET.name && f.chiefName) { SET.name = f.chiefName; SET.org = f.chiefOrg || ''; saveSet(); updateWatermark(); }
+  localStorage.removeItem(DRAFT_KEY); localStorage.removeItem(DRAFT_KEY + '-m');
+  F.dirty = false; const id = F.id;
+  await reload(); toast('야장을 저장했습니다');
+  closeAllTo(0); setTimeout(() => flyTo(id), 400);
+};
+
+/* =========================================================
+   자동 기입 (GPS · 날씨 · 주소 · 고도)
+   ========================================================= */
+function getPosition(maxWait = 12000) {
+  return new Promise((res, rej) => {
+    if (!navigator.geolocation) return rej(new Error('이 기기는 위치 기능을 지원하지 않습니다'));
+    let best = null; const done = () => { navigator.geolocation.clearWatch(w); clearTimeout(t); best ? res(best) : rej(new Error('위치를 확인하지 못했습니다. 위치 권한과 GPS를 확인하세요')); };
+    const w = navigator.geolocation.watchPosition(p => {
+      if (!best || p.coords.accuracy < best.coords.accuracy) best = p;
+      const s = $('#autoStat'); if (s && s.dataset.live) s.firstChild.textContent = `📡 GPS 측위 중… 현재 정확도 ±${Math.round(best.coords.accuracy)}m`;
+      if (best.coords.accuracy <= 8) done();
+    }, er => { if (!best) { clearTimeout(t); navigator.geolocation.clearWatch(w); rej(new Error(er.code === 1 ? '위치 권한이 거부되었습니다. 브라우저 설정에서 허용해 주세요' : '위치를 확인하지 못했습니다')); } },
+      { enableHighAccuracy: true, maximumAge: 0, timeout: maxWait });
+    const t = setTimeout(done, maxWait);
+  });
+}
+const WX = c => c <= 1 ? ['맑음', c === 0 ? '맑음' : '대체로 맑음'] : c <= 3 ? ['흐림', c === 2 ? '구름 조금' : '흐림'] : c <= 48 ? ['흐림', '안개'] :
+  c <= 67 || (c >= 80 && c <= 82) ? ['비', c >= 80 ? '소나기' : c <= 57 ? '이슬비' : '비'] : c <= 77 || c === 85 || c === 86 ? ['기타', '눈'] : ['비', '뇌우'];
+async function fetchJSON(u, ms = 9000) { const c = new AbortController(); const t = setTimeout(() => c.abort(), ms); try { const r = await fetch(u, { signal: c.signal }); if (!r.ok) throw 0; return await r.json(); } finally { clearTimeout(t); } }
+function addrFrom(a) {
+  const parts = [a.province || a.state, a.city, a.county, a.borough || a.city_district, a.town || a.suburb, a.village || a.quarter, a.hamlet || a.neighbourhood, a.road, a.house_number];
+  return parts.filter((v, i, s) => v && s.indexOf(v) === i).join(' ');
+}
+async function autoFill(btn) {
+  const f = F.f, st = $('#autoStat'); btn.disabled = true;
+  const line = (ok, t) => `<div>${ok === 1 ? '✅' : ok === 0 ? '⚠️' : '⏳'} ${t}</div>`;
+  f.date = todayStr(); if (!f.tStart) f.tStart = nowHM();
+  st.dataset.live = 1; st.innerHTML = `<div>📡 GPS 측위 중…</div>`;
+  let p; try { p = await getPosition(); } catch (er) { st.innerHTML = line(0, er.message); btn.disabled = false; delete st.dataset.live; renderKeep(); return; }
+  delete st.dataset.live;
+  const { latitude: la, longitude: lo, accuracy, altitude, altitudeAccuracy } = p.coords;
+  f.lat = round7(la); f.lon = round7(lo); f.gpsAcc = Math.round(accuracy);
+  if (!f.src) { f.src = 'GPS'; if (F.taxon === 'insect' && !f['src__GPS']) f['src__GPS'] = '스마트폰 내장 GPS'; }
+  const msgs = [line(1, `조사일자 ${dotDate(f.date)} · 시작 ${f.tStart}`), line(1, `좌표 N ${dmsStr(la)} E ${dmsStr(lo)} (±${Math.round(accuracy)}m)`)];
+  st.innerHTML = msgs.join('') + line(2, '날씨·주소·고도 조회 중…');
+  if (!navigator.onLine) { msgs.push(line(0, '오프라인 상태라 날씨·주소·고도는 기입하지 못했습니다. 연결 후 다시 눌러 주세요')); }
+  else {
+    const [wx, geo, el] = await Promise.allSettled([
+      fetchJSON(`https://api.open-meteo.com/v1/forecast?latitude=${la}&longitude=${lo}&current=temperature_2m,relative_humidity_2m,weather_code,wind_speed_10m&wind_speed_unit=ms&timezone=Asia%2FSeoul`),
+      fetchJSON(`https://nominatim.openstreetmap.org/reverse?format=jsonv2&lat=${la}&lon=${lo}&zoom=18&addressdetails=1&accept-language=ko`),
+      fetchJSON(`https://api.open-meteo.com/v1/elevation?latitude=${la}&longitude=${lo}`)
+    ]);
+    if (wx.status === 'fulfilled' && wx.value.current) { const c = wx.value.current, [w, d] = WX(c.weather_code);
+      f.weather = w; if (w === '기타') f['weather__기타'] = d; f.temp = Math.round(c.temperature_2m * 10) / 10;
+      f.wxNote = `${d}, 습도 ${c.relative_humidity_2m}%, 풍속 ${c.wind_speed_10m}m/s (Open-Meteo ${c.time.slice(11)})`;
+      msgs.push(line(1, `날씨 ${d} · 기온 ${f.temp}℃`)); } else msgs.push(line(0, '날씨 조회 실패'));
+    if (geo.status === 'fulfilled' && geo.value.address) { f.addr = addrFrom(geo.value.address); msgs.push(line(1, `행정구역 ${f.addr}`)); } else msgs.push(line(0, '행정구역 조회 실패 (직접 입력하세요)'));
+    let ev = null, src = '';
+    if (altitude != null && (altitudeAccuracy == null || altitudeAccuracy <= 15)) { ev = Math.round(altitude); src = 'GPS'; }
+    else if (el.status === 'fulfilled' && el.value.elevation) { ev = Math.round(el.value.elevation[0]); src = '수치표고모델(90m)'; }
+    if (ev != null) { f.elev = ev; msgs.push(line(1, `고도 ${ev}m (${src})`)); } else msgs.push(line(0, '고도 조회 실패'));
+  }
+  F.dirty = true; if (!F.serialManual) f.serial = autoSerial(); saveDraft();
+  renderKeep(); $('#autoStat').innerHTML = msgs.join(''); btn = $('[data-act="auto"]'); if (btn) btn.disabled = false;
+}
+function renderKeep() { const s = $('#autoStat') && $('#autoStat').innerHTML; renderTab(); if (s) $('#autoStat').innerHTML = s; }
+
+/* ---------- 지도에서 위치 지정 ---------- */
+function openPicker(latP, lonP) {
+  const la = num(getP(latP)) ?? num(F.f.lat), lo = num(getP(lonP)) ?? num(F.f.lon);
+  const m = showModal(`<div class="sc-head"><button class="icon-btn" data-x>✕</button><h2>지도에서 위치 지정</h2><button class="btn sm" data-ok style="background:#fff;color:var(--navy)">이 위치로</button></div>
+    <div style="position:relative;flex:1"><div id="pmap" style="position:absolute;inset:0"></div>
+    <svg class="cross" viewBox="0 0 34 34"><circle cx="17" cy="17" r="6" fill="none" stroke="#c0352b" stroke-width="3"/><path d="M17 0v10M17 24v10M0 17h10M24 17h10" stroke="#c0352b" stroke-width="3"/></svg></div>`, { cls: 'full' });
+  const pm = L.map('pmap', { zoomControl: false }).setView(la != null ? [la, lo] : map.getCenter(), la != null ? 17 : Math.max(map.getZoom(), 8));
+  (curLayer === 'sat' ? L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}', { maxZoom: 19, maxNativeZoom: 18, crossOrigin: 'anonymous' }) : L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', { maxZoom: 19, crossOrigin: 'anonymous' })).addTo(pm);
+  setTimeout(() => pm.invalidateSize(), 60);
+  $('[data-x]', m.el).onclick = () => m.close();
+  $('[data-ok]', m.el).onclick = () => { const c = pm.getCenter(); setP(latP, round7(c.lat)); setP(lonP, round7(c.lng)); changed(latP); m.close(); setTimeout(renderTab, 30); };
+}
+
+/* ---------- 나침반 / 경사계 ---------- */
+async function sensorPerm() { if (typeof DeviceOrientationEvent !== 'undefined' && DeviceOrientationEvent.requestPermission) { const r = await DeviceOrientationEvent.requestPermission(); if (r !== 'granted') throw new Error('센서 권한이 거부되었습니다'); } }
+function sample(evName, fn, ms = 2000) {
+  return new Promise((res, rej) => { const v = []; const h = e => { const x = fn(e); if (x != null && !isNaN(x)) v.push(x); };
+    window.addEventListener(evName, h); setTimeout(() => { window.removeEventListener(evName, h); v.length ? res(v) : rej(new Error('센서 값을 읽지 못했습니다')); }, ms); });
+}
+async function measureAspect(b) {
+  try { await sensorPerm(); b.textContent = '휴대폰 윗부분을 경사면 아래쪽(사면 방향)으로 향하게 유지…';
+    const ev = 'ondeviceorientationabsolute' in window ? 'deviceorientationabsolute' : 'deviceorientation';
+    const v = await sample(ev, e => e.webkitCompassHeading != null ? e.webkitCompassHeading : (e.absolute || ev === 'deviceorientationabsolute') && e.alpha != null ? (360 - e.alpha) % 360 : null);
+    const s = v.reduce((a, d) => [a[0] + Math.sin(d * Math.PI / 180), a[1] + Math.cos(d * Math.PI / 180)], [0, 0]);
+    F.f.aspect = Math.round(((Math.atan2(s[0], s[1]) * 180 / Math.PI) + 360) % 360); changed('aspect'); renderTab(); toast(`방위 ${F.f.aspect}° 입력 (${compass(F.f.aspect)})`);
+  } catch (er) { toast(er.message); renderTab(); }
+}
+async function measureSlope(b) {
+  try { await sensorPerm(); b.textContent = '휴대폰을 경사면에 평평하게 놓고 기다리는 중…';
+    const v = await sample('deviceorientation', e => e.beta == null ? null : Math.acos(Math.cos(e.beta * Math.PI / 180) * Math.cos(e.gamma * Math.PI / 180)) * 180 / Math.PI);
+    F.f.slope = Math.round(v.reduce((a, x) => a + x, 0) / v.length); changed('slope'); renderTab(); toast(`경사도 ${F.f.slope}° 입력`);
+  } catch (er) { toast(er.message); renderTab(); }
+}
+
+/* ---------- 사진 ---------- */
+function compress(file, max = 1600, q = .75) {
+  return new Promise((res, rej) => { const img = new Image(); img.onload = () => { const s = Math.min(1, max / Math.max(img.width, img.height));
+    const c = document.createElement('canvas'); c.width = Math.round(img.width * s); c.height = Math.round(img.height * s); c.getContext('2d').drawImage(img, 0, 0, c.width, c.height);
+    URL.revokeObjectURL(img.src); res(c.toDataURL('image/jpeg', q)); }; img.onerror = rej; img.src = URL.createObjectURL(file); });
+}
+async function addPhotos(files) { for (const fl of files) { try { F.f.photos.push(await compress(fl)); } catch (_) {} } changed('photos'); renderTab(); }
+
+/* ---------- 약도 그리기 ---------- */
+function openSketch() {
+  const m = showModal(`<div class="sc-head"><button class="icon-btn" data-x>✕</button><h2>${F.taxon === 'plant' ? '입지위치도' : '조사지 약도'}</h2><button class="btn sm" data-ok style="background:#fff;color:var(--navy)">완료</button></div>
+    <canvas id="skc"></canvas>
+    <div class="sk-tools">${['#141a2b', '#c0352b', '#1f5fd1', '#2d7a4f'].map((c, i) => `<button class="sw ${i ? '' : 'on'}" data-c="${c}" style="background:${c}"></button>`).join('')}
+      <button class="btn sm line" data-w>굵게</button><button class="btn sm line" data-t>글자</button><button class="btn sm line" data-u>↶ 취소</button><button class="btn sm red" data-clr>지우기</button></div>`, { cls: 'full', sticky: true });
+  const cv = $('#skc', m.el), ctx = cv.getContext('2d'); let color = '#141a2b', width = 3, textMode = false; const hist = [];
+  const fit = () => { const r = cv.getBoundingClientRect(), dpr = devicePixelRatio || 1; cv.width = r.width * dpr; cv.height = r.height * dpr; ctx.scale(dpr, dpr); ctx.fillStyle = '#fff'; ctx.fillRect(0, 0, r.width, r.height);
+    if (F.f.sketch) { const im = new Image(); im.onload = () => { const s = Math.min(r.width / im.width, r.height / im.height); ctx.drawImage(im, 0, 0, im.width * s, im.height * s); }; im.src = F.f.sketch; } };
+  setTimeout(fit, 50);
+  const pt = e => { const r = cv.getBoundingClientRect(); return [e.clientX - r.left, e.clientY - r.top]; };
+  let drawing = false;
+  cv.addEventListener('pointerdown', e => { hist.push(ctx.getImageData(0, 0, cv.width, cv.height)); if (hist.length > 30) hist.shift();
+    const [x, y] = pt(e);
+    if (textMode) { const t = prompt('넣을 글자 (예: 계곡, 집단A, 입구)'); if (t) { ctx.fillStyle = color; ctx.font = 'bold 16px sans-serif'; ctx.fillText(t, x, y); } textMode = false; $('[data-t]', m.el).classList.remove('ghost'); return; }
+    drawing = true; ctx.strokeStyle = color; ctx.lineWidth = width; ctx.lineCap = ctx.lineJoin = 'round'; ctx.beginPath(); ctx.moveTo(x, y); cv.setPointerCapture(e.pointerId); });
+  cv.addEventListener('pointermove', e => { if (!drawing) return; const [x, y] = pt(e); ctx.lineTo(x, y); ctx.stroke(); });
+  cv.addEventListener('pointerup', () => drawing = false);
+  m.el.addEventListener('click', e => { const t = e.target;
+    if (t.dataset.c) { color = t.dataset.c; $$('.sw', m.el).forEach(s => s.classList.toggle('on', s === t)); }
+    if ('w' in t.dataset) { width = width === 3 ? 7 : 3; t.textContent = width === 3 ? '굵게' : '가늘게'; }
+    if ('t' in t.dataset) { textMode = !textMode; t.classList.toggle('ghost', textMode); if (textMode) toast('글자를 넣을 위치를 누르세요'); }
+    if ('u' in t.dataset && hist.length) ctx.putImageData(hist.pop(), 0, 0);
+    if ('clr' in t.dataset) { hist.push(ctx.getImageData(0, 0, cv.width, cv.height)); const r = cv.getBoundingClientRect(); ctx.fillStyle = '#fff'; ctx.fillRect(0, 0, r.width, r.height); }
+    if ('x' in t.dataset) m.close();
+    if ('ok' in t.dataset) { F.f.sketch = cv.toDataURL('image/jpeg', .8); changed('sketch'); m.close(); setTimeout(renderTab, 30); }
+  });
+}
+
+/* =========================================================
+   시작
+   ========================================================= */
+window.showDetail = showDetail; window.openForm = openForm;
+(async () => {
+  try { await DB.open(); await reload(); if (RECS.length) fitAll(); } catch (e) { toast('저장소를 열 수 없습니다: ' + e); }
+  if ('serviceWorker' in navigator) navigator.serviceWorker.register('./sw.js').catch(() => {});
+  if (!SET.name) setTimeout(() => toast('☰ 메뉴 > 설정·백업에서 조사자 정보를 먼저 입력해 두세요', 3500), 1200);
+})();
+</script>
+</body>
+</html>

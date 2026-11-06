@@ -1,0 +1,18 @@
+{
+  "id": "./",
+  "name": "멸종위기종 전자야장",
+  "short_name": "전자야장",
+  "description": "멸종위기 야생생물(식물·곤충) 현지조사표 전자 입력 및 분석",
+  "lang": "ko",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#16235a",
+  "theme_color": "#16235a",
+  "icons": [
+    { "src": "icons/icon-192.png", "sizes": "192x192", "type": "image/png", "purpose": "any" },
+    { "src": "icons/icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any" },
+    { "src": "icons/icon-maskable-512.png", "sizes": "512x512", "type": "image/png", "purpose": "maskable" }
+  ]
+}
