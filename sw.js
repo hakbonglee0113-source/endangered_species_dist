@@ -1,5 +1,5 @@
 /* 멸종위기종 전자야장 Service Worker */
-const VER = 'v1.0.0';
+const VER = 'v1.1.0';
 const SHELL = 'es-shell-' + VER;
 const TILES = 'es-tiles';
 const SHELL_FILES = ['./', './index.html', './manifest.webmanifest', './icons/icon-192.png', './icons/icon-512.png',

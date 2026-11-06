@@ -64,6 +64,10 @@ input,select,textarea{font:inherit;font-size:16px;color:var(--ink)}
 .leaflet-bottom.leaflet-right{bottom:calc(var(--sab));right:96px}
 .pt{width:16px;height:16px;border-radius:50%;border:3px solid #fff;box-shadow:0 1px 5px rgba(0,0,0,.45)}
 .pt.plant{background:var(--plant)}.pt.insect{background:var(--insect)}
+.pt.sp{box-shadow:0 0 0 2px var(--navy),0 1px 5px rgba(0,0,0,.45)}
+.bub{width:40px;height:40px;border-radius:50%;background:var(--navy);color:#fff;font-weight:800;display:grid;place-items:center;border:3px solid #fff;box-shadow:0 2px 8px rgba(0,0,0,.4)}
+.leaflet-tooltip.lbl{pointer-events:auto;cursor:pointer}
+.plist{max-height:240px;overflow:auto;min-width:200px}.plist .rec{padding:8px 10px}
 .leaflet-tooltip.lbl{background:rgba(255,255,255,.94);border:0;border-radius:8px;padding:3px 7px;font-size:11px;line-height:1.3;
   box-shadow:0 1px 6px rgba(0,0,0,.25);color:var(--ink);text-align:center;font-weight:600}
 .leaflet-tooltip.lbl b{font-weight:800}
@@ -126,7 +130,14 @@ table.st th,table.st td{padding:6px 4px;border-bottom:1px solid #eef0f5;text-ali
 table.st th:first-child,table.st td:first-child{text-align:left;white-space:normal}
 table.st th{color:var(--muted);font-weight:600}
 .tbl-wrap{overflow-x:auto}
-.filters{display:grid;grid-template-columns:1fr 1fr 1fr;gap:6px;margin-bottom:12px}
+.filters{display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-bottom:8px}
+.st-top{display:flex;justify-content:space-between;align-items:center;margin:0 2px 10px}
+.card h3{display:flex;justify-content:space-between;align-items:center;gap:8px}
+.bp-btn{border:1px solid var(--line);background:#fff;color:var(--navy);border-radius:8px;font-size:12px;font-weight:700;padding:5px 9px;white-space:nowrap}
+.bp-btn.on{background:var(--navy);color:#fff;border-color:var(--navy)}
+.bp{margin-top:12px;padding-top:10px;border-top:1px dashed var(--line)}
+.bp-t{font-size:12.5px;font-weight:700;color:var(--navy);margin-bottom:4px}
+.bp-leg{font-size:11px;color:var(--muted);margin-top:4px;line-height:1.5}
 .filters select,.set input{width:100%;padding:9px 8px;border:1px solid var(--line);border-radius:10px;background:#fff;font-size:14px}
 .set label{display:block;font-size:12.5px;color:var(--muted);margin:8px 0 4px}
 .set .grid2{display:grid;grid-template-columns:1fr 1fr;gap:8px}
@@ -209,6 +220,8 @@ textarea:focus{border-color:var(--navy2)}
 .tree-g summary .cnt:empty{display:none}
 .tree-sub{padding:4px 14px 12px}
 .tree-sub .lab{color:var(--muted);font-weight:600}
+.tree-sel{background:#fff;border:1px dashed var(--navy2);border-radius:11px;padding:9px 12px;font-size:13px;margin-bottom:8px;color:var(--navy)}
+.tree-g summary .cnt{font-weight:700}
 .note{background:var(--navy-soft);color:var(--navy);border-radius:12px;padding:12px 14px;font-size:13px;margin-bottom:12px}
 .note.big{padding:28px 18px;text-align:center;font-size:14px}
 .prev{background:#fff7e0;border:1px solid #f1dca0;border-radius:12px;padding:10px 12px;font-size:13px;margin-bottom:12px}
@@ -243,7 +256,30 @@ textarea:focus{border-color:var(--navy2)}
 .sk-tools .sw{width:30px;height:30px;border-radius:50%;border:3px solid #fff;box-shadow:0 0 0 1px var(--line)}
 .sk-tools .sw.on{box-shadow:0 0 0 2px var(--navy)}
 #skc{flex:1;touch-action:none;background:#fff;width:100%}
-@media print{body *{visibility:hidden!important}body::after{content:"멸종위기 야생생물의 출현좌표는 화면캡쳐가 금지되어 있습니다";visibility:visible;position:fixed;top:40%;left:0;right:0;text-align:center;font-size:22px}}
+#printArea{display:none}
+@media print{
+  body:not(.printing) *{visibility:hidden!important}
+  body:not(.printing)::after{content:"멸종위기 야생생물의 출현좌표는 화면캡쳐가 금지되어 있습니다";visibility:visible;position:fixed;top:40%;left:0;right:0;text-align:center;font-size:22px}
+  @page{size:A4;margin:12mm}
+  html,body{background:#fff!important;height:auto}
+  body.printing>*:not(#printArea){display:none!important}
+  body.printing #printArea{display:block;color:#000;font-size:11pt;-webkit-print-color-adjust:exact;print-color-adjust:exact}
+  #printArea .pr-rec{break-after:page}
+  #printArea .pr-rec:last-child{break-after:auto}
+  #printArea .pr-h{display:flex;gap:10px;align-items:center;border-bottom:2.5px solid #16235a;padding-bottom:8px;margin-bottom:6px}
+  #printArea .pr-h img{width:38px;height:38px;border-radius:8px}
+  #printArea .pr-t{font-size:15pt;font-weight:800;color:#16235a}
+  #printArea .pr-s{font-size:9.5pt;color:#333}
+  #printArea .dt h4{break-after:avoid;margin:12px 0 4px;font-size:10.5pt}
+  #printArea .dt dl{grid-template-columns:34mm 1fr;font-size:9.5pt;gap:2px 8px}
+  #printArea .dt dt,#printArea .dt dd{break-inside:avoid;padding:2px 0;border-bottom:1px solid #eee}
+  #printArea .sketch-prev{max-height:110mm;object-fit:contain;break-inside:avoid}
+  #printArea .thumbs .th{width:42mm;height:42mm;break-inside:avoid}
+  #printArea .pr-foot{margin-top:10px;font-size:8pt;color:#777;text-align:right}
+  #printArea .card,#printArea .kpi{break-inside:avoid;border-color:#ccc}
+  #printArea .kpis{grid-template-columns:repeat(4,1fr)}
+  #printArea .bp-btn{display:none}
+}
 </style>
 </head>
 <body>
@@ -307,7 +343,7 @@ textarea:focus{border-color:var(--navy2)}
 /* =========================================================
    멸종위기 야생생물 전자야장 (식물·곤충)  v1.0
    ========================================================= */
-const APP_VER = '1.0.0';
+const APP_VER = '1.1.0';
 const $ = (s, el = document) => el.querySelector(s);
 const $$ = (s, el = document) => [...el.querySelectorAll(s)];
 const esc = v => String(v ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
@@ -398,7 +434,10 @@ const I_SEV = ['일부', '미약', '보통', '위협', '심각'];
 const I_PRED = ['단기', '중기반복(<5년)', '중기지속(<5년)', '장기반복(>5년)', '장기지속(>5년)'];
 const THR_CAT = { thrA: '인위적', thrN: '자연적', thrB: '생물적' };
 
-const TAB_NAMES = ['1. 조사지역 정보 등', '2. 개체군 정보', '3. 서식지 특성(위협요인)', '4. 환경요소', '5. 공동/동서출현종', '6. 기타사항'];
+const TABS = {
+  plant: ['1. 조사지역 정보 등', '2. 개체군 정보', '3. 서식지 특성(위협요인)', '4. 환경요소', '5. 공동/동서출현종', '6. 기타사항'],
+  insect: ['1. 조사지역 정보 등', '2. 개체군 정보', '3. 서식지 특성(위협요인)', '4. 공동/동서출현종', '5. 기타사항']
+};
 
 const common1 = (taxon) => [
   { t: 'auto' },
@@ -444,7 +483,7 @@ const SCHEMA = {
       { t: 'stageN', stages: ['유묘', '영양생장기', '개화 및 결실기', '기타'] },
       { t: 'sec', label: '소집단 좌표 · 개체수 · 주요 공동/동서출현종' },
       { t: 'sub' }],
-    [{ t: 'sec', label: '서식처 유형' },
+    [{ t: 'sec', label: '서식처 유형 (1개만 선택)' },
       { t: 'tree', k: 'hab', data: PLANT_HAB },
       { t: 'sec', label: '개체군 위협요인 — 주요 요인' },
       { t: 'note', label: '조사지점 또는 인접 지역에서 생육에 영향을 미치는 요인만 체크합니다. 위협요인이 다양하면 6번 탭 코멘트란에 기재하세요.' },
@@ -502,7 +541,7 @@ const SCHEMA = {
       { k: 'stage', label: '성장단계', t: 'check', opts: ['알', '유충', '번데기', '성충'] },
       { t: 'stageN', stages: ['알', '유충', '번데기', '성충'] },
       { t: 'row', items: [{ k: 'reproPct', label: '생식가능 개체수 비율', t: 'number', unit: '%' }, { k: 'size', label: '개체평균크기', t: 'number', unit: 'cm', step: '0.1' }] }],
-    [{ t: 'sec', label: '서식지 유형' },
+    [{ t: 'sec', label: '서식지 유형 (1개만 선택)' },
       { t: 'tree', k: 'hab', data: INSECT_HAB },
       { t: 'sec', label: '서식지/개체군 위협요인 — 주요 요인' },
       { k: 'thrCat', label: '구분 (중복 체크 가능)', t: 'check', opts: ['인위적', '자연적', '생물적', '해당사항 없음'] },
@@ -517,7 +556,6 @@ const SCHEMA = {
       { t: 'sec', label: '2·3순위 위협요인' },
       { t: 'rank', k: 'thr2', label: '2순위' },
       { t: 'rank', k: 'thr3', label: '3순위' }],
-    [{ t: 'note', big: 1, label: '곤충 현지조사표에는 환경요소(서식지 평가항목)가 없습니다.\n서식지 정보는 3번 탭에서 입력해 주세요.' }],
     [{ t: 'sec', label: '공동/동서출현종' },
       { t: 'co', mode: 'count' }],
     [{ t: 'sec', label: '조사지 약도' },
@@ -549,19 +587,72 @@ setLayer(curLayer);
 $('#layerSeg').addEventListener('click', e => { const b = e.target.closest('button'); if (b) setLayer(b.dataset.l); });
 
 const mk = L.layerGroup().addTo(map); const MK = {};
+let PTS = [];
+/* 라벨이 겹치는 지점은 원형으로 펼쳐 지시선으로 실제 위치와 연결.
+   한 묶음이 RING_MAX건을 넘으면 개수 버튼으로 표시 → 누르면 확대, 최대 확대에서는 목록 */
+const LBL_W = 112, LBL_H = 40, RING_MAX = 10;
 function drawMarkers() {
-  mk.clearLayers(); for (const k in MK) delete MK[k];
-  let n = 0;
-  RECS.forEach(r => {
-    const { lat, lon } = r.f; if (num(lat) == null || num(lon) == null) return; n++;
-    const m = L.marker([+lat, +lon], { icon: L.divIcon({ className: '', html: `<div class="pt ${r.taxon}"></div>`, iconSize: [16, 16], iconAnchor: [8, 8] }) })
-      .bindTooltip(`<span class="d">${esc(dotDate(r.f.date))}</span><br><b>${esc(r.f.species || '(종명 미기재)')}</b>`, { permanent: true, direction: 'top', offset: [0, -8], className: 'lbl' })
-      .bindPopup(() => `<div class="pop"><h4>${esc(r.f.species || '')}</h4><div class="m">${r.taxon === 'plant' ? '식물' : '곤충'} · ${esc(dotDate(r.f.date))} · ${esc(r.f.serial || '')}<br>${esc(r.f.chiefName || '')} · 개체수 ${esc(r.f.count ?? '-')}</div>
-        <div class="bt"><button class="btn sm" onclick="showDetail('${r.id}')">상세</button><button class="btn sm ghost" onclick="openForm('${r.taxon}','${r.id}')">수정</button></div></div>`);
-    m.addTo(mk); MK[r.id] = m;
-  });
-  $('#countChip').textContent = `조사지점 ${n}`;
+  PTS = RECS.filter(r => num(r.f.lat) != null && num(r.f.lon) != null);
+  $('#countChip').textContent = `조사지점 ${PTS.length}`;
+  layoutMarkers();
 }
+const tipHTML = r => `<span class="d">${esc(dotDate(r.f.date))}</span><br><b>${esc(r.f.species || '(종명 미기재)')}</b>`;
+const popHTML = r => `<div class="pop"><h4>${esc(r.f.species || '')}</h4><div class="m">${r.taxon === 'plant' ? '식물' : '곤충'} · ${esc(dotDate(r.f.date))} · ${esc(r.f.serial || '')}<br>${esc(r.f.chiefName || '')} · 개체수 ${esc(r.f.count ?? '-')}</div>
+  <div class="bt"><button class="btn sm" onclick="showDetail('${r.id}')">상세</button><button class="btn sm ghost" onclick="openForm('${r.taxon}','${r.id}')">수정</button></div></div>`;
+const TIP_OFF = { top: [0, -9], bottom: [0, 9], left: [-9, 0], right: [9, 0] };
+function addPin(r, ll, dir = 'top', spread) {
+  const m = L.marker(ll || [+r.f.lat, +r.f.lon], { riseOnHover: true, icon: L.divIcon({ className: '', html: `<div class="pt ${r.taxon}${spread ? ' sp' : ''}"></div>`, iconSize: [16, 16], iconAnchor: [8, 8] }) })
+    .bindTooltip(tipHTML(r), { permanent: true, direction: dir, offset: TIP_OFF[dir], className: 'lbl', interactive: true })
+    .bindPopup(() => popHTML(r));
+  m.on('tooltipopen', e => { const el = e.tooltip.getElement && e.tooltip.getElement(); if (el) el.onclick = () => m.openPopup(); });
+  m.addTo(mk); MK[r.id] = m; return m;
+}
+function addBubble(list, ll) {
+  const n = list.length, b = L.latLngBounds(list.map(r => [+r.f.lat, +r.f.lon]));
+  const m = L.marker(ll, { icon: L.divIcon({ className: '', html: `<div class="bub">${n}</div>`, iconSize: [40, 40], iconAnchor: [20, 20] }) })
+    .bindTooltip(`<b>${n}건 중첩</b><br><span class="d">눌러서 펼치기</span>`, { permanent: true, direction: 'top', offset: [0, -18], className: 'lbl' });
+  m.on('click', () => {
+    const same = b.getNorthEast().distanceTo(b.getSouthWest()) < 2;
+    if (!same && map.getZoom() < map.getMaxZoom() - 1) return map.fitBounds(b, { padding: [90, 90], maxZoom: map.getMaxZoom() });
+    L.popup({ maxHeight: 320 }).setLatLng(ll).setContent(`<div class="pop"><h4>이 위치의 기록 ${n}건</h4><div class="plist">${list.slice().sort((x, y) => (y.f.date || '').localeCompare(x.f.date || '')).map(r =>
+      `<button class="rec" onclick="showDetail('${r.id}')"><div class="t"><span class="tag ${r.taxon}">${r.taxon === 'plant' ? '식물' : '곤충'}</span>${esc(r.f.species || '')}</div><div class="s">${esc(dotDate(r.f.date))} · ${esc(r.f.serial || '')}</div></button>`).join('')}</div></div>`).openOn(map);
+  });
+  m.addTo(mk);
+}
+function layoutMarkers() {
+  mk.clearLayers(); for (const k in MK) delete MK[k];
+  if (!PTS.length) return;
+  const z = map.getZoom();
+  const P = PTS.map(r => map.project([+r.f.lat, +r.f.lon], z));
+  const par = P.map((_, i) => i); const find = i => par[i] === i ? i : (par[i] = find(par[i]));
+  const ord = P.map((_, i) => i).sort((a, b) => P[a].x - P[b].x);
+  for (let a = 0; a < ord.length; a++) for (let b = a + 1; b < ord.length; b++) {
+    const i = ord[a], j = ord[b]; if (P[j].x - P[i].x >= LBL_W) break;
+    if (Math.abs(P[j].y - P[i].y) < LBL_H) par[find(i)] = find(j);
+  }
+  const groups = {}; P.forEach((_, i) => (groups[find(i)] ||= []).push(i));
+  Object.values(groups).forEach(g => {
+    if (g.length === 1) return addPin(PTS[g[0]]);
+    const c = g.reduce((s, i) => ({ x: s.x + P[i].x / g.length, y: s.y + P[i].y / g.length }), { x: 0, y: 0 });
+    const cll = map.unproject(L.point(c.x, c.y), z);
+    if (g.length > RING_MAX) return addBubble(g.map(i => PTS[i]), cll);
+    // 실제 위치의 방향을 최대한 유지하며 원 위 등간격 배치
+    const angOf = i => (Math.abs(P[i].x - c.x) + Math.abs(P[i].y - c.y) < 0.5) ? null : Math.atan2(P[i].y - c.y, P[i].x - c.x);
+    const sorted = g.slice().sort((i, j) => (angOf(i) ?? 0) - (angOf(j) ?? 0) || (PTS[i].f.date || '').localeCompare(PTS[j].f.date || ''));
+    const a0 = angOf(sorted[0]) ?? -Math.PI / 2, R = Math.max(56, 21 * g.length);
+    L.circleMarker(cll, { radius: 4, color: '#16235a', weight: 2, fillColor: '#fff', fillOpacity: 1, interactive: false }).addTo(mk);
+    sorted.forEach((i, k) => {
+      const ang = a0 + 2 * Math.PI * k / g.length, r = PTS[i];
+      const ll = map.unproject(L.point(c.x + R * Math.cos(ang), c.y + R * Math.sin(ang)), z);
+      const d = ((ang * 180 / Math.PI) % 360 + 540) % 360 - 180;
+      const dir = d > -135 && d <= -45 ? 'top' : d > -45 && d < 45 ? 'right' : d >= 45 && d < 135 ? 'bottom' : 'left';
+      L.polyline([[+r.f.lat, +r.f.lon], ll], { color: '#16235a', weight: 1.6, opacity: .75, dashArray: '4 3', interactive: false }).addTo(mk);
+      L.circleMarker([+r.f.lat, +r.f.lon], { radius: 3, color: '#16235a', weight: 1, fillColor: r.taxon === 'plant' ? '#2d7a4f' : '#b36a0e', fillOpacity: 1, interactive: false }).addTo(mk);
+      addPin(r, ll, dir, true);
+    });
+  });
+}
+map.on('zoomend', layoutMarkers);
 function fitAll() {
   const pts = RECS.filter(r => num(r.f.lat) != null).map(r => [+r.f.lat, +r.f.lon]);
   if (pts.length) map.fitBounds(pts, { padding: [60, 60], maxZoom: 15 }); else map.setView([36.2, 127.9], 7);
@@ -574,7 +665,7 @@ $('#btnLocate').onclick = async () => {
     if (meMarker) meMarker.setLatLng(ll); else meMarker = L.marker(ll, { icon: L.divIcon({ className: '', html: '<div class="me-dot"></div>', iconSize: [18, 18], iconAnchor: [9, 9] }), interactive: false }).addTo(map);
     map.setView(ll, 16); } catch (e) { toast(e.message); }
 };
-function flyTo(id) { const r = RECS.find(x => x.id === id); if (!r || num(r.f.lat) == null) return toast('좌표가 없는 기록입니다'); map.setView([+r.f.lat, +r.f.lon], 17); setTimeout(() => MK[id] && MK[id].openPopup(), 350); }
+function flyTo(id) { const r = RECS.find(x => x.id === id); if (!r || num(r.f.lat) == null) return toast('좌표가 없는 기록입니다'); map.setView([+r.f.lat, +r.f.lon], 17, { animate: false }); layoutMarkers(); setTimeout(() => MK[id] ? MK[id].openPopup() : toast('같은 위치의 기록이 많아 묶음으로 표시됩니다'), 120); }
 
 /* =========================================================
    화면 캡쳐 방지
@@ -607,7 +698,7 @@ document.addEventListener('touchstart', e => { if (e.touches.length >= 3 && mapV
 document.addEventListener('visibilitychange', () => { if (document.hidden) shield.classList.add('on'); else if (!$('.modal.warn')) setTimeout(() => shield.classList.remove('on'), 150); });
 window.addEventListener('blur', () => { if (!/Android|iPhone|iPad/i.test(navigator.userAgent)) shield.classList.add('on'); });
 window.addEventListener('focus', () => { if (!$('.modal.warn')) shield.classList.remove('on'); });
-window.addEventListener('beforeprint', captureWarn);
+window.addEventListener('beforeprint', () => { if (OUR_PRINT) return; const pa = $('#printArea'); if (pa) pa.innerHTML = ''; captureWarn(); });
 let lpT; $('#map').addEventListener('touchstart', e => { if (e.touches.length === 1) lpT = setTimeout(captureWarn, 900); }, { passive: true });
 ['touchend', 'touchmove', 'touchcancel'].forEach(ev => $('#map').addEventListener(ev, () => clearTimeout(lpT), { passive: true }));
 
@@ -717,7 +808,7 @@ function detailHTML(r) {
   return SCHEMA[r.taxon].map((tab, ti) => {
     const rows = tab.flatMap(flatFields).map(fd => { const v = fmtVal(fd, r.f); return v ? `<dt>${esc(fd.dl || fd.label)}</dt><dd>${v}</dd>` : ''; }).join('');
     const media = tab.some(fd => fd.t === 'media') ? mediaView(r.f) : '';
-    return rows || media ? `<h4>${TAB_NAMES[ti]}</h4><dl>${rows}</dl>${media}` : '';
+    return rows || media ? `<h4>${TABS[r.taxon][ti]}</h4><dl>${rows}</dl>${media}` : '';
   }).join('');
 }
 function mediaView(f) {
@@ -729,7 +820,7 @@ function showDetail(id) {
   const r = RECS.find(x => x.id === id); if (!r) return;
   map.closePopup();
   showModal(`<h3><span class="tag ${r.taxon}">${r.taxon === 'plant' ? '식물' : '곤충'}</span> ${esc(r.f.species || '')}</h3><div class="hint">${esc(r.f.serial || '')} · 최종수정 ${new Date(r.updatedAt).toLocaleString('ko-KR')}</div><div class="dt">${detailHTML(r)}</div>`, {
-    acts: [['삭제', 'red', () => { delRec(r); return false; }], ['지도', 'ghost', () => { closeAllTo(0); setTimeout(() => flyTo(id), 400); return false; }], ['수정', 'primary', () => { openForm(r.taxon, id); return false; }]]
+    acts: [['삭제', 'red', () => { delRec(r); return false; }], ['PDF', 'line', () => { pdfRecord(r); return false; }], ['지도', 'ghost', () => { closeAllTo(0); setTimeout(() => flyTo(id), 400); return false; }], ['수정', 'primary', () => { openForm(r.taxon, id); return false; }]]
   });
 }
 async function delRec(r) {
@@ -739,13 +830,14 @@ async function delRec(r) {
 function closeAllTo(n) { const k = LAY.length - n; if (k > 0) history.go(-k); }
 
 /* ---------- 통계 ---------- */
-const ST = { who: null, taxon: 'all', year: 'all' };
+const ST = { who: null, taxon: 'all', year: 'all', sp: 'all' };
+const sortNum = arr => arr.map(num).filter(v => v != null).sort((x, y) => x - y);
+const quant = (a, p) => { const h = (a.length - 1) * p, lo = Math.floor(h), hi = Math.ceil(h); return a[lo] + (h - lo) * (a[hi] - a[lo]); };
 const stat = arr => {
-  const a = arr.map(num).filter(v => v != null).sort((x, y) => x - y); const n = a.length; if (!n) return null;
+  const a = sortNum(arr); const n = a.length; if (!n) return null;
   const sum = a.reduce((s, v) => s + v, 0), mean = sum / n;
   const sd = n > 1 ? Math.sqrt(a.reduce((s, v) => s + (v - mean) ** 2, 0) / (n - 1)) : 0;
-  const med = n % 2 ? a[(n - 1) / 2] : (a[n / 2 - 1] + a[n / 2]) / 2;
-  return { n, sum, mean, sd, med, min: a[0], max: a[n - 1] };
+  return { n, sum, mean, sd, med: quant(a, .5), q1: quant(a, .25), q3: quant(a, .75), min: a[0], max: a[n - 1], vals: a };
 };
 const fx = (v, d = 1) => v == null ? '-' : (Math.round(v * 10 ** d) / 10 ** d).toLocaleString('ko-KR');
 function bars(entries, color) {
@@ -754,38 +846,72 @@ function bars(entries, color) {
   return `<div class="bars">${entries.map(([l, v]) => `<div class="b"><span title="${esc(l)}">${esc(l)}</span><div class="tr"><div class="fill" style="width:${(v / mx * 100).toFixed(1)}%;${color ? `background:${color}` : ''}"></div></div><span class="n">${v}</span></div>`).join('')}</div>`;
 }
 const tally = (list, fn) => { const m = {}; list.forEach(r => [].concat(fn(r) || []).forEach(k => { if (k) m[k] = (m[k] || 0) + 1; })); return Object.entries(m).sort((a, b) => b[1] - a[1]); };
-function paneStats() {
-  const people = [...new Set(RECS.map(r => r.f.chiefName).filter(Boolean))].sort();
-  if (ST.who == null) ST.who = SET.name && people.includes(SET.name) ? SET.name : 'all';
-  const years = [...new Set(RECS.map(r => (r.f.date || '').slice(0, 4)).filter(Boolean))].sort().reverse();
-  const L = RECS.filter(r => (ST.who === 'all' || r.f.chiefName === ST.who) && (ST.taxon === 'all' || r.taxon === ST.taxon) && (ST.year === 'all' || (r.f.date || '').startsWith(ST.year)));
-  const opt = (arr, cur) => arr.map(([v, l]) => `<option value="${esc(v)}" ${cur === v ? 'selected' : ''}>${esc(l)}</option>`).join('');
-  let h = `<div class="filters">
-    <select id="sW">${opt([['all', '조사자 전체'], ...people.map(p => [p, p])], ST.who)}</select>
-    <select id="sT">${opt([['all', '분류군 전체'], ['plant', '식물'], ['insect', '곤충']], ST.taxon)}</select>
-    <select id="sY">${opt([['all', '전체 기간'], ...years.map(y => [y, y + '년'])], ST.year)}</select></div>`;
-  if (!L.length) { $('#drBody').innerHTML = h + '<div class="empty">조건에 맞는 야장이 없습니다</div>'; bindSF(); return; }
+function niceTicks(lo, hi, n = 5) {
+  if (lo === hi) { lo -= 1; hi += 1; }
+  const raw = (hi - lo) / n, mag = 10 ** Math.floor(Math.log10(raw)), st = [1, 2, 2.5, 5, 10].map(m => m * mag).find(m => m >= raw);
+  const t = []; for (let v = Math.ceil(lo / st) * st; v <= hi + 1e-9; v += st) t.push(Math.round(v * 1e6) / 1e6);
+  return { lo: Math.min(lo, t[0]), hi: Math.max(hi, t[t.length - 1]), t };
+}
+/* 박스플롯 (Tukey: 수염 = 1.5×IQR 이내 최솟값·최댓값, 그 밖은 이상치) */
+function boxplotSVG(rows, shared) {
+  rows = rows.filter(r => r.s);
+  if (!rows.length) return '<div class="hint">자료 없음</div>';
+  const W = 360, LW = 104, X0 = LW + 6, X1 = W - 14, RH = shared ? 34 : 46, top = 8;
+  const H = top + rows.length * RH + (shared ? 30 : 6);
+  const gl = shared ? niceTicks(Math.min(...rows.map(r => r.s.min)), Math.max(...rows.map(r => r.s.max))) : null;
+  let g = '';
+  rows.forEach((r, i) => {
+    const s = r.s, sc = shared ? gl : niceTicks(s.min, s.max, 4);
+    const X = v => X0 + (v - sc.lo) / (sc.hi - sc.lo || 1) * (X1 - X0);
+    const y = top + i * RH + (shared ? RH / 2 : 18), bh = 14, iqr = s.q3 - s.q1;
+    const lw = s.vals.find(v => v >= s.q1 - 1.5 * iqr), hw = [...s.vals].reverse().find(v => v <= s.q3 + 1.5 * iqr);
+    const out = s.vals.filter(v => v < lw || v > hw);
+    g += `<text x="${LW}" y="${y + 4}" text-anchor="end" font-size="12.5" fill="#141a2b">${esc(r.label.length > 9 ? r.label.slice(0, 9) + '…' : r.label)}</text>
+      <text x="${LW}" y="${y + 15}" text-anchor="end" font-size="10" fill="#646b7d">n=${s.n}</text>
+      <line x1="${X(lw)}" x2="${X(hw)}" y1="${y}" y2="${y}" stroke="#24387f" stroke-width="1.4"/>
+      <line x1="${X(lw)}" x2="${X(lw)}" y1="${y - 5}" y2="${y + 5}" stroke="#24387f" stroke-width="1.4"/>
+      <line x1="${X(hw)}" x2="${X(hw)}" y1="${y - 5}" y2="${y + 5}" stroke="#24387f" stroke-width="1.4"/>
+      <rect x="${X(s.q1)}" y="${y - bh / 2}" width="${Math.max(1.5, X(s.q3) - X(s.q1))}" height="${bh}" rx="2" fill="#e8ecf7" stroke="#24387f" stroke-width="1.4"/>
+      <line x1="${X(s.med)}" x2="${X(s.med)}" y1="${y - bh / 2}" y2="${y + bh / 2}" stroke="#141a2b" stroke-width="2.6"/>
+      <path d="M${X(s.mean)} ${y - 4.5}l4.5 4.5-4.5 4.5-4.5-4.5z" fill="#fff" stroke="#c0352b" stroke-width="1.4"/>
+      ${out.map(v => `<circle cx="${X(v)}" cy="${y}" r="2.8" fill="none" stroke="#24387f" stroke-width="1.2"/>`).join('')}`;
+    if (!shared) g += `<text x="${X0}" y="${y + 21}" font-size="10" fill="#646b7d">${fx(sc.lo)}</text><text x="${X1}" y="${y + 21}" font-size="10" fill="#646b7d" text-anchor="end">${fx(sc.hi)}</text>
+      <line x1="${X0}" x2="${X1}" y1="${y + 12}" y2="${y + 12}" stroke="#dfe3ec"/>`;
+  });
+  if (shared) { const ya = top + rows.length * RH + 4, X = v => X0 + (v - gl.lo) / (gl.hi - gl.lo || 1) * (X1 - X0);
+    g += `<line x1="${X0}" x2="${X1}" y1="${ya}" y2="${ya}" stroke="#9aa1b2"/>` + gl.t.map(v => `<line x1="${X(v)}" x2="${X(v)}" y1="${ya}" y2="${ya + 4}" stroke="#9aa1b2"/><text x="${X(v)}" y="${ya + 15}" font-size="10.5" fill="#646b7d" text-anchor="middle">${fx(v)}</text>`).join(''); }
+  return `<svg viewBox="0 0 ${W} ${H}" width="100%" style="display:block;max-width:560px" role="img">${g}</svg>
+    <div class="bp-leg">상자: 1~3사분위(Q1–Q3) · <b>굵은 선: 중앙값</b> · <span style="color:#c0352b">◇ 평균</span> · 수염: 1.5×IQR 이내 최소·최대 · ○ 이상치</div>`;
+}
+const VARS = [['elev', '고도(m)'], ['temp', '기온(℃)'], ['slope', '경사도(°)'], ['aspect', '방위(°)'], ['height', '개체평균높이(cm)'], ['area', '분포면적(㎡)'], ['reproN', '생식가능개체수'], ['reproPct', '생식가능비율(%)'], ['size', '개체평균크기(cm)']];
+function statFilter() {
+  return RECS.filter(r => (ST.who === 'all' || r.f.chiefName === ST.who) && (ST.taxon === 'all' || r.taxon === ST.taxon)
+    && (ST.year === 'all' || (r.f.date || '').startsWith(ST.year)) && (ST.sp === 'all' || r.f.species === ST.sp));
+}
+function filterDesc() { return [ST.who === 'all' ? '조사자 전체' : ST.who, { all: '분류군 전체', plant: '식물', insect: '곤충' }[ST.taxon], ST.year === 'all' ? '전체 기간' : ST.year + '년', ST.sp === 'all' ? '전체 종' : ST.sp].join(' · '); }
+function bpBtn(id) { return `<button type="button" class="bp-btn" data-bp="${id}">📦 박스플롯</button>`; }
+function statsBody(L, print) {
   const cnt = stat(L.map(r => r.f.count));
   const spp = [...new Set(L.map(r => r.f.species).filter(Boolean))];
   const days = new Set(L.map(r => r.f.date).filter(Boolean)).size;
-  h += `<div class="kpis"><div class="kpi"><div class="v">${L.length}</div><div class="l">조사표 수</div></div>
+  let h = `<div class="kpis"><div class="kpi"><div class="v">${L.length}</div><div class="l">조사표 수</div></div>
     <div class="kpi"><div class="v">${spp.length}</div><div class="l">조사 대상종 수</div></div>
     <div class="kpi"><div class="v">${cnt ? fx(cnt.sum, 0) : '-'}</div><div class="l">확인 개체수 합계</div></div>
     <div class="kpi"><div class="v">${days}</div><div class="l">조사 일수</div></div></div>`;
-  // 종별 기술통계
   const bySp = {}; L.forEach(r => (bySp[r.f.species || '(미기재)'] ||= []).push(r));
-  h += `<div class="card"><h3>종별 개체수 기술통계</h3><div class="tbl-wrap"><table class="st"><tr><th>종명</th><th>조사</th><th>합계</th><th>평균</th><th>SD</th><th>중앙값</th><th>최소</th><th>최대</th></tr>${
-    Object.entries(bySp).sort((a, b) => b[1].length - a[1].length).map(([sp, rs]) => { const s = stat(rs.map(r => r.f.count));
-      return `<tr><td>${esc(sp)}</td><td>${rs.length}</td><td>${s ? fx(s.sum, 0) : '-'}</td><td>${s ? fx(s.mean) : '-'}</td><td>${s ? fx(s.sd) : '-'}</td><td>${s ? fx(s.med) : '-'}</td><td>${s ? fx(s.min, 0) : '-'}</td><td>${s ? fx(s.max, 0) : '-'}</td></tr>`; }).join('')}</table></div>
+  const spRows = Object.entries(bySp).sort((a, b) => b[1].length - a[1].length).map(([sp, rs]) => ({ label: sp, n: rs.length, s: stat(rs.map(r => r.f.count)) }));
+  h += `<div class="card"><h3><span>종별 개체수 기술통계</span>${print ? '' : bpBtn('sp')}</h3><div class="tbl-wrap"><table class="st"><tr><th>종명</th><th>조사</th><th>합계</th><th>평균</th><th>SD</th><th>중앙값</th><th>최소</th><th>최대</th></tr>${
+    spRows.map(({ label, n, s }) => `<tr><td>${esc(label)}</td><td>${n}</td><td>${s ? fx(s.sum, 0) : '-'}</td><td>${s ? fx(s.mean) : '-'}</td><td>${s ? fx(s.sd) : '-'}</td><td>${s ? fx(s.med) : '-'}</td><td>${s ? fx(s.min, 0) : '-'}</td><td>${s ? fx(s.max, 0) : '-'}</td></tr>`).join('')}</table></div>
+    <div class="bp" data-bpbox="sp" ${print ? '' : 'hidden'}><div class="bp-t">종별 개체수 박스플롯 (공통 축)</div>${boxplotSVG(spRows, true)}</div>
     <div class="hint" style="margin-top:6px">SD: 표본표준편차(n−1). 개체수 미기재 야장은 계산에서 제외</div></div>`;
-  // 환경 변수
-  const vars = [['elev', '고도(m)'], ['temp', '기온(℃)'], ['slope', '경사도(°)'], ['aspect', '방위(°)'], ['height', '개체평균높이(cm)'], ['area', '분포면적(㎡)'], ['reproN', '생식가능개체수'], ['reproPct', '생식가능비율(%)'], ['size', '개체평균크기(cm)']]
-    .map(([k, l]) => [l, stat(L.map(r => r.f[k]))]).filter(x => x[1]);
-  if (vars.length) h += `<div class="card"><h3>측정 변수 기술통계</h3><div class="tbl-wrap"><table class="st"><tr><th>변수</th><th>n</th><th>평균</th><th>SD</th><th>최소</th><th>최대</th></tr>${vars.map(([l, s]) => `<tr><td>${l}</td><td>${s.n}</td><td>${fx(s.mean)}</td><td>${fx(s.sd)}</td><td>${fx(s.min)}</td><td>${fx(s.max)}</td></tr>`).join('')}</table></div></div>`;
+  const vars = VARS.map(([k, l]) => ({ label: l, s: stat(L.map(r => r.f[k])) })).filter(x => x.s);
+  if (vars.length) h += `<div class="card"><h3><span>측정 변수 기술통계</span>${print ? '' : bpBtn('var')}</h3><div class="tbl-wrap"><table class="st"><tr><th>변수</th><th>n</th><th>평균</th><th>SD</th><th>중앙값</th><th>최소</th><th>최대</th></tr>${
+    vars.map(({ label, s }) => `<tr><td>${label}</td><td>${s.n}</td><td>${fx(s.mean)}</td><td>${fx(s.sd)}</td><td>${fx(s.med)}</td><td>${fx(s.min)}</td><td>${fx(s.max)}</td></tr>`).join('')}</table></div>
+    <div class="bp" data-bpbox="var" ${print ? '' : 'hidden'}><div class="bp-t">측정 변수 박스플롯 (변수별 개별 축)</div>${boxplotSVG(vars, false)}</div></div>`;
   h += `<div class="card"><h3>월별 조사 횟수</h3>${bars(tally(L, r => (r.f.date || '').slice(0, 7)).sort((a, b) => a[0].localeCompare(b[0])))}</div>`;
   h += `<div class="card"><h3>시·도별 조사 횟수</h3>${bars(tally(L, r => (r.f.addr || '').split(/\s+/)[0]))}</div>`;
   h += `<div class="card"><h3>위협요인 빈도</h3>${bars(tally(L, r => ['thrA', 'thrN', 'thrB'].flatMap(k => (r.f[k] || []).map(v => `${THR_CAT[k]}·${v}`))).slice(0, 15), '#c0352b')}</div>`;
-  h += `<div class="card"><h3>서식지(처) 유형 — 대분류</h3>${bars(tally(L, r => [...new Set((r.f.hab || []).map(p => p.split(' > ')[0]))]), '#2d7a4f')}</div>`;
+  h += `<div class="card"><h3>서식지(처) 유형</h3>${bars(tally(L, r => habVal(r.f.hab)), '#2d7a4f')}</div>`;
   h += `<div class="card"><h3>성장단계 기록 빈도</h3>${bars(tally(L, r => r.f.stage), '#b36a0e')}</div>`;
   const pl = L.filter(r => r.taxon === 'plant');
   if (pl.length) {
@@ -794,12 +920,62 @@ function paneStats() {
   }
   const ins = L.filter(r => r.taxon === 'insect');
   if (ins.length) h += `<div class="card"><h3>곤충 조사방법</h3>${bars(tally(ins, r => r.f.method))}</div>`;
-  $('#drBody').innerHTML = h; bindSF();
+  return h;
 }
-function bindSF() {
+function paneStats() {
+  const people = [...new Set(RECS.map(r => r.f.chiefName).filter(Boolean))].sort();
+  if (ST.who == null) ST.who = SET.name && people.includes(SET.name) ? SET.name : 'all';
+  const years = [...new Set(RECS.map(r => (r.f.date || '').slice(0, 4)).filter(Boolean))].sort().reverse();
+  const spAll = [...new Set(RECS.filter(r => ST.taxon === 'all' || r.taxon === ST.taxon).map(r => r.f.species).filter(Boolean))].sort((a, b) => a.localeCompare(b, 'ko'));
+  if (ST.sp !== 'all' && !spAll.includes(ST.sp)) ST.sp = 'all';
+  const L = statFilter();
+  const opt = (arr, cur) => arr.map(([v, l]) => `<option value="${esc(v)}" ${cur === v ? 'selected' : ''}>${esc(l)}</option>`).join('');
+  let h = `<div class="filters">
+    <select id="sW">${opt([['all', '조사자 전체'], ...people.map(p => [p, p])], ST.who)}</select>
+    <select id="sT">${opt([['all', '분류군 전체'], ['plant', '식물'], ['insect', '곤충']], ST.taxon)}</select>
+    <select id="sY">${opt([['all', '전체 기간'], ...years.map(y => [y, y + '년'])], ST.year)}</select>
+    <select id="sS">${opt([['all', '조사종명 전체'], ...spAll.map(p => [p, p])], ST.sp)}</select></div>
+    <div class="st-top"><span class="hint">${L.length}건 분석</span>${L.length ? '<button class="btn sm line" id="sPdf">PDF로 저장</button>' : ''}</div>`;
+  h += L.length ? statsBody(L) : '<div class="empty">조건에 맞는 야장이 없습니다</div>';
+  $('#drBody').innerHTML = h;
   $('#sW').onchange = e => { ST.who = e.target.value; paneStats(); };
   $('#sT').onchange = e => { ST.taxon = e.target.value; paneStats(); };
   $('#sY').onchange = e => { ST.year = e.target.value; paneStats(); };
+  $('#sS').onchange = e => { ST.sp = e.target.value; paneStats(); };
+  if ($('#sPdf')) $('#sPdf').onclick = () => pdfStats();
+  $$('.bp-btn', $('#drBody')).forEach(b => b.onclick = () => { const box = $(`[data-bpbox="${b.dataset.bp}"]`); box.hidden = !box.hidden; b.classList.toggle('on', !box.hidden); });
+}
+
+/* ---------- PDF 저장 (인쇄 → PDF로 저장) ---------- */
+let OUR_PRINT = false;
+function printReport(html, title) {
+  let pa = $('#printArea'); if (!pa) { pa = document.createElement('div'); pa.id = 'printArea'; document.body.appendChild(pa); }
+  pa.innerHTML = html; document.body.classList.add('printing');
+  const oldT = document.title; document.title = title;
+  const imgs = $$('img', pa);
+  toast('인쇄 화면에서 대상(프린터)을 ‘PDF로 저장’으로 선택하세요', 4000);
+  Promise.all(imgs.map(i => i.complete ? 1 : new Promise(r => { i.onload = i.onerror = r; }))).then(() => setTimeout(() => {
+    OUR_PRINT = true;
+    try { window.print(); } catch (_) { toast('이 브라우저에서는 인쇄(PDF 저장)를 지원하지 않습니다'); }
+    setTimeout(() => { OUR_PRINT = false; document.title = oldT; }, 3000);
+  }, 150));
+}
+const repHead = (t, sub) => `<div class="pr-h"><img src="icons/icon-192.png" alt=""><div><div class="pr-t">${esc(t)}</div><div class="pr-s">${sub}</div></div></div>`;
+const taxKo = t => t === 'plant' ? '식물' : '곤충';
+function recordPage(r) {
+  return `<section class="pr-rec">${repHead(`멸종위기 야생생물(${taxKo(r.taxon)}) 현지조사표`, `조사표번호 <b>${esc(r.f.serial || '-')}</b> · 조사종명 <b>${esc(r.f.species || '-')}</b> · 조사일자 ${esc(dotDate(r.f.date))}`)}
+    <div class="dt">${detailHTML(r)}</div><div class="pr-foot">멸종위기종 전자야장 v${APP_VER} · 출력 ${todayStr()} ${nowHM()} · 출현좌표 외부 유출 금지</div></section>`;
+}
+function pdfRecords(taxon) {
+  const list = RECS.filter(r => r.taxon === taxon).sort((a, b) => (a.f.date || '').localeCompare(b.f.date || '') || (a.f.serial || '').localeCompare(b.f.serial || ''));
+  if (!list.length) return toast('출력할 자료가 없습니다');
+  printReport(list.map(recordPage).join(''), `현지조사표_${taxKo(taxon)}_${todayStr().replace(/-/g, '')}`);
+}
+function pdfRecord(r) { printReport(recordPage(r), `현지조사표_${r.f.serial || r.f.species || r.id}`); }
+function pdfStats() {
+  const L = statFilter(); if (!L.length) return toast('출력할 자료가 없습니다');
+  printReport(`<section class="pr-stats">${repHead('멸종위기종 현지조사 기술통계 보고서', `${esc(filterDesc())} · ${L.length}건 · 출력 ${todayStr()}`)}${statsBody(L, true)}</section>`,
+    `전자야장_통계_${todayStr().replace(/-/g, '')}`);
 }
 
 /* ---------- 설정·백업 ---------- */
@@ -812,13 +988,17 @@ async function paneSet() {
       <button class="btn block" style="margin-top:10px" id="sSave">저장</button></div>
     <div class="card"><h3>내보내기</h3><div class="stack">
       <button class="btn ghost" id="xP">식물 야장 CSV (엑셀용)</button><button class="btn ghost" id="xI">곤충 야장 CSV (엑셀용)</button>
-      <button class="btn line" id="xJ">전체 백업 파일(JSON, 사진 포함)</button></div></div>
+      <button class="btn ghost" id="pP">식물 야장 PDF로 저장</button><button class="btn ghost" id="pI">곤충 야장 PDF로 저장</button>
+      <button class="btn ghost" id="pS">통계 보고서 PDF로 저장</button>
+      <button class="btn line" id="xJ">전체 백업 파일(JSON, 사진 포함)</button></div>
+      <div class="hint" style="margin-top:8px">PDF는 인쇄 화면이 열리면 대상(프린터)을 ‘PDF로 저장’으로 고르면 됩니다. 통계 보고서는 통계 탭에서 고른 조건이 적용됩니다.</div></div>
     <div class="card"><h3>가져오기 · 관리</h3><div class="stack">
       <label class="btn line" style="cursor:pointer">백업 파일 불러오기<input type="file" id="iJ" accept=".json,application/json" hidden></label>
       <button class="btn red" id="xDel">전체 자료 삭제</button></div>
       <div class="hint" style="margin-top:10px">⚠ 야장 자료는 이 휴대폰의 앱 저장소에만 보관됩니다. 브라우저 데이터를 지우거나 앱을 삭제하면 사라지므로 조사 후 백업 파일을 꼭 내보내 두세요.<br>${est}${persisted ? ' · 영구 저장 허용됨' : ''}</div></div>
     <div class="hint" style="text-align:center">멸종위기종 전자야장 v${APP_VER} · 지도 © OpenStreetMap, Esri · 날씨 Open-Meteo · 주소 Nominatim</div>`;
   $('#sSave').onclick = () => { SET.name = $('#sN').value.trim(); SET.org = $('#sO').value.trim(); SET.aName = $('#sAN').value.trim(); SET.aOrg = $('#sAO').value.trim(); saveSet(); updateWatermark(); ST.who = null; toast('저장했습니다'); };
+  $('#pP').onclick = () => pdfRecords('plant'); $('#pI').onclick = () => pdfRecords('insect'); $('#pS').onclick = pdfStats;
   $('#xP').onclick = () => exportCSV('plant'); $('#xI').onclick = () => exportCSV('insect'); $('#xJ').onclick = exportJSON;
   $('#iJ').onchange = importJSON;
   $('#xDel').onclick = async () => { if (!RECS.length) return toast('삭제할 자료가 없습니다'); if (await confirmBox(`저장된 야장 <b>${RECS.length}건</b>을 모두 삭제합니다. 되돌릴 수 없습니다.`, '모두 삭제', true)) { await DB.clear(); await reload(); paneSet(); toast('모두 삭제했습니다'); } };
@@ -873,11 +1053,11 @@ function openForm(taxon, id, draft) {
   if (draft) F = { taxon, id: draft.id, f: draft.f, isNew: draft.isNew, tab: 0, dirty: true, serialManual: draft.serialManual };
   else if (ex) F = { taxon, id, f: JSON.parse(JSON.stringify(ex.f)), isNew: false, tab: 0, dirty: false, serialManual: true };
   else F = { taxon, id: uid(), isNew: true, tab: 0, dirty: false, serialManual: false,
-    f: { date: todayStr(), chiefName: SET.name, chiefOrg: SET.org, asstName: SET.aName, asstOrg: SET.aOrg, sub: [], co: [], photos: [], hab: [] } };
+    f: { date: todayStr(), chiefName: SET.name, chiefOrg: SET.org, asstName: SET.aName, asstOrg: SET.aOrg, sub: [], co: [], photos: [], hab: '' } };
   if (draft) { const p = JSON.parse(localStorage.getItem(DRAFT_KEY + '-m') || 'null'); if (p && p.id === F.id) { F.f.photos = p.photos || []; F.f.sketch = p.sketch; } }
-  F.f.sub ||= []; F.f.co ||= []; F.f.photos ||= []; F.f.hab ||= [];
+  F.f.sub ||= []; F.f.co ||= []; F.f.photos ||= []; F.f.hab = habVal(F.f.hab);
   $('#fTitle').textContent = `${taxon === 'plant' ? '식물' : '곤충'} 현지조사표${F.isNew ? '' : ' · 수정'}`;
-  $('#fTabs').innerHTML = TAB_NAMES.map((n, i) => `<button data-t="${i}" class="${taxon === 'insect' && i === 3 ? 'na' : ''}">${taxon === 'insect' && i === 3 ? '4. 환경요소(곤충 미해당)' : n}</button>`).join('');
+  $('#fTabs').innerHTML = TABS[taxon].map((n, i) => `<button data-t="${i}">${n}</button>`).join('');
   const wasLayer = LAY.length && ['taxon', 'modal'].includes(LAY[LAY.length - 1].name);
   if (wasLayer) { const top = LAY[LAY.length - 1]; top.close(); LAY[LAY.length - 1] = { name: 'form', close: closeForm }; }
   else pushLayer('form', closeForm);
@@ -889,12 +1069,13 @@ function closeForm() {
 }
 $('#fTabs').addEventListener('click', e => { const b = e.target.closest('button'); if (b) setTab(+b.dataset.t); });
 $('#fPrev').onclick = () => F.tab > 0 && setTab(F.tab - 1);
-$('#fNext').onclick = () => F.tab < 5 && setTab(F.tab + 1);
+$('#fNext').onclick = () => F.tab < TABS[F.taxon].length - 1 && setTab(F.tab + 1);
 function setTab(i) {
   F.tab = i; $$('#fTabs button').forEach((b, j) => b.classList.toggle('on', j === i));
   $('#fTabs button.on').scrollIntoView({ inline: 'center', block: 'nearest', behavior: 'smooth' });
   renderTab(); $('#fbody').scrollTop = 0;
-  $('#fPrev').disabled = i === 0; $('#fNext').textContent = i === 5 ? '마지막 탭' : '다음 ▶'; $('#fNext').disabled = i === 5;
+  const last = TABS[F.taxon].length - 1;
+  $('#fPrev').disabled = i === 0; $('#fNext').textContent = i === last ? '마지막 탭' : '다음 ▶'; $('#fNext').disabled = i === last;
 }
 function renderTab() { const st = $('#fbody').scrollTop; $('#fbody').innerHTML = SCHEMA[F.taxon][F.tab].map(fd => R(fd)).join(''); $('#fbody').scrollTop = st; refreshDatalist(); }
 
@@ -916,7 +1097,7 @@ function R(fd) {
     case 'radio': case 'check': return chipGroup(fd.k, fd.label, fd.opts, fd.t, fd.list, fd.req);
     case 'auto': return `<div class="auto-card"><p>조사일자 · 시각 · 날씨 · 기온 · 행정구역 · 경위도 · 고도를 한 번에 기입합니다. 조사지점에 서서 눌러 주세요.</p>
       <button type="button" class="btn" data-act="auto"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M13 2L4 14h7l-1 8 9-12h-7z"/></svg>현재 위치·날씨 자동 기입</button><div id="autoStat"></div></div>`;
-    case 'serial': return `<label class="fld"><span>조사표번호 <span class="hint">(일련번호_국명)</span></span><div class="inrow"><input data-k="serial" value="${esc(f.serial ?? '')}" placeholder="예: 001_한라송이풀"><button type="button" class="nb" data-act="serial">자동</button></div></label>`;
+    case 'serial': return `<label class="fld"><span>조사표번호 <span class="hint">(일련번호_국명)</span></span><div class="inrow"><input data-k="serial" value="${esc(f.serial ?? '')}" placeholder="예: 001_${F.taxon === 'plant' ? '한라송이풀' : '붉은점모시나비'}"><button type="button" class="nb" data-act="serial">자동</button></div></label>`;
     case 'coord': return coordHTML(fd);
     case 'stageN': return `<div class="lab">단계별 개체수</div><div class="row" style="margin-bottom:12px">${fd.stages.map(s => `<div class="inrow"><span class="u" style="padding-left:10px;white-space:nowrap;font-size:12px">${esc(s)}</span><input data-k="stageN.${s}" type="number" inputmode="numeric" value="${esc((f.stageN || {})[s] ?? '')}"></div>`).join('')}</div>`;
     case 'sub': return subHTML();
@@ -967,15 +1148,16 @@ function coHTML(mode) {
       <button type="button" class="del" data-act="coDel" data-i="${i}">✕</button></div>`).join('')
     + `<button type="button" class="btn ghost block" data-act="coAdd" style="margin-top:4px">＋ 출현종 추가</button>`;
 }
+const habVal = x => Array.isArray(x) ? (x[0] || '') : (x || '');
 function treeHTML(fd) {
-  const v = F.f[fd.k] || [];
-  return fd.data.map(([big, mids]) => {
-    const c = v.filter(p => p.split(' > ')[0] === big).length;
-    return `<details class="tree-g" ${c ? 'open' : ''}><summary>${esc(big)}<span class="cnt">${c || ''}</span></summary><div class="tree-sub">
+  const v = habVal(F.f[fd.k]);
+  return `<div class="tree-sel" data-sel="${fd.k}">${v ? '선택: <b>' + esc(v) + '</b>' : '아래에서 해당 유형을 <b>1개만</b> 선택하세요'}</div>` + fd.data.map(([big, mids]) => {
+    const c = v.split(' > ')[0] === big;
+    return `<details class="tree-g" ${c ? 'open' : ''}><summary>${esc(big)}<span class="cnt">${c ? '선택됨' : ''}</span></summary><div class="tree-sub">
       ${mids.map(([mid, smalls]) => {
         const os = smalls.map(normOpt).map(o => ({ ...o, path: [big, mid, o.v].filter(Boolean).join(' > ') }));
-        return `${mid ? `<div class="lab" style="margin-top:6px">${esc(mid)}</div>` : ''}<div class="chips" data-k="${fd.k}" data-mode="check">${os.map(o => `<button type="button" class="chip ${v.includes(o.path) ? 'on' : ''}" data-v="${esc(o.path)}">${esc(o.v)}</button>`).join('')}</div>
-          ${os.filter(o => o.x).map(o => `<input class="xtra" data-k="${esc(fd.k + '__' + o.path)}" data-of="${fd.k}" data-ov="${esc(o.path)}" placeholder="${esc(o.x)}" value="${esc(F.f[fd.k + '__' + o.path] ?? '')}" ${v.includes(o.path) ? '' : 'hidden'}>`).join('')}`;
+        return `${mid ? `<div class="lab" style="margin-top:6px">${esc(mid)}</div>` : ''}<div class="chips radio" data-k="${fd.k}" data-mode="radio">${os.map(o => `<button type="button" class="chip ${v === o.path ? 'on' : ''}" data-v="${esc(o.path)}">${esc(o.v)}</button>`).join('')}</div>
+          ${os.filter(o => o.x).map(o => `<input class="xtra" data-k="${esc(fd.k + '__' + o.path)}" data-of="${fd.k}" data-ov="${esc(o.path)}" placeholder="${esc(o.x)}" value="${esc(F.f[fd.k + '__' + o.path] ?? '')}" ${v === o.path ? '' : 'hidden'}>`).join('')}`;
       }).join('')}</div></details>`;
   }).join('');
 }
@@ -1025,7 +1207,7 @@ function fmtVal(fd, f, plain) {
     case 'text': case 'number': case 'date': case 'time': case 'area': return isEmpty(f[fd.k]) ? '' : X(f[fd.k] + (fd.unit && !plain ? ' ' + fd.unit : ''));
     case 'radio': return f[fd.k] ? X(extra(fd.k, f[fd.k])) : '';
     case 'check': return isEmpty(f[fd.k]) ? '' : X(f[fd.k].map(v => extra(fd.k, v)).join(plain ? '; ' : ', '));
-    case 'tree': return isEmpty(f[fd.k]) ? '' : (plain ? f[fd.k].map(v => extra(fd.k, v)).join('; ') : f[fd.k].map(v => esc(extra(fd.k, v))).join('<br>'));
+    case 'tree': { const v = habVal(f[fd.k]); return v ? X(extra(fd.k, v)) : ''; }
     case 'coord': { const la = f[fd.lat], lo = f[fd.lon]; if (la == null || la === '') return ''; return X(`N ${dmsStr(la)} / E ${dmsStr(lo)}${plain ? '' : ` (${(+la).toFixed(6)}, ${(+lo).toFixed(6)})`}`); }
     case 'stageN': { const s = f.stageN || {}; const t = Object.entries(s).filter(([, v]) => v !== '' && v != null).map(([k, v]) => `${k} ${v}`); return t.length ? X(t.join(', ')) : ''; }
     case 'sub': return (f.sub || []).length ? (plain ? f.sub.map((g, i) => `[${i + 1}] N${dmsStr(g.lat)} E${dmsStr(g.lon)} ${g.n ?? ''}개체 ${g.co || ''}`).join(' | ')
@@ -1037,12 +1219,15 @@ function fmtVal(fd, f, plain) {
   return '';
 }
 // 상세/CSV 라벨 보완
-SCHEMA.plant[0].find(x => x.t === 'coord').dl = '실측 좌표'; SCHEMA.insect[0].find(x => x.t === 'coord').dl = '실측 좌표';
-['plant', 'insect'].forEach(t => { const c = SCHEMA[t][0].filter(x => x.t === 'coord'); c[1].dl = '기존 좌표'; });
-SCHEMA.plant[1].find(x => x.t === 'stageN').label = '단계별 개체수'; SCHEMA.insect[1].find(x => x.t === 'stageN').label = '단계별 개체수';
-SCHEMA.plant[1].find(x => x.t === 'sub').label = '소집단';
-SCHEMA.plant[4].find(x => x.t === 'co').label = '공동/동서출현종'; SCHEMA.insect[4].find(x => x.t === 'co').label = '공동/동서출현종';
-SCHEMA.plant[2].find(x => x.t === 'tree').label = '서식처 유형'; SCHEMA.insect[2].find(x => x.t === 'tree').label = '서식지 유형';
+['plant', 'insect'].forEach(t => {
+  SCHEMA[t].forEach(tab => tab.forEach(fd => {
+    if (fd.t === 'stageN') fd.label = '단계별 개체수';
+    if (fd.t === 'sub') fd.label = '소집단';
+    if (fd.t === 'co') fd.label = '공동/동서출현종';
+    if (fd.t === 'tree') fd.label = t === 'plant' ? '서식처 유형' : '서식지 유형';
+  }));
+  const c = SCHEMA[t][0].filter(x => x.t === 'coord'); c[0].dl = '실측 좌표'; c[1].dl = '기존 좌표';
+});
 
 /* ---------- 값 변경 처리 ---------- */
 let draftT;
@@ -1060,7 +1245,9 @@ function syncChips(k) {
   const v = getP(k);
   $$(`.chips${sel(k)}`, $('#fbody')).forEach(g => $$('.chip', g).forEach(c => c.classList.toggle('on', g.dataset.mode === 'radio' ? v === c.dataset.v : (Array.isArray(v) && v.includes(c.dataset.v)))));
   $$(`.xtra[data-of="${CSS.escape(k)}"]`, $('#fbody')).forEach(x => { x.hidden = !(Array.isArray(v) ? v.includes(x.dataset.ov) : v === x.dataset.ov); });
-  if (k === 'hab') $$('.tree-g', $('#fbody')).forEach(d => { const big = d.querySelector('summary').firstChild.textContent; const c = (F.f.hab || []).filter(p => p.split(' > ')[0] === big).length; d.querySelector('.cnt').textContent = c || ''; });
+  if (k === 'hab') { const hv = habVal(F.f.hab);
+    $$('.tree-g', $('#fbody')).forEach(d => { const big = d.querySelector('summary').firstChild.textContent; d.querySelector('.cnt').textContent = hv.split(' > ')[0] === big ? '선택됨' : ''; });
+    const ts = $('.tree-sel', $('#fbody')); if (ts) ts.innerHTML = hv ? '선택: <b>' + esc(hv) + '</b>' : '아래에서 해당 유형을 <b>1개만</b> 선택하세요'; }
 }
 function hooks(k) {
   const f = F.f;
